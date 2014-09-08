@@ -1,11 +1,7 @@
 /*
-ziggurat.h Ziggurat random-number generator
+coreslam_internals.h internal support for CoreSLAM
 
-Downloaded from 
-
-  http://people.sc.fsu.edu/~jburkardt/c_src/ziggurat/ziggurat.c
-
-on 20 July 2014.
+Copyright (C) 2014 Simon D. Levy
 
 This code is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as 
@@ -21,16 +17,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with this code.  If not, see <http:#www.gnu.org/licenses/>.
 */
 
-#include <stdint.h>
+#ifdef _MSC_VER
+typedef __int64 int64_t;       /* Define it from MSVC's internal type */
+#else
+#include <stdint.h>            /* Use the C99 official header */
+#endif
 
-uint32_t cong_seeded ( uint32_t *jcong );
-double cpu_time ( void );
-uint32_t kiss_seeded ( uint32_t *jcong, uint32_t *jsr, uint32_t *w, uint32_t *z );
-uint32_t mwc_seeded ( uint32_t *w, uint32_t *z );
-float r4_exp ( uint32_t *jsr, uint32_t ke[256], float fe[256], float we[256] );
-void r4_exp_setup ( uint32_t ke[256], float fe[256], float we[256] );
-float r4_nor ( uint32_t *jsr, uint32_t kn[128], float fn[128], float wn[128] );
-void r4_nor_setup ( uint32_t kn[128], float fn[128], float wn[128] );
-float r4_uni ( uint32_t *jsr );
-uint32_t shr3_seeded ( uint32_t *jsr );
-void timestamp ( void );
+
+static const int NO_OBSTACLE            = 65500;
+static const int OBSTACLE               = 0;
+
+static double 
+radians(double degrees)
+{
+    return degrees * M_PI / 180;
+}
