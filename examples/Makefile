@@ -42,28 +42,8 @@ log2pgm: log2pgm.o
 log2pgm.o: log2pgm.cpp 
 	g++ -O3 -c -I ../cpp log2pgm.cpp
 
-bench: $(DATASET).pgm
-	./benchmark.py $(DATASET) 1000
-
 $(DATASET).pgm:
 	./log2pgm.py $(DATASET) $(USE_ODOMETRY) $(RANDOM_SEED)
-
-bigtest: log2pgm
-	./log2pgm.py $(DATASET) 1 $(RANDOM_SEED)
-	mv $(DATASET).pgm $(DATASET)_py.pgm
-	./log2pgm $(DATASET) 1 $(RANDOM_SEED)
-	mv $(DATASET).pgm $(DATASET)_cpp.pgm
-	$(VIEWER) $(DATASET)_*.pgm ~/Desktop/$(DATASET).pgm
-	./log2pgm.py $(DATASET) 0 $(RANDOM_SEED)
-	mv $(DATASET).pgm $(DATASET)_py.pgm
-	./log2pgm $(DATASET) 0 $(RANDOM_SEED)
-	mv $(DATASET).pgm $(DATASET)_cpp.pgm
-	$(VIEWER) $(DATASET)_*.pgm ~/Desktop/$(DATASET).pgm
-	./log2pgm.py $(DATASET) 1
-	mv $(DATASET).pgm $(DATASET)_py.pgm
-	./log2pgm $(DATASET) 1
-	mv $(DATASET).pgm $(DATASET)_cpp.pgm
-	$(VIEWER) $(DATASET)_*.pgm ~/Desktop/$(DATASET).pgm
 
 backup:
 	cp -r .. ~/Documents/slam/bak-breezyslam
