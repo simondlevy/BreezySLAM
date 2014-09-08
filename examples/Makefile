@@ -40,7 +40,7 @@ log2pgm: log2pgm.o
 	g++ -O3 -o log2pgm log2pgm.o -L$(LIBDIR) -lbreezyslam
 
 log2pgm.o: log2pgm.cpp 
-	g++ -O3 -c -I ../c++ log2pgm.cpp
+	g++ -O3 -c -I ../cpp log2pgm.cpp
 
 bench: $(DATASET).pgm
 	./benchmark.py $(DATASET) 1000
