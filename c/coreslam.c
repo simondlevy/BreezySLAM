@@ -390,6 +390,9 @@ scan_init(
     scan->value = int_alloc(size*span);
     scan->span = span;
     
+    scan->npoints = 0;
+    scan->obst_npoints = 0;
+    
     /* assure size multiple of 4 for SSE */
     scan->obst_x_mm = float_alloc(size*span+4);
     scan->obst_y_mm = float_alloc(size*span+4);
