@@ -19,6 +19,7 @@ along with this code.  If not, see <http:#www.gnu.org/licenses/>.
 */
 
 #include "ziggurat.h"
+#include "random.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -32,17 +33,32 @@ typedef struct random_t
         
 } random_t;
 
-void * random_init(int seed)
+size_t random_size(void)
+{
+    return sizeof(random_t);
+}
+
+
+void * random_new(int seed)
 {
     random_t * r = (random_t *)malloc(sizeof(random_t));
     
-    r->seed = seed;
-        
-    r4_nor_setup (r->kn, r->fn, r->wn );
+    random_init(r, seed);
     
     return r;
     
 }
+
+
+void random_init(void * v, int seed)
+{
+    random_t * r = (random_t *)v;
+    
+    r->seed = seed;
+        
+    r4_nor_setup (r->kn, r->fn, r->wn );    
+}
+
 
 double random_normal(void * v, double mu, double sigma)
 {

@@ -673,7 +673,7 @@ Randomizer_init(Randomizer *self, PyObject *args, PyObject *kwds)
         return error_on_raise_argument_exception("Randomizer");
     }
     
-    self->randomizer = random_init(seed);
+    self->randomizer = random_new(seed);
     
     return 0;
 }

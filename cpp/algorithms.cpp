@@ -190,7 +190,7 @@ SinglePositionSLAM(laser, map_size_pixels, map_size_meters)
     
     this->max_search_iter = DEFAULT_MAX_SEARCH_ITER;
     
-    this->randomizer = random_init(random_seed);
+    this->randomizer = random_new(random_seed);
 }
 
 RMHC_SLAM::~RMHC_SLAM(void)

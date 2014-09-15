@@ -17,8 +17,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with this code.  If not, see <http:#www.gnu.org/licenses/>.
 */
 
+
 #ifdef _MSC_VER
 typedef __int64 int64_t;       /* Define it from MSVC's internal type */
+#define _USE_MATH_DEFINES
+#include <math.h>
 #else
 #include <stdint.h>            /* Use the C99 official header */
 #endif
