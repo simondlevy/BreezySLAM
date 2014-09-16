@@ -584,7 +584,7 @@ static PyMethodDef Map_methods[] =
 
 #define TP_DOC_MAP \
 "A class for maps used in SLAM.\n"\
-"Map.__init__(size_pixels, scale_mm_per_pixel, bytes=None)"
+"Map.__init__(size_pixels, size_meters, bytes=None)"
 
 
 static PyTypeObject pybreezyslam_MapType = 
@@ -916,4 +916,3 @@ PyInit_pybreezyslam(void)
 }
 
 #endif
-
