@@ -1,7 +1,7 @@
 %
-% logdemo.m : BreezySLAM Matlab demo.  Reads logfile with odometry and scan 
+% logdemo.m : BreezySLAM Matlab demo.  Reads logfile with odometry and scan
 %             data from Paris Mines Tech and displays the map and robot
-%             trajectory.
+%             position in real time.
 %
 % For details see
 %
@@ -33,9 +33,11 @@
 
 function logdemo(dataset, use_odometry, seed)
 
-% Map size, scale
+% Params
+
 MAP_SIZE_PIXELS          = 800;
-MAP_SIZE_METERS          =  32;
+MAP_SIZE_METERS          = 32;
+ROBOT_SIZE_PIXELS        = 10;
 
 % Grab input args
 
@@ -48,7 +50,7 @@ if nargin < 3
 end
 
 % Load data from file
-[scans, odometries] = load_data(dataset);
+[times, scans, odometries] = load_data(dataset);
 
 % Build a robot model if we want odometry
 robot = [];
@@ -63,30 +65,20 @@ else
     slam = Deterministic_SLAM(MinesLaser(), MAP_SIZE_PIXELS, MAP_SIZE_METERS);
 end
 
-% Report what we're doing
-nscans = size(scans, 1);
-h = waitbar(0, sprintf('Processing %d scans %s odometry, %s filter', ...
-    nscans, flag2with(use_odometry), flag2with(seed)));
-
-% Start with an empty trajectory of positions
-trajectory = zeros(nscans, 2);
-
-% Start timing
-start_sec = cputime;
+% Initialize previous time for delay
+prevTime = 0;
 
 % Loop over scans
-for scanno = 1:nscans
-    
-    waitbar(scanno/nscans, h)
+for scanno = 1:size(scans, 1)
     
     if use_odometry
         
         % Convert odometry to velocities
         [velocities,robot] = robot.computeVelocities(odometries(scanno, :));
-                
+        
         % Update SLAM with lidar and velocities
         slam = slam.update(scans(scanno,:), velocities);
-          
+        
     else
         
         % Update SLAM with lidar alone
@@ -94,49 +86,53 @@ for scanno = 1:nscans
     end
     
     % Get new position
-    [x_mm, y_mm, ~] = slam.getpos();
+    [x_mm, y_mm, theta_degrees] = slam.getpos();
     
-    % Add new position to trajectory
-    trajectory(scanno, :) = [x_mm, y_mm];
+    % Get current map
+    map = slam.getmap();
+        
+    % Display map
+    hold off
+    image(map/4) % Keep bytes in [0,64] for colormap
+    axis('square')
+    colormap('gray')
+    hold on
+    
+    % Generate a polyline to represent the robot
+    [x_pix, y_pix] = robot_polyline(ROBOT_SIZE_PIXELS);
+
+    % Rotate the polyline based on the robot's angular rotation
+    theta_radians = pi * theta_degrees / 180;
+    x_pix_r = x_pix * cos(theta_radians) - y_pix * sin(theta_radians);
+    y_pix_r = x_pix * sin(theta_radians) + y_pix * cos(theta_radians);
+
+    % Add the robot's position as offset to the polyline
+    x_pix = x_pix_r + mm2pix(x_mm, MAP_SIZE_METERS, MAP_SIZE_PIXELS);
+    y_pix = y_pix_r + mm2pix(y_mm, MAP_SIZE_METERS, MAP_SIZE_PIXELS);
+    
+    
+    % Add robot image to map
+    fill(x_pix, y_pix, 'r')
+    drawnow   
+    
+    % Delay based on current time in microseconds
+    currTime = times(scanno);
+    if scanno > 1
+        pause((currTime-prevTime)/1e6)
+    end
+    prevTime = times(scanno);
+    
     
 end
 
-% Hide waitbar
-close(h)
+% Function to generate a x, y points for a polyline to display the robot
+% Currently we just generate a triangle.
+function [x_pix, y_pix] = robot_polyline(robot_size)
+HEIGHT_RATIO = 1.25; 
+x_pix = [-robot_size,              robot_size, -robot_size]; 
+y_pix = [-robot_size/HEIGHT_RATIO, 0 ,          robot_size/HEIGHT_RATIO];
 
-% Report elapsed time
-elapsed_sec = cputime - start_sec;
-fprintf('%d scans in %f sec = %f scans / sec\n', nscans, elapsed_sec, nscans/elapsed_sec)
-
-                 
-% Get final map
-map = slam.getmap();
-
-% Put trajectory into map as black pixels
-for scanno = 1:nscans
-    
-    x_pix = mm2pix(trajectory(scanno,1), MAP_SIZE_METERS, MAP_SIZE_PIXELS);
-    y_pix = mm2pix(trajectory(scanno,2), MAP_SIZE_METERS, MAP_SIZE_PIXELS);
-    
-    map(y_pix, x_pix) = 0;
-    
-end
-
-% Display the final map and trajectory
-figure
-image(map/4) % Keep bytes in [0,64] for colormap
-axis('square')
-colormap('gray')
-
-
-% Function to turn 0/1 to 'without'/'with' --------------------------------
-function s = flag2with(x)
-s = 'without';
-if x
-    s = 'with';
-end
-
-% Function to cnovert millimeters to pixels -------------------------------
+% Function to convert millimeters to pixels -------------------------------
 
 function pix = mm2pix(mm, MAP_SIZE_METERS, MAP_SIZE_PIXELS)
 pix = floor(mm / (MAP_SIZE_METERS * 1000. / MAP_SIZE_PIXELS));
@@ -151,10 +147,11 @@ pix = floor(mm / (MAP_SIZE_METERS * 1000. / MAP_SIZE_PIXELS));
 %
 %where Q1, Q2 are odometry values
 
-function [scans,odometries] = load_data(dataset)
+function [times, scans,odometries] = load_data(dataset)
 
 data = load([dataset '.dat']);
 
+times = data(:,1);
 scans = data(:,25:end-1); % avoid final ' '
 odometries = data(:,[1,3,4]);
 
