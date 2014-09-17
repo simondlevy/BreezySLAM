@@ -41,14 +41,14 @@ classdef Scan
               span = 1;
           end
                     
-          [scan.c_scan, scan.c_laser] = mex_coreslam('Scan_init', laser, span);
+          [scan.c_scan, scan.c_laser] = mex_breezyslam('Scan_init', laser, span);
                               
       end 
       
       function disp(scan)
           % Displays information about this Scan
           
-          mex_coreslam('Scan_disp', scan.c_scan)
+          mex_breezyslam('Scan_disp', scan.c_scan)
          
       end 
       
@@ -59,7 +59,7 @@ classdef Scan
           %    hole_width_mm is the width of holes (obstacles, walls) in millimeters.
           %    velocities is an optional list[dxy_mm, dtheta_degrees]
           %    i.e., robot's (forward, rotational velocity) for improving the quality of the scan.
-          mex_coreslam('Scan_update', scan.c_scan, scan.c_laser, int32(scans_mm), hole_width_mm, velocities)
+          mex_breezyslam('Scan_update', scan.c_scan, scan.c_laser, int32(scans_mm), hole_width_mm, velocities)
       end
       
    end

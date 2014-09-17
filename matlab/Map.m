@@ -26,13 +26,13 @@ classdef Map
         function map = Map(size_pixels, size_meters)
             % Map creates an empty square map
             %     map = Map(size_pixels, size_meters)
-            map.c_map = mex_coreslam('Map_init', size_pixels, size_meters);
+            map.c_map = mex_breezyslam('Map_init', size_pixels, size_meters);
             
         end
         
         function disp(map)
             % Displays data about this map
-            mex_coreslam('Map_disp', map.c_map)
+            mex_breezyslam('Map_disp', map.c_map)
             
         end
         
@@ -40,7 +40,7 @@ classdef Map
             % Updates this map with a new scan and position
             %
             %     update(map, scan, new_position, map_quality, hole_width_mm)
-            mex_coreslam('Map_update', map.c_map, scan.c_scan, new_position, int32(map_quality), hole_width_mm)
+            mex_breezyslam('Map_update', map.c_map, scan.c_scan, new_position, int32(map_quality), hole_width_mm)
             
         end
         
@@ -50,7 +50,7 @@ classdef Map
             %     bytes = get(map)
             
             % Transpose for uniformity with Python, C++ versions
-            bytes = mex_coreslam('Map_get', map.c_map)';
+            bytes = mex_breezyslam('Map_get', map.c_map)';
             
         end
         

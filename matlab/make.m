@@ -16,4 +16,4 @@
 %    along with this code.  If not, see <http:#www.gnu.org/licenses/>.
 
 
-mex mex_coreslam.c ../c/coreslam.c ../c/coreslam_sisd.c ../c/random.c ../c/ziggurat.c
+mex mex_breezyslam.c ../c/coreslam.c ../c/coreslam_sisd.c ../c/random.c ../c/ziggurat.c
