@@ -29,8 +29,8 @@ RANDOM_SEED  = 9999
 all: log2pgm
 
 pytest: 
-	./log2png.py $(DATASET) $(USE_ODOMETRY) $(RANDOM_SEED)
-	$(VIEWER) $(DATASET).png
+	./log2pgm.py $(DATASET) $(USE_ODOMETRY) $(RANDOM_SEED)
+	$(VIEWER) $(DATASET).pgm
 
 cpptest: log2pgm 
 	./log2pgm $(DATASET) $(USE_ODOMETRY) $(RANDOM_SEED)
