@@ -19,7 +19,6 @@ classdef Scan
    properties (Access = {?Map, ?RMHC_SLAM})
        
        c_scan
-       c_laser
    end
    
    methods
@@ -34,14 +33,14 @@ classdef Scan
           %         distance_no_detection_mm 
           %         distance_no_detection_mm
           %         detection_margin
-          % offset_mm = offset_mm
+          %         offset_mm = offset_mm
           %     span (default=1) supports spanning laser scan to cover the space better
 
           if nargin < 2
               span = 1;
           end
-                    
-          [scan.c_scan, scan.c_laser] = mex_breezyslam('Scan_init', laser, span);
+                              
+          scan.c_scan = mex_breezyslam('Scan_init', laser, span);
                               
       end 
       
@@ -59,7 +58,7 @@ classdef Scan
           %    hole_width_mm is the width of holes (obstacles, walls) in millimeters.
           %    velocities is an optional list[dxy_mm, dtheta_degrees]
           %    i.e., robot's (forward, rotational velocity) for improving the quality of the scan.
-          mex_breezyslam('Scan_update', scan.c_scan, scan.c_laser, int32(scans_mm), hole_width_mm, velocities)
+          mex_breezyslam('Scan_update', scan.c_scan, int32(scans_mm), hole_width_mm, velocities)
       end
       
    end

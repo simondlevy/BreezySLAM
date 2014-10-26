@@ -106,7 +106,6 @@ static void load_data(
     while (fgets(s, MAXLINE, fp))
     {
         char * cp = strtok(s, " ");
-        
                
         long * odometry = new long [3];
         odometry[0] = atol(cp);
@@ -356,11 +355,11 @@ int main( int argc, const char** argv )
         }
         else
         {
-            ((RMHC_SLAM *)slam)->update(lidar);  
+            slam->update(lidar);  
         }
         
         Position position = slam->getpos();
-                        
+
         // Add new coordinates to trajectory
         double * v = new double[2];
         v[0] = position.x_mm;

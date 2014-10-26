@@ -84,6 +84,14 @@ public:
 
 
     /**
+    * Updates the scan, and calls the the implementing class's updateMapAndPointcloud method with zero velocities
+    * (no odometry).
+    * @param scan_mm Lidar scan values, whose count is specified in the <tt>scan_size</tt> 
+    * attribute of the Laser object passed to the CoreSlam constructor
+    */
+    void update(int * scan_mm);
+    
+    /**
     * The quality of the map (0 through 255); default = 50
     */
     int map_quality;
@@ -232,14 +240,7 @@ public:
 
     ~RMHC_SLAM(void);    
     
-    /**
-    * Updates the scan, and calls the the implementing class's updateMapAndPointcloud method with zero velocities
-    * (no odometry).
-    * @param scan_mm Lidar scan values, whose count is specified in the <tt>scan_size</tt> 
-    * attribute of the Laser object passed to the CoreSlam constructor
-    */
-    void update(int * scan_mm);
-    
+   
     /**
     * The standard deviation in millimeters of the Gaussian distribution of 
     * the (X,Y) component of position in the particle filter; default = 100

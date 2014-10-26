@@ -96,15 +96,20 @@ classdef CoreSLAM
             %     Calls the the implementing class's updateMapAndPointcloud()
             %     method with the specified velocities.
             %
-            %     slam = update(slam, scans_mm, velocities)
+            %     slam = update(slam, scans_mm, [velocities])
             %
             %     scan_mm is a list of Lidar scan values, whose count is specified in the scan_size
-            %     velocities is a list of velocities [dxy_mm, dtheta_degrees, dt_seconds] for odometry
-                        
+            %     velocities is an optional list of velocities [dxy_mm, dtheta_degrees, dt_seconds] for odometry
+                                    
             % Build a scan for computing distance to map, and one for updating map
             slam.scan_update(slam.scan_for_mapbuild, scans_mm)            
             slam.scan_update(slam.scan_for_distance, scans_mm)
-                                   
+                                        
+            % Default to zero velocities
+            if nargin < 3
+                velocities = [0, 0, 0];
+            end
+            
             % Update velocities
             velocity_factor = 0;
             if velocities(3) > 0

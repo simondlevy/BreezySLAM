@@ -1,7 +1,29 @@
+/**
+* 
+* BreezySLAM: Simple, efficient SLAM in Java
+*
+* Velocities.java - Java code for Velocities class
+*
+* Copyright (C) 2014 Simon D. Levy
+*
+* This code is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as 
+* published by the Free Software Foundation, either version 3 of the 
+* License, or (at your option) any later version.
+* 
+* This code is distributed in the hope that it will be useful,     
+* but WITHOUT ANY WARRANTY without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU Lesser General Public License 
+* along with this code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package edu.wlu.cs.levy.breezyslam.components;
 
 /**
-* A class representing the forward and angular velocities of a robot.
+* A class representing the forward and angular velocities of a robot as determined by odometry.
 */
 public class Velocities 
 {    
@@ -41,28 +63,52 @@ public class Velocities
         this.dtheta_degrees = dtheta_degrees * velocity_factor;
     }
 
+    /**
+      * Returns a string representation of this Velocities object.
+      */
     public String toString()
     {
         return String.format("<dxy=%7.0f mm dtheta = %+3.3f degrees dt = %f s",
             this.dxy_mm, this.dtheta_degrees, this.dt_seconds);
     }
 
+    /**
+      * Returns the forward component of this Velocities object.
+      */
     public double getDxyMm()
     {
         return this.dxy_mm;
     }
 
-    public double getDthetaDegrees()
+    /**
+      * Returns the angular component of this Velocities object.
+      */
+     public double getDthetaDegrees()
     {
         return this.dtheta_degrees;
     }
 
+    /**
+      * Returns the time component of this Velocities object.
+      */
     public double getDtSeconds()
     {
         return this.dt_seconds;
     }
 
+    /**
+      * Forward component of velocity, in mm to be divided by time in seconds.
+      */
     protected double dxy_mm;
-    protected double dtheta_degrees;
-    protected double dt_seconds;
+
+    /**
+      * Angular component of velocity, in mm to be divided by time in seconds.
+      */
+
+     protected double dtheta_degrees;
+
+    /**
+      *  Time in seconds between successive velocity measurements.
+      */
+     protected double dt_seconds;
 }

@@ -35,6 +35,15 @@ class Laser
     friend class SinglePositionSLAM;
     friend class RMHC_SLAM;
     friend class Scan;
+
+protected:
+
+    int scan_size;                      /* number of points per scan */
+    double scan_rate_hz;                /* scans per second */
+    double detection_angle_degrees;     /* e.g. 240, 360 */
+    double distance_no_detection_mm;    /* default value when the laser returns 0 */
+    int detection_margin;               /* first scan element to consider */
+    double offset_mm;                   /* position of the laser wrt center of rotation */
     
 public:
     
@@ -56,34 +65,53 @@ public:
         float distance_no_detection_mm,
         int detection_margin = 0,
         float offset_mm = 0.
-        );
+        )
+
+    {
+        this->scan_size = scan_size;
+        this->scan_rate_hz = scan_rate_hz;
+        this->detection_angle_degrees = detection_angle_degrees;
+        this->distance_no_detection_mm = distance_no_detection_mm;
+        this->detection_margin = detection_margin;
+        this->offset_mm = offset_mm;
+    }
     
     /**
     * Builds an empty Laser object (all parameters zero).
     */
     Laser(void);
     
-    /**
-    * Dealloates memory for this Laser object.
-    */
-    ~Laser(void);
-    
-    
-    friend ostream& operator<< (ostream & out, Laser & laser);
+    friend ostream& operator<< (ostream & out, Laser & laser) 
+    {
+        char str[512];
 
-private:
-    
-    struct laser_t * laser;
-    
+        sprintf(str, 
+             "<scan_size=%d | scan_rate=%3.3f hz | " 
+             "detection_angle=%3.3f deg | " 
+             "distance_no_detection=%7.4f mm | " 
+             "detection_margin=%d | offset=%4.4f mm>",
+             laser.scan_size,  laser.scan_rate_hz,  
+             laser.detection_angle_degrees, 
+             laser.distance_no_detection_mm,  
+             laser.detection_margin, 
+             laser.offset_mm);
+
+        out << str;
+
+        return out;
+    }
 };
     
+/**
+  * A class for the Hokuyo URG-04LX laser.
+  */
 class URG04LX : public Laser  
 {
     
 public:
     
     /**
-    * Builds a Laser object from parameters based on the specifications for your 
+    * Builds a URG04LX object.
     * Lidar unit.
     * @param detection_margin           number of rays at edges of scan to ignore
     * @param offset_mm                  forward/backward offset of laser motor from robot center
@@ -94,7 +122,7 @@ public:
     Laser(682, 10, 240, 4000, detection_margin, offset_mm) { }
     
     /**
-    * Builds an empty Laser object (all parameters zero).
+    * Builds an empty URG04LX object (all parameters zero).
     */
     URG04LX(void) : Laser() {} 
     

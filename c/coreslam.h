@@ -60,26 +60,20 @@ typedef struct scan_t
     int * value;
     int npoints;
     int span;
-    
+
+    int size;                           /* number of rays per scan */
+    double rate_hz;                     /* scans per second */
+    double detection_angle_degrees;     /* e.g. 240, 360 */
+    double distance_no_detection_mm;    /* default value when the laser returns 0 */
+    int detection_margin;               /* first scan element to consider */
+    double offset_mm;                   /* position of the laser wrt center of rotation */
+     
     /* for SSE */
     float * obst_x_mm;
     float * obst_y_mm;
     int obst_npoints;
         
 } scan_t;
-
-
-typedef struct laser_t
-{
-    int scan_size;                      /* number of points per scan */
-    double scan_rate_hz;                /* scans per second */
-    double detection_angle_degrees;     /* e.g. 240, 360 */
-    double distance_no_detection_mm;    /* default value when the laser returns 0 */
-    int detection_margin;               /* first scan element to consider */
-    double offset_mm;                   /* position of the laser wrt center of rotation */
-    
-} laser_t;
-
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -116,8 +110,13 @@ map_update(
 
 void scan_init(
     scan_t * scan, 
+    int span,
     int size,
-    int span);
+    double scan_rate_hz,                
+    double detection_angle_degrees,     
+    double distance_no_detection_mm,    
+    int detection_margin,               
+    double offset_mm);
 
 void 
 scan_free(
@@ -131,7 +130,6 @@ void
 scan_update(
     scan_t * scan, 
     int * lidar_mm, 
-    laser_t laser,
     double hole_width_mm,
     double velocities_dxy_mm,
     double velocities_dtheta_degrees);
@@ -146,11 +144,6 @@ map_set(
     map_t * map, 
     char * bytes);
     
-void 
-laser_string(
-    laser_t laser, 
-    char * str);
-
 /* Returns -1 for infinity */
 int 
 distance_scan_to_map(
@@ -165,7 +158,6 @@ rmhc_position_search(
     position_t start_pos,
 	map_t * map,
     scan_t * scan,
-    laser_t laser,
 	double sigma_xy_mm,
 	double sigma_theta_degrees,
 	int max_search_iter,

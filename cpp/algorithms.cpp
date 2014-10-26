@@ -99,6 +99,13 @@ void CoreSLAM::update(int * scan_mm, Velocities & velocities)
     this->updateMapAndPointcloud(velocities);
 }   
 
+void CoreSLAM::update(int * scan_mm) 
+{
+    Velocities zero_velocities;   
+    
+    this->update(scan_mm, zero_velocities);
+}
+
 
 void CoreSLAM::getmap(unsigned char * mapbytes)
 {
@@ -130,15 +137,15 @@ void SinglePositionSLAM::updateMapAndPointcloud(Velocities & velocities)
 {    
     // Start at current position 
     Position start_pos = this->position;
-    
+
     // Add effect of velocities
     start_pos.x_mm      += velocities.dxy_mm * this->costheta(),
     start_pos.y_mm      += velocities.dxy_mm *  this->sintheta(),
     start_pos.theta_degrees += velocities.dtheta_degrees;
     
     // Add offset from laser
-    start_pos.x_mm += this->laser->laser->offset_mm * this->costheta();
-    start_pos.y_mm += this->laser->laser->offset_mm * this->sintheta();
+    start_pos.x_mm += this->laser->offset_mm * this->costheta();
+    start_pos.y_mm += this->laser->offset_mm * this->sintheta();
     
     // Get new position from implementing class
     Position new_position = this->getNewPosition(start_pos);
@@ -148,8 +155,8 @@ void SinglePositionSLAM::updateMapAndPointcloud(Velocities & velocities)
    
     // Update the current position with this new position, adjusted by laser offset
     this->position = Position(new_position);
-    this->position.x_mm -= this->laser->laser->offset_mm * this->costheta();
-    this->position.y_mm -= this->laser->laser->offset_mm * this->sintheta(); 
+    this->position.x_mm -= this->laser->offset_mm * this->costheta();
+    this->position.y_mm -= this->laser->offset_mm * this->sintheta(); 
 }
     
 Position & SinglePositionSLAM::getpos(void)
@@ -198,13 +205,6 @@ RMHC_SLAM::~RMHC_SLAM(void)
     free(this->randomizer);
 }
 
-void RMHC_SLAM::update(int * scan_mm) 
-{
-    Velocities zero_velocities;   
-    
-    CoreSLAM::update(scan_mm, zero_velocities);
-}
-
 Position RMHC_SLAM::getNewPosition(Position & start_pos)
 {
     // Search for a new position if indicated
@@ -219,7 +219,6 @@ Position RMHC_SLAM::getNewPosition(Position & start_pos)
             start_pos_c,
             this->map->map,
             this->scan_for_distance->scan,
-            *this->laser->laser,
             this->sigma_xy_mm,
             this->sigma_theta_degrees,
             this->max_search_iter,

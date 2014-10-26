@@ -96,8 +96,6 @@ private:
     
     struct scan_t * scan;
     
-    struct laser_t * laser;
-    
     void init(Laser * laser, int span);
 };
 

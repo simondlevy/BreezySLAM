@@ -64,11 +64,11 @@ def load_data(datadir, dataset):
             break       
             
         toks = s.split()[0:-1] # ignore ''
-        
+
         odometry = (int(toks[0]), int(toks[2]), int(toks[3]))
                         
         lidar = [int(tok) for tok in toks[24:]]
-                        
+
         scans.append(lidar)
         odometries.append(odometry)
         

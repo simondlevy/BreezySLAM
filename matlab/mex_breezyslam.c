@@ -83,16 +83,6 @@ static position_t _rhs2pos(const mxArray * prhs[], int index)
     return position;
 }
 
-static void _rhs2laser(laser_t * laser, const mxArray * prhs[], int index)
-{
-    laser->scan_size =           (int)_get_field(prhs[index], "scan_size");
-    laser->scan_rate_hz =             _get_field(prhs[index], "scan_rate_hz");
-    laser->detection_angle_degrees =  _get_field(prhs[index], "detection_angle_degrees");
-    laser->distance_no_detection_mm = _get_field(prhs[index], "distance_no_detection_mm");
-    laser->detection_margin =    (int)_get_field(prhs[index], "detection_margin");
-    laser->offset_mm =                _get_field(prhs[index], "offset_mm");
-}
-
 /* Class methods ------------------------------------------------------- */
 
 static void _map_init(mxArray *plhs[], const mxArray * prhs[])
@@ -153,19 +143,29 @@ static void _map_get(mxArray *plhs[], const mxArray * prhs[])
 static void _scan_init(mxArray *plhs[], const mxArray * prhs[])
 {
     
-    laser_t * laser = (laser_t *)mxMalloc(sizeof(laser_t));
-    
     scan_t * scan = (scan_t *)mxMalloc(sizeof(scan_t));
     
     int span = (int)mxGetScalar(prhs[2]);
-    
-    _rhs2laser(laser, prhs, 1);
-    
-    scan_init(scan, laser->scan_size, span);
-            
-    
+
+    const mxArray * laser = prhs[1];
+    int scan_size =                  (int)_get_field(laser, "scan_size");
+    double scan_rate_hz =             _get_field(laser, "scan_rate_hz");
+    double detection_angle_degrees =  _get_field(laser, "detection_angle_degrees");
+    double distance_no_detection_mm = _get_field(laser, "distance_no_detection_mm");
+    int detection_margin =           (int)_get_field(laser, "detection_margin");
+    double offset_mm =                _get_field(laser, "offset_mm");
+ 
+    scan_init(
+            scan, 
+            span,
+            scan_size, 
+            scan_rate_hz,                
+            detection_angle_degrees,     
+            distance_no_detection_mm,    
+            detection_margin,               
+            offset_mm);
+     
     _insert_obj_lhs(plhs, scan, 0);
-    _insert_obj_lhs(plhs, laser, 1);
 }
 
 static void _scan_disp(const mxArray * prhs[])
@@ -183,17 +183,15 @@ static void _scan_update(const mxArray * prhs[])
 {
     scan_t * scan = _rhs2scan(prhs, 1);
     
-    laser_t * laser = (laser_t *)_rhs2ptr(prhs, 2);
+    int scansize = (int)mxGetNumberOfElements(prhs[2]);
     
-    int scansize = (int)mxGetNumberOfElements(prhs[3]);
+    int * lidar_mm = (int *)mxGetPr(prhs[2]);
     
-    int * lidar_mm = (int *)mxGetPr(prhs[3]);
+    double hole_width_mm = mxGetScalar(prhs[3]);
     
-    double hole_width_mm = mxGetScalar(prhs[4]);
+    double * velocities = mxGetPr(prhs[4]);
     
-    double * velocities = mxGetPr(prhs[5]);
-    
-    scan_update(scan, lidar_mm, *laser, hole_width_mm, velocities[0], velocities[1]);
+    scan_update(scan, lidar_mm, hole_width_mm, velocities[0], velocities[1]);
 }
 
 static void _randomizer_init(mxArray *plhs[], const mxArray * prhs[])
@@ -215,7 +213,6 @@ static void _rmhcPositionSearch(mxArray *plhs[], const mxArray * prhs[])
     
     scan_t * scan = _rhs2scan(prhs, 3);
     
-    laser_t laser;
     position_t new_pos;
     
     double sigma_xy_mm = mxGetScalar(prhs[5]);
@@ -226,13 +223,10 @@ static void _rmhcPositionSearch(mxArray *plhs[], const mxArray * prhs[])
     
     void * randomizer = (void *)(long)mxGetScalar(prhs[8]);
     
-    _rhs2laser(&laser, prhs, 4);
-    
     new_pos =  rmhc_position_search(
             start_pos,
             map,
             scan,
-            laser,
             sigma_xy_mm,
             sigma_theta_degrees,
             max_search_iter,

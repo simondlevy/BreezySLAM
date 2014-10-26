@@ -54,10 +54,15 @@ void Scan::init(Laser * laser, int span)
 {
     this->scan = new scan_t;
     
-    scan_init(this->scan, laser->laser->scan_size, span);
-    
-    this->laser = new laser_t;
-    memcpy(this->laser, laser->laser, sizeof(laser_t));    
+    scan_init(
+            this->scan, 
+            span, 
+            laser->scan_size,
+            laser->scan_rate_hz,                
+            laser->detection_angle_degrees,     
+            laser->distance_no_detection_mm,    
+            laser->detection_margin,               
+            laser->offset_mm);
 }
 
 Scan::~Scan(void)
@@ -76,7 +81,6 @@ Scan::update(
     scan_update(
         this->scan,
         scanvals_mm,
-        *this->laser,
         hole_width_millimeters,
         velocities.dxy_mm,
         velocities.dtheta_degrees);
@@ -86,13 +90,8 @@ Scan::update(
     int * scanvals_mm, 
     double hole_width_millimeters)
 {
-    scan_update(
-        this->scan,
-        scanvals_mm,
-        *this->laser,
-        hole_width_millimeters,
-        0,
-        0);
+    Velocities zeroVelocities;
+    this->update(scanvals_mm, hole_width_millimeters, zeroVelocities);
 }
 
 ostream& operator<< (ostream & out, Scan & scan)

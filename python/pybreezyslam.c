@@ -47,26 +47,6 @@ Change log:
 #include "../c/random.h"
 #include "pyextension_utils.h"
 
-// Helpers ---------------------------------------------------------------------
-
-static int pylaser2claser(PyObject * py_laser, laser_t * c_laser)
-{
-    if (
-        !int_from_obj(py_laser, "scan_size", &c_laser->scan_size) ||
-        !double_from_obj(py_laser, "scan_rate_hz", &c_laser->scan_rate_hz) ||
-        !double_from_obj(py_laser, "detection_angle_degrees", &c_laser->detection_angle_degrees) ||
-        !double_from_obj(py_laser, "distance_no_detection_mm", &c_laser->distance_no_detection_mm) ||
-        !int_from_obj(py_laser, "detection_margin", &c_laser->detection_margin) ||
-        !double_from_obj(py_laser, "offset_mm", &c_laser->offset_mm)
-        )
-    {
-        return 1; 
-    }
-    
-    /* success */
-    return 0; 
-}
-
 // Position class  -------------------------------------------------------------
 
 typedef struct 
@@ -218,7 +198,6 @@ typedef struct
 {
     PyObject_HEAD
     
-    laser_t laser;
     scan_t scan;
     int * lidar_mm;
     
@@ -253,6 +232,13 @@ Scan_init(Scan *self, PyObject *args, PyObject *kwds)
     
     static char* argnames[] = {"laser", "span", NULL};
 
+    int scan_size = 0;
+    double scan_rate_hz = 0;                
+    double detection_angle_degrees = 0;     
+    double distance_no_detection_mm = 0;
+    int detection_margin = 0;
+    double offset_mm = 0;
+
     if(!PyArg_ParseTupleAndKeywords(args, kwds,"O|i", argnames, 
         &py_laser, 
         &span))
@@ -260,14 +246,27 @@ Scan_init(Scan *self, PyObject *args, PyObject *kwds)
          return error_on_raise_argument_exception("Scan");
     }
     
-    if (pylaser2claser(py_laser, &self->laser))
+    if (!int_from_obj(py_laser, "scan_size", &scan_size) ||
+        !double_from_obj(py_laser, "scan_rate_hz", &scan_rate_hz) ||
+        !double_from_obj(py_laser, "detection_angle_degrees", &detection_angle_degrees) ||
+        !double_from_obj(py_laser, "distance_no_detection_mm", &distance_no_detection_mm) ||
+        !int_from_obj(py_laser, "detection_margin", &detection_margin) ||
+        !double_from_obj(py_laser, "offset_mm", &offset_mm))
     {
          return error_on_raise_argument_exception("Scan");
     }
-            
-    scan_init(&self->scan, self->laser.scan_size, span);
-    
-    self->lidar_mm = int_alloc(self->laser.scan_size);
+      
+    scan_init(
+            &self->scan, 
+            span,
+            scan_size, 
+            scan_rate_hz,                
+            detection_angle_degrees,     
+            distance_no_detection_mm,    
+            detection_margin,               
+            offset_mm);
+ 
+    self->lidar_mm = int_alloc(self->scan.size);
     
     return 0;
 }
@@ -311,7 +310,7 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
     }
     
     // Bozo filter on LIDAR argument list size
-    if (PyList_Size(py_lidar) != self->laser.scan_size)
+    if (PyList_Size(py_lidar) != self->scan.size)
     {        
         return null_on_raise_argument_exception_with_details("Scan", "update", 
             "lidar size mismatch");
@@ -342,7 +341,7 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
 
     // Extract LIDAR values from argument
     int k = 0;
-    for (k=0; k<self->laser.scan_size; ++k)
+    for (k=0; k<self->scan.size; ++k)
     {
         self->lidar_mm[k] = PyFloat_AsDouble(PyList_GetItem(py_lidar, k));
     }
@@ -351,7 +350,6 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
     scan_update(
         &self->scan, 
         self->lidar_mm, 
-        self->laser,
         hole_width_mm,
         dxy_mm,
         dtheta_degrees);
@@ -794,19 +792,11 @@ rmhcPositionSearch(PyObject *self, PyObject *args)
     // Convert Python objects to C structures
     position_t start_pos = pypos2cpos(py_start_pos);
 
-    // Convert Python laser object to C struct
-    laser_t c_laser;
-    if (pylaser2claser(py_laser, &c_laser))
-    {
-         return null_on_raise_argument_exception("breezyslam", "rmhcPositionSearch");
-    }
-   
 	position_t likeliest_position = 
     rmhc_position_search(
         start_pos,
         &py_map->map,
         &py_scan->scan,
-        c_laser,
         sigma_xy_mm,
         sigma_theta_degrees,
         max_search_iter,
@@ -916,3 +906,4 @@ PyInit_pybreezyslam(void)
 }
 
 #endif
+

@@ -28,7 +28,9 @@ using namespace std;
 
 /**
 * A class representing the position of a robot.
-*/class Position 
+*/
+
+class Position 
 {    
     friend class CoreSLAM;
     
@@ -64,7 +66,8 @@ public:
     {
         char str[100];
         
-        sprintf(str, "<x = %7.0f mm  y = %7.0f mm theta = %+3.3f degrees>",
+        //sprintf(str, "<x = %7.0f mm  y = %7.0f mm theta = %+3.3f degrees>",
+        sprintf(str, "<x = %f mm  y = %f mm theta = %f degrees>",
             position.x_mm, position.y_mm, position.theta_degrees);
         
         out << str;

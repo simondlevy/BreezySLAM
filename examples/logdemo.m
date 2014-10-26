@@ -3,6 +3,14 @@
 %             data from Paris Mines Tech and displays the map and robot
 %             position in real time.
 %
+% Usage:
+%
+%   >> logdemo(dataset, [use_odometry], [random_seed])
+%
+% Examples:
+%
+%   >> logdemo('exp2')
+%
 % For details see
 %
 %     @inproceedings{coreslam-2010,
@@ -84,7 +92,7 @@ for scanno = 1:size(scans, 1)
         % Update SLAM with lidar alone
         slam = slam.update(scans(scanno,:));
     end
-    
+        
     % Get new position
     [x_mm, y_mm, theta_degrees] = slam.getpos();
     
@@ -109,7 +117,6 @@ for scanno = 1:size(scans, 1)
     % Add the robot's position as offset to the polyline
     x_pix = x_pix_r + mm2pix(x_mm, MAP_SIZE_METERS, MAP_SIZE_PIXELS);
     y_pix = y_pix_r + mm2pix(y_mm, MAP_SIZE_METERS, MAP_SIZE_PIXELS);
-    
     
     % Add robot image to map
     fill(x_pix, y_pix, 'r')

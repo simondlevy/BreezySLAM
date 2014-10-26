@@ -235,17 +235,14 @@ static void
         int offset,
         int distance,
         int scanval,
-        laser_t laser,
         double horz_mm,
         double rotation)
 {
     int j;
     for (j=0; j<scan->span; ++j)
     {
-        double k = (double)(offset*scan->span+j) * laser.detection_angle_degrees /
-                (laser.scan_size * scan->span - 1);
-        double angle = radians(-laser.detection_angle_degrees/2 + k * rotation);
-        
+        double k = (double)(offset*scan->span+j) * scan->detection_angle_degrees / (scan->size * scan->span - 1);
+        double angle = radians(-scan->detection_angle_degrees/2 + k * rotation);
         double x = distance * cos(angle) - k * horz_mm;
         double y = distance * sin(angle);
         
@@ -381,16 +378,27 @@ void
     }
 }
 
-void
-        scan_init(
-        scan_t * scan,
-        int size,
-        int span)
+void scan_init(
+    scan_t * scan, 
+    int span,
+    int size,
+    double scan_rate_hz,                
+    double detection_angle_degrees,     
+    double distance_no_detection_mm,    
+    int detection_margin,               
+    double offset_mm)                  
 {
     scan->x_mm = double_alloc(size*span);
     scan->y_mm = double_alloc(size*span);
     scan->value = int_alloc(size*span);
     scan->span = span;
+
+    scan->size = size;
+    scan->rate_hz = scan_rate_hz;
+    scan->detection_angle_degrees = detection_angle_degrees;
+    scan->distance_no_detection_mm = distance_no_detection_mm;
+    scan->detection_margin = detection_margin;
+    scan->offset_mm = offset_mm;
     
     scan->npoints = 0;
     scan->obst_npoints = 0;
@@ -421,16 +429,15 @@ void scan_string(
 }
 
 void
-        scan_update(
+scan_update(
         scan_t * scan,
         int * lidar_mm,
-        laser_t laser,
         double hole_width_mm,
         double velocities_dxy_mm,
         double velocities_dtheta_degrees)
 {    
     /* Take velocity into account */
-    int degrees_per_second = (int)(laser.scan_rate_hz * 360);
+    int degrees_per_second = (int)(scan->rate_hz * 360);
     double horz_mm = velocities_dxy_mm / degrees_per_second;
     double rotation = 1 + velocities_dtheta_degrees / degrees_per_second;
     
@@ -440,14 +447,14 @@ void
     scan->npoints = 0;
     scan->obst_npoints = 0;
     
-    for (i=laser.detection_margin+1; i<laser.scan_size-laser.detection_margin; ++i)
+    for (i=scan->detection_margin+1; i<scan->size-scan->detection_margin; ++i)
     {
         int lidar_value_mm = lidar_mm[i];
         
         /* No obstacle */
         if (lidar_value_mm == 0)
         {
-            scan_update_xy(scan, i, (int)laser.distance_no_detection_mm, NO_OBSTACLE, laser, horz_mm, rotation);
+            scan_update_xy(scan, i, (int)scan->distance_no_detection_mm, NO_OBSTACLE, horz_mm, rotation);
         }
         
         /* Obstacle */
@@ -457,7 +464,7 @@ void
          
             int j = 0;
             
-            scan_update_xy(scan, i, lidar_value_mm, OBSTACLE, laser, horz_mm, rotation);
+            scan_update_xy(scan, i, lidar_value_mm, OBSTACLE, horz_mm, rotation);
             
             /* Store obstacles separately for SSE */
             for (j=oldstart; j<scan->npoints; ++j)
@@ -473,29 +480,11 @@ void
     }
 }
 
-void
-        laser_string(
-        laser_t laser,
-        char * str)
-{
-    sprintf(str,
-            "scan_size=%d | scan_rate=%3.3f hz | detection_angle=%3.3f deg | "
-            "distance_no_detection=%7.4f mm | detection_margin=%d | offset=%4.4f m",
-            laser.scan_size,
-            laser.scan_rate_hz,
-            laser.detection_angle_degrees,
-            laser.distance_no_detection_mm,
-            laser.detection_margin,
-            laser.offset_mm
-            );
-}
-
 position_t
         rmhc_position_search(
         position_t start_pos,
         map_t * map,
         scan_t * scan,
-        laser_t laser,
         double sigma_xy_mm,
         double sigma_theta_degrees,
         int max_search_iter,
