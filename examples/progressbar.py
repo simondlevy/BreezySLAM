@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Downloaded from http://code.activestate.com/recipes/168639-progress-bar-class/
 # 12 January 2013
 
@@ -40,3 +42,20 @@ class ProgressBar:
         
     def __str__(self):
         return str(self.progBar)
+
+if __name__ == '__main__':
+
+    import time
+    import sys
+
+    progbar = ProgressBar(0, 100, 80)
+
+    for k in range(0,100):
+    
+        progbar.updateAmount(k)
+
+        sys.stdout.write('%s\r' % progbar)
+
+        time.sleep(.01)
+
+    sys.stdout.write('\n')
