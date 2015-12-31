@@ -106,7 +106,7 @@ def main():
         
             # Update SLAM with lidar alone
             slam.update(lidars[scanno])
-                    
+
         # Get new position
         x_mm, y_mm, theta_degrees = slam.getpos()    
         
