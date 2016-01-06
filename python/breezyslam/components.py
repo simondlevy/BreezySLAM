@@ -61,4 +61,12 @@ class URG04LX(Laser):
         
         Laser.__init__(self, 682, 10, 240, 4000, detectionMargin, offsetMillimeters)
 
+class XVLidar(Laser):
+    '''
+    A class for the GetSurreal XVLidar
+    '''
+    def __init__(self, detectionMargin = 0, offsetMillimeters = 0):
+        
+        Laser.__init__(self, 360, 5.5, 360, 6000, detectionMargin, offsetMillimeters)
+
 
