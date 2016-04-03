@@ -39,7 +39,6 @@ class Laser(object):
         self.scan_rate_hz = scan_rate_hz
         self.detection_angle_degrees = detection_angle_degrees
         self.distance_no_detection_mm = distance_no_detection_mm
-        self.distance_no_detection_mm = distance_no_detection_mm
         self.detection_margin = detection_margin
         self.offset_mm = offset_mm
         
