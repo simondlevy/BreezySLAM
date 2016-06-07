@@ -1,6 +1,8 @@
 BreezySLAM
 ==========
 
+<img src="scanrates.png">
+
 Simple, efficient, open-source package for Simultaneous Localization and Mapping in Python, Matlab, and C++
 
 <a href="https://github.com/simondlevy/BreezySLAM">This repository</a> contains everything you need to
