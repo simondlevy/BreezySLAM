@@ -85,7 +85,7 @@ To see what other features are available, do
 
 &nbsp; &nbsp; </p><h3><b><tt>pydoc breezyslam</tt></b></h3>
 
-By using the component classes <b>Map">Map</b>, <b>Scan</b>, and
+By using the component classes <b>Map</b>, <b>Scan</b>, and
 <b>Position</b> and the <b>distanceScanToMap()</b> method,
 you can develop new algorithms and particle filters of your own.
 
