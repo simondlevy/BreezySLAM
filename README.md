@@ -85,11 +85,8 @@ To see what other features are available, do
 
 &nbsp; &nbsp; </p><h3><b><tt>pydoc breezyslam</tt></b></h3>
 
-or check out the online <a href="doc/breezyslam.html">documentation</a>. By using the component classes
-<a href="doc/breezyslam.components.html#Map">Map</a>, 
-<a href="doc/breezyslam.components.html#Scan">Scan</a>, and
-<a href="doc/breezyslam.components.html#Position">Position</a> and
-the <a href="doc/breezyslam.algorithms.html#-distanceScanToMap">distanceScanToMap()</a> method,
+By using the component classes <b>Map">Map</b>, <b>Scan</b>, and
+<b>Position</b> and the <b>distanceScanToMap()</b> method,
 you can develop new algorithms and particle filters of your own.
 
 <p><h3>Testing with the Hokuyo URG04LX</h3>
