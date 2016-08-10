@@ -39,8 +39,8 @@ MAP_SIZE_PIXELS          = 800
 MAP_SIZE_METERS          =  32
 
 from breezyslam.algorithms import Deterministic_SLAM, RMHC_SLAM
-
 from mines import MinesLaser, Rover, load_data
+from cvslamshow import SlamShow
 
 from sys import argv, exit
 
@@ -73,6 +73,9 @@ def main():
     
     # Create a byte array to receive the computed maps
     mapbytes = bytearray(MAP_SIZE_PIXELS * MAP_SIZE_PIXELS)
+
+    # Set up a SLAM display
+    display = SlamShow(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, 'SLAM')
     
     # Loop over scans    
     for scanno in range(nscans):
@@ -98,6 +101,15 @@ def main():
         # Get current map    
         slam.getmap(mapbytes)
 
+        # Display map and robot pose
+        display.displayMap(mapbytes)
+        display.displayRobot((x_mm, y_mm, theta_degrees))
+
+        # Exit gracefully if user closes display
+        key = display.refresh()
+        if key != None and (key&0x1A):
+            exit(0)
+ 
         # XXX Add delay for real-time plot
     
             
