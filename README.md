@@ -3,7 +3,7 @@ BreezySLAM
 
 <img src="scanrates.png" align="center">
 
-Simple, efficient, open-source package for Simultaneous Localization and Mapping in Python, Matlab, and C++
+Simple, efficient, open-source package for Simultaneous Localization and Mapping in Python, Matlab, Java, and C++
 
 <a href="https://github.com/simondlevy/BreezySLAM">This repository</a> contains everything you need to
 start working with 
@@ -24,7 +24,7 @@ Application Programming Interface that is simple enough for beginners to use,
 but that is efficient enough to scale-up to real world problems. 
 As shown in the following code fragment, the basic API is extremely 
 simple: a constructor that accepts Lidar parameters and the size of 
-the map (pixels) and mapping area (meters; a method for updating with the current scan; a method that returns
+the map (pixels) and mapping area (meters); a method for updating with the current scan; a method that returns
 the current robot position; and a method for retrieving the current map as a byte
 array.
 
