@@ -40,7 +40,7 @@ MAP_SIZE_METERS          =  32
 
 from breezyslam.algorithms import Deterministic_SLAM, RMHC_SLAM
 from mines import MinesLaser, Rover, load_data
-from cvslamshow import SlamShow
+from pltslamshow import SlamShow
 
 from sys import argv, exit
 

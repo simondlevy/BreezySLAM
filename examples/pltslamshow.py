@@ -1,7 +1,7 @@
 '''
-cvslamshow.py - OpenCV classes for displaying maps and robots in SLAM projects
+pltslamshow.py - Pyplot classes for displaying maps and robots in SLAM projects
 
-Copyright (C) 2014 Simon D. Levy
+Copyright (C) 2016 Simon D. Levy and Matt Lubas
 
 This code is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as 
@@ -131,6 +131,11 @@ class SlamShow(object):
                 
     def refresh(self):                   
                        
+       # Rotate image 270 degrees 
+        #wid,hgt = cv.GetSize(self.image)
+        #mapMatrix = cv2.getRotationMatrix2D((wid/2,hgt/2), 270, 1.0)
+        #cv.WarpAffine(self.image, self.image, cv.fromarray(mapMatrix))
+        
         # Display image
         cv.ShowImage(self.window_name, self.image)
                                          
