@@ -30,6 +30,9 @@ RANDOM_SEED  = 9999
 
 all: log2pgm Log2PGM.class
 
+display:
+	./logdemo.py exp1 1 9999
+
 pytest: 
 	./log2pgm.py $(DATASET) $(USE_ODOMETRY) $(RANDOM_SEED)
 	$(VIEWER) $(DATASET).pgm ~/Desktop/$(DATASET).pgm

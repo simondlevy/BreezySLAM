@@ -96,9 +96,7 @@ def main():
         # Get new position
         x_mm, y_mm, theta_degrees = slam.getpos()    
 
-        print(scanno, x_mm, y_mm, theta_degrees)
-
-        # Get current map    
+        # Get new map
         slam.getmap(mapbytes)
 
         # Display map and robot pose
