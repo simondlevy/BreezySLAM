@@ -152,8 +152,21 @@ class SlamShow(object):
                 TRAJECTORY_COLOR_BGR)
                 
     def refresh(self):                   
-                       
-       # Rotate image 270 degrees 
+
+        # If we have a new figure, something went wrong (closing figure failed)
+        if self.figid != id(plt.gcf()):
+            return False
+
+        # Redraw current objects without blocking
+        plt.draw()
+
+        # Refresh display, setting flag on window close or keyboard interrupt
+        try:
+            plt.pause(.01)
+        except:
+            return False
+
+        # Rotate image 270 degrees 
         #wid,hgt = cv.GetSize(self.image)
         #mapMatrix = cv2.getRotationMatrix2D((wid/2,hgt/2), 270, 1.0)
         #cv.WarpAffine(self.image, self.image, cv.fromarray(mapMatrix))
@@ -164,7 +177,6 @@ class SlamShow(object):
         # Force image display, returning any key hit
         key = cvdisplay()
         return key if key > -1 else None
-     
 
     def waitkey(self, action):
         
