@@ -30,7 +30,7 @@ RANDOM_SEED  = 9999
 
 all: log2pgm Log2PGM.class
 
-display:
+movie:
 	./logdemo.py exp1 1 9999
 
 pytest: 

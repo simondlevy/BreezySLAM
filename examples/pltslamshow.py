@@ -44,6 +44,7 @@ SENSOR_NEGATIVE_COLOR_BGR       = (0,0,255)
 TRAJECTORY_COLOR_BGR            = (255, 0, 0)
 
 import cv
+import matplotlib.pyplot as plt
 
 # Arbitrary font for OpenCV
 FONT_FACE                       = cv.CV_FONT_HERSHEY_COMPLEX
@@ -75,6 +76,28 @@ class SlamShow(object):
         cv.SetData(self.image, self.bgrbytes, self.map_size_pixels*3)
         cv.ShowImage(self.window_name, self.image)
 
+        # Make a nice big (10"x10") figure
+        fig = plt.figure(figsize=(10,10))
+
+        # Store Python ID of figure to detect window close
+        self.figid = id(fig)
+
+        fig.canvas.set_window_title('SLAM 2D')
+
+        self.ax = fig.gca()
+        self.ax.set_aspect("auto")
+        self.ax.set_autoscale_on(True)
+
+        map_size_mm = map_scale_mm_per_pixel * map_size_pixels
+
+        self.ax.set_xlim([0, map_size_mm])
+        self.ax.set_ylim([0, map_size_mm])
+
+        self.ax.set_xlabel('X (cm)')
+        self.ax.set_ylabel('Y (cm)')
+
+        self.ax.grid(False)
+
 
     def displayMap(self, mapbytes):
         
@@ -88,7 +111,6 @@ class SlamShow(object):
  
  
     def displayRobot(self, (x_mm, y_mm, theta_deg), color=ROBOT_COLOR_BGR, scale=1, line_thickness=1):
-
         # Get a polyline (e.g. triangle) to represent the robot icon
         robot_points = self.robot_polyline(scale)
         
