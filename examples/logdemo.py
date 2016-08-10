@@ -104,9 +104,9 @@ def main():
         display.displayRobot((x_mm, y_mm, theta_degrees))
 
         # Exit gracefully if user closes display
-        key = display.refresh()
-        if key != None and (key&0x1A):
+        if not display.refresh():
             exit(0)
+        
  
         # XXX Add delay for real-time plot
     

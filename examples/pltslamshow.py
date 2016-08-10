@@ -166,17 +166,12 @@ class SlamShow(object):
         except:
             return False
 
-        # Rotate image 270 degrees 
-        #wid,hgt = cv.GetSize(self.image)
-        #mapMatrix = cv2.getRotationMatrix2D((wid/2,hgt/2), 270, 1.0)
-        #cv.WarpAffine(self.image, self.image, cv.fromarray(mapMatrix))
-        
         # Display image
         cv.ShowImage(self.window_name, self.image)
-                                         
-        # Force image display, returning any key hit
+
+        # Force image display, returning False if user hit ESC, True otherwise
         key = cvdisplay()
-        return key if key > -1 else None
+        return False if key==27 else True
 
     def waitkey(self, action):
         
