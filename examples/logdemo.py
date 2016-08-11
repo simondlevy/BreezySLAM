@@ -79,7 +79,8 @@ def main():
     
     # Loop over scans    
     for scanno in range(nscans):
-    
+   
+
         if use_odometry:
                   
             # Convert odometry to velocities
@@ -102,6 +103,8 @@ def main():
         # Display map and robot pose
         display.displayMap(mapbytes)
         display.displayRobot((x_mm, y_mm, theta_degrees))
+
+        display.setPose(x_mm, y_mm, theta_degrees)   
 
         # Exit gracefully if user closes display
         if not display.refresh():

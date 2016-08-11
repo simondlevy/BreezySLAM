@@ -102,11 +102,13 @@ class SlamShow(object):
         self.ax.set_xlim([0, map_size_mm])
         self.ax.set_ylim([0, map_size_mm])
 
-        self.ax.set_xlabel('X (cm)')
-        self.ax.set_ylabel('Y (cm)')
+        self.ax.set_xlabel('X (mm)')
+        self.ax.set_ylabel('Y (mm)')
 
         self.ax.grid(False)
 
+        #Starting vehicle at Center, 1600mm, 1600mm
+        self._add_vehicle(16000,16000,0)
 
     def displayMap(self, mapbytes):
         
@@ -123,11 +125,6 @@ class SlamShow(object):
  
     def displayRobot(self, (x_mm, y_mm, theta_deg), color=ROBOT_COLOR_BGR, scale=1, line_thickness=1):
 
-        # Use a very short arrow shaft to orient the head of the arrow
-        dx, dy = _rotate(0, 0, .1, theta_deg)
-
-        self.ax.arrow(x_mm, y_mm, dx, dy, head_width=ROBOT_WIDTH_MM, head_length=ROBOT_HEIGHT_MM, fc='r', ec='r')
-
         # Get a polyline (e.g. triangle) to represent the robot icon
         robot_points = self.robot_polyline(scale)
         
@@ -142,8 +139,6 @@ class SlamShow(object):
        
         # Add an icon for the robot
         cv.PolyLine(self.image, [robot_points], True, color, line_thickness) 
-
-        # Use a very short arrow shaft to orient the head of the arrow
 
     def displayScan(self, scan, offset_mm = (0,0), color=SCANPOINT_COLOR_BGR):
    
@@ -169,7 +164,30 @@ class SlamShow(object):
                 (self.mm2pix(x1_mm), self.mm2pix(y1_mm)), \
                 (self.mm2pix(x2_mm), self.mm2pix(y2_mm)), \
                 TRAJECTORY_COLOR_BGR)
-                
+    
+
+    def setPose(self, x_mm, y_mm, theta_deg):
+        '''
+        Sets vehicle pose:
+        X:      left/right   (cm)
+        Y:      forward/back (cm)
+        theta:  rotation (degrees)
+        '''
+
+        #remove old arrow
+        self.vehicle.remove()
+        
+        #create a new arrow
+        self._add_vehicle(x_mm, y_mm, theta_deg)
+
+    def _add_vehicle(self, x_mm, y_mm, theta_deg):
+
+        # Use a very short arrow shaft to orient the head of the arrow
+        dx, dy = _rotate(0, 0, .1, theta_deg)
+
+        self.vehicle=self.ax.arrow(x_mm, y_mm, dx, dy, head_width=ROBOT_WIDTH_MM, head_length=ROBOT_HEIGHT_MM, fc='r', ec='r')
+
+
     def refresh(self):                   
 
         # If we have a new figure, something went wrong (closing figure failed)
@@ -229,16 +247,6 @@ class SlamShow(object):
         ytop = -ROBOT_HEIGHT / 2 * scale
         return [(xlft,ybot), (xrgt,0), (xlft,ytop)]
 
-    #XXX possible solution to use lines instead of arrow?
-    def _add_vehicle(self, pt1, pt2, pt3):
-
-        # remove old arrow
-        self.vehicle.remove()
-
-        # create a new arrow
-        self._add_vehicle(x, y, theta)
-    
-
 
     # Converts millimeters to pixels
     def mm2pix(self, mm):
@@ -258,4 +266,3 @@ def rotate(pt, deg):
     x,y = pt  
     return int(x*c - y*s), int(x*s + y*c)
     
-
