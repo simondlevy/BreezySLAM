@@ -22,6 +22,9 @@ ROBOT_COLOR_BGR                 = (0, 0, 255)
 ROBOT_HEIGHT                    = 16
 ROBOT_WIDTH                     = 10
 
+ROBOT_HEIGHT_MM                 = 500
+ROBOT_WIDTH_MM                  = 300
+
 # Scan point display params
 SCANPOINT_RADIUS                = 1
 SCANPOINT_COLOR_BGR             = (0, 255, 0)
@@ -45,11 +48,18 @@ TRAJECTORY_COLOR_BGR            = (255, 0, 0)
 
 import cv
 import matplotlib.pyplot as plt
+import matplotlib.lines as lines
 
 # Arbitrary font for OpenCV
 FONT_FACE                       = cv.CV_FONT_HERSHEY_COMPLEX
 
 from math import sin, cos, radians
+
+def _rotate(x, y, r, theta_deg):
+    theta = radians(theta_deg)
+    dx = r * cos(theta)
+    dy = r * sin(theta)
+    return x+dx, y+dy
 
 class SlamShow(object):
 
@@ -106,25 +116,39 @@ class SlamShow(object):
         self.bgrbytes[1::3] = mapbytes
         self.bgrbytes[2::3] = mapbytes
         
+        
+
         # Put color bytes into image
         cv.SetData(self.image, self.bgrbytes, self.map_size_pixels*3)
- 
+        
  
     def displayRobot(self, (x_mm, y_mm, theta_deg), color=ROBOT_COLOR_BGR, scale=1, line_thickness=1):
+
+        # Use a very short arrow shaft to orient the head of the arrow
+        dx, dy = _rotate(0, 0, .1, theta_deg)
+
+        self.ax.arrow(x_mm, y_mm, dx, dy, head_width=ROBOT_WIDTH_MM, head_length=ROBOT_HEIGHT_MM, fc='r', ec='r')
+
         # Get a polyline (e.g. triangle) to represent the robot icon
         robot_points = self.robot_polyline(scale)
         
-        # Rotate the polyline by the current angle
+        # Rotate the polyline by the current angle... would use rotate instead of this
         robot_points = map(lambda pt: rotate(pt, theta_deg), robot_points)
         
         # Convert the robot position from meters to pixels
         x_pix, y_pix = self.mm2pix(x_mm), self.mm2pix(y_mm)
 
-        # Move the polyline to the current robot position
+        # Move the polyline to the current robot position ... would use rotate instead of this?
         robot_points = map(lambda pt: (x_pix+pt[0], y_pix+pt[1]), robot_points)
-        
+       
         # Add an icon for the robot
         cv.PolyLine(self.image, [robot_points], True, color, line_thickness) 
+
+        # Use a very short arrow shaft to orient the head of the arrow
+        x = 0
+        y = 0
+        dx, dy = _rotate(x,y, .01, 0)
+        
 
     def displayScan(self, scan, offset_mm = (0,0), color=SCANPOINT_COLOR_BGR):
    
@@ -203,12 +227,24 @@ class SlamShow(object):
     # rightward and centered at (0,0).
     # Currently builds an isoceles triangle pointing rightward
     def robot_polyline(self, scale):
+
+        dx = 500
+        dy = 500
+        
         xlft = -ROBOT_HEIGHT / 2 * scale
         xrgt =  ROBOT_HEIGHT / 2 * scale
         ybot =  ROBOT_WIDTH / 2  * scale
         ytop = -ROBOT_HEIGHT / 2 * scale
         return [(xlft,ybot), (xrgt,0), (xlft,ytop)]
-                        
+
+    #XXX possible solution to use lines instead of arrow?
+    def three_lines(self, pt1, pt2, pt3):
+    
+        x1,y1 = pt1
+        x2,y2 = pt2
+        x3,y3 = pt3
+        
+
     # Converts millimeters to pixels
     def mm2pix(self, mm):
         return int(mm / float(self.map_scale_mm_per_pixel))
