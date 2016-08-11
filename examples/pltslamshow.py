@@ -48,7 +48,6 @@ TRAJECTORY_COLOR_BGR            = (255, 0, 0)
 
 import cv
 import matplotlib.pyplot as plt
-import matplotlib.lines as lines
 
 # Arbitrary font for OpenCV
 FONT_FACE                       = cv.CV_FONT_HERSHEY_COMPLEX
@@ -145,10 +144,6 @@ class SlamShow(object):
         cv.PolyLine(self.image, [robot_points], True, color, line_thickness) 
 
         # Use a very short arrow shaft to orient the head of the arrow
-        x = 0
-        y = 0
-        dx, dy = _rotate(x,y, .01, 0)
-        
 
     def displayScan(self, scan, offset_mm = (0,0), color=SCANPOINT_COLOR_BGR):
    
@@ -227,9 +222,6 @@ class SlamShow(object):
     # rightward and centered at (0,0).
     # Currently builds an isoceles triangle pointing rightward
     def robot_polyline(self, scale):
-
-        dx = 500
-        dy = 500
         
         xlft = -ROBOT_HEIGHT / 2 * scale
         xrgt =  ROBOT_HEIGHT / 2 * scale
@@ -238,12 +230,15 @@ class SlamShow(object):
         return [(xlft,ybot), (xrgt,0), (xlft,ytop)]
 
     #XXX possible solution to use lines instead of arrow?
-    def three_lines(self, pt1, pt2, pt3):
+    def _add_vehicle(self, pt1, pt2, pt3):
+
+        # remove old arrow
+        self.vehicle.remove()
+
+        # create a new arrow
+        self._add_vehicle(x, y, theta)
     
-        x1,y1 = pt1
-        x2,y2 = pt2
-        x3,y3 = pt3
-        
+
 
     # Converts millimeters to pixels
     def mm2pix(self, mm):
