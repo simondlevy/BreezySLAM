@@ -54,12 +54,6 @@ FONT_FACE                       = cv.CV_FONT_HERSHEY_COMPLEX
 
 from math import sin, cos, radians
 
-def _rotate(x, y, r, theta_deg):
-    theta = radians(theta_deg)
-    dx = r * cos(theta)
-    dy = r * sin(theta)
-    return x+dx, y+dy
-
 class SlamShow(object):
 
     def __init__(self, map_size_pixels, map_scale_mm_per_pixel, window_name):
@@ -182,8 +176,8 @@ class SlamShow(object):
 
     def _add_vehicle(self, x_mm, y_mm, theta_deg):
 
-        # Use a very short arrow shaft to orient the head of the arrow
-        dx, dy = _rotate(0, 0, .1, theta_deg)
+        #XXX Use a very short arrow shaft to orient the head of the arrow
+        dx, dy = plt_rotate(0, 0, 1, theta_deg)
 
         self.vehicle=self.ax.arrow(x_mm, y_mm, dx, dy, head_width=ROBOT_WIDTH_MM, head_length=ROBOT_HEIGHT_MM, fc='r', ec='r')
 
@@ -265,4 +259,13 @@ def rotate(pt, deg):
     s = sin(rad)
     x,y = pt  
     return int(x*c - y*s), int(x*s + y*c)
+
+def plt_rotate(x, y, r, deg):
+    rad = radians(deg)
+    c = cos(rad)
+    s = sin(rad)
+    dx = r * c
+    dy = r * s
+    
+    return x+dx, y+dy 
     
