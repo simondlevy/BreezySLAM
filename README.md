@@ -64,7 +64,6 @@ download and unzip the file, cd to <tt><b>BreezySLAM-master/python</b></tt>, and
 
 For a quick demo, you can then cd to <tt><b>BreezySLAM-master/examples</b></tt> and do
 
-&nbsp; &nbsp; <h3><b><tt>chmod +x log2pgm.py</tt></b>
 &nbsp; &nbsp; <h3><b><tt>make pytest</tt></b></h3>
 
 
@@ -74,6 +73,12 @@ map and robot trajctory for the Lidar scan and odometry data in the log file
 <a href="http://www.pythonware.com/products/pil/">Python Imaging Library</a> installed,
 you can also try the <b><tt>log2png.py</tt></b> script to generate a
 a PNG file instead.
+
+If you have installed OpenCV for Python, you can see a &ldquo;live&rdquo; animation
+by doing
+
+&nbsp; &nbsp; <h3><b><tt>make cvmovie</tt></b></h3>
+
 You can turn off odometry by setting the <b><tt>USE_ODOMETRY</tt></b>
 parameter at the top of the Makefile to 0 (zero). You can turn off 
 the particle-filter (Monte Carlo position estimation) by commenting-out
