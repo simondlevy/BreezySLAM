@@ -102,7 +102,6 @@ def main():
 
         # Display map and robot pose
         display.displayMap(mapbytes)
-        display.displayRobot((x_mm, y_mm, theta_degrees))
 
         display.setPose(x_mm, y_mm, theta_degrees)   
 
