@@ -48,6 +48,7 @@ TRAJECTORY_COLOR_BGR            = (255, 0, 0)
 
 import matplotlib.pyplot as plt
 from math import sin, cos, radians
+import numpy as np
 
 class SlamShow(object):
 
@@ -87,14 +88,20 @@ class SlamShow(object):
         self._add_vehicle(16000,16000,0)
 
     def displayMap(self, mapbytes):
-        
+
+        mapimg = np.reshape(np.frombuffer(mapbytes, dtype=np.uint8), (self.map_size_pixels, self.map_size_pixels))
+ 
+        plt.imshow(mapimg)
+        plt.set_cmap('gray')
+
         # Interleave the grayscale map bytes into the color bytes
         self.bgrbytes[0::3] = mapbytes
         self.bgrbytes[1::3] = mapbytes
         self.bgrbytes[2::3] = mapbytes
-        
-        # Put color bytes into image
-               
+
+        # Put color bytes into image - this line causes error
+        #plt.set_cmap('BlueRedAlpha')
+
     def displayVelocities(self, dxy_mm, dtheta_deg):
         
         # Add velocity bars
