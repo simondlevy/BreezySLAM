@@ -84,6 +84,8 @@ by doing
 make cvmovie
 </pre>
 
+There is also a Pyplot version (<tt>logdemoplt.py</tt>) in the works.
+
 You can turn off odometry by setting the <b><tt>USE_ODOMETRY</tt></b>
 parameter at the top of the Makefile to 0 (zero). You can turn off 
 the particle-filter (Monte Carlo position estimation) by commenting-out
@@ -206,7 +208,7 @@ can be found in the header of each source file.
 
 <h3>Personnel</h3>
 
-Suraj Bajracharya and Simon D. Levy
+Suraj Bajracharya, Simon D. Levy, Matt Lubas, Alfredo Rwagaju
 
 <h3>Acknowledgments</h3>
 
