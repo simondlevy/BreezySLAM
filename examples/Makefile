@@ -33,6 +33,9 @@ all: log2pgm Log2PGM.class
 movie:
 	./logdemo.py exp1 1 9999
 
+cvmovie:
+	./logdemocv.py exp1 1 9999
+
 pytest: 
 	./log2pgm.py $(DATASET) $(USE_ODOMETRY) $(RANDOM_SEED)
 	$(VIEWER) $(DATASET).pgm ~/Desktop/$(DATASET).pgm

@@ -91,7 +91,7 @@ class SlamShow(object):
 
         mapimg = np.reshape(np.frombuffer(mapbytes, dtype=np.uint8), (self.map_size_pixels, self.map_size_pixels))
  
-        plt.imshow(mapimg)
+        #plt.imshow(mapimg)
         plt.set_cmap('gray')
 
         # Interleave the grayscale map bytes into the color bytes
@@ -135,7 +135,6 @@ class SlamShow(object):
 
         self.vehicle=self.ax.arrow(x_mm, y_mm, dx, dy, head_width=ROBOT_WIDTH_MM, head_length=ROBOT_HEIGHT_MM, fc='r', ec='r')
 
-
     def refresh(self):                   
 
         # If we have a new figure, something went wrong (closing figure failed)
@@ -143,15 +142,16 @@ class SlamShow(object):
             return False
 
         # Redraw current objects without blocking
-        plt.draw()
+        #plt.draw()
 
         # Refresh display, setting flag on window close or keyboard interrupt
         try:
-            plt.pause(.0001)
-
+            plt.pause(.01) # Arbitrary pause to force redraw
             return True
         except:
             return False
+
+        return True
     
     # Converts millimeters to pixels
     def mm2pix(self, mm):

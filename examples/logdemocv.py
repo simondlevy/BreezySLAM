@@ -36,14 +36,13 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 
 # Map size, scale
 MAP_SIZE_PIXELS          = 800
-MAP_SIZE_METERS          = 32
+MAP_SIZE_METERS          =  32
 
 from breezyslam.algorithms import Deterministic_SLAM, RMHC_SLAM
 from mines import MinesLaser, Rover, load_data
-from pltslamshow import SlamShow
+from cvslamshow import SlamShow
 
 from sys import argv, exit
-from time import time
 
 def main():
 	    
@@ -77,12 +76,10 @@ def main():
 
     # Set up a SLAM display
     display = SlamShow(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, 'SLAM')
-
-    start_time = time()
     
     # Loop over scans    
     for scanno in range(nscans):
-   
+    
         if use_odometry:
                   
             # Convert odometry to velocities
@@ -99,21 +96,19 @@ def main():
         # Get new position
         x_mm, y_mm, theta_degrees = slam.getpos()    
 
-        # Get new map
-        #slam.getmap(mapbytes)
+        print(scanno, x_mm, y_mm, theta_degrees)
+
+        # Get current map    
+        slam.getmap(mapbytes)
 
         # Display map and robot pose
-        #display.displayMap(mapbytes)
-
-        #display.setPose(x_mm, y_mm, theta_degrees)   
+        display.displayMap(mapbytes)
+        display.displayRobot((x_mm, y_mm, theta_degrees))
 
         # Exit gracefully if user closes display
-        if not display.refresh():
+        key = display.refresh()
+        if key != None and (key&0x1A):
             exit(0)
-
-        curr_time = time()
-        print(curr_time - start_time)
-        start_time = curr_time
  
         # XXX Add delay for real-time plot
     
