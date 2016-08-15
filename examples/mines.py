@@ -65,10 +65,13 @@ def load_data(datadir, dataset):
             
         toks = s.split()[0:-1] # ignore ''
 
-        odometry = (int(toks[0]), int(toks[2]), int(toks[3]))
+        timestamp = int(toks[0])
+
+        odometry = timestamp, int(toks[2]), int(toks[3])
                         
         lidar = [int(tok) for tok in toks[24:]]
 
+        timestamps.append(timestamp)
         scans.append(lidar)
         odometries.append(odometry)
         
