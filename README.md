@@ -59,11 +59,15 @@ The BreezySLAM installation uses the popular
 approach to installing Python packages, so all you should have to do is
 download and unzip the file, cd to <tt><b>BreezySLAM-master/python</b></tt>, and do 
 
-&nbsp; &nbsp; </p><h3><b><tt>sudo python setup.py install</tt></b></h3>
+<pre>
+sudo python setup.py install
+</pre>
 
 For a quick demo, you can then cd to <tt><b>BreezySLAM-master/examples</b></tt> and do
 
-&nbsp; &nbsp; <h3><b><tt>make pytest</tt></b></h3>
+<pre>
+make pytest
+</pre>
 
 
 This will generate and display a PGM file showing the
@@ -76,7 +80,9 @@ a PNG file instead.
 If you have installed OpenCV for Python, you can see a &ldquo;live&rdquo; animation
 by doing
 
-&nbsp; &nbsp; <h3><b><tt>make cvmovie</tt></b></h3>
+<pre>
+make cvmovie
+</pre>
 
 You can turn off odometry by setting the <b><tt>USE_ODOMETRY</tt></b>
 parameter at the top of the Makefile to 0 (zero). You can turn off 
@@ -87,7 +93,9 @@ the particle-filter (Monte Carlo position estimation) by commenting-out
 
 To see what other features are available, do 
 
-&nbsp; &nbsp; </p><h3><b><tt>pydoc breezyslam</tt></b></h3>
+<pre>
+pydoc breezyslam
+</pre>
 
 By using the component classes <b>Map</b>, <b>Scan</b>, and
 <b>Position</b> and the <b>distanceScanToMap()</b> method,
@@ -141,7 +149,9 @@ variable at the top of the Makefile.
 
 For a quick demo, you can then cd to <tt><b>BreezySLAM-master/examples</b></tt> and do
 
-&nbsp; &nbsp; </p><h3><b><tt>make cpptest</tt></b></h3>
+<pre>
+make cpptest
+</pre>
 
 <p>
 
@@ -162,8 +172,9 @@ Then run make in these directories, and also in
 
 For a quick demo, you can then cd to <tt><b>BreezySLAM-master/examples</b></tt> and do
 
-&nbsp; &nbsp; </p><h3><b><tt>make javatest</tt></b></h3>
-
+<pre>
+make javatest
+</pre>
 
 <h3>Notes on Windows installation</h3>
 
