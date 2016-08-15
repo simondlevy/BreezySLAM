@@ -74,7 +74,7 @@ def load_data(datadir, dataset):
         
     fd.close()
         
-    return scans, odometries
+    return timestamps, scans, odometries
 
 class MinesLaser(URG04LX):
     

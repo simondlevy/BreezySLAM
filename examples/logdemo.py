@@ -59,7 +59,7 @@ def main():
     seed =  int(argv[3]) if len(argv) > 3 else 0
     
 	# Load the data from the file    
-    lidars, odometries = load_data('.', dataset)
+    timestamp, lidars, odometries = load_data('.', dataset)
     
     # Build a robot model if we want odometry
     robot = Rover() if use_odometry else None
