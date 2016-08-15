@@ -28,27 +28,26 @@ the map (pixels) and mapping area (meters); a method for updating with the curre
 the current robot position; and a method for retrieving the current map as a byte
 array.
 
-</p><p>
-<tt>
-&nbsp; &nbsp; from breezyslam.algorithms import RMHC_SLAM
-</tt></p><p><tt>
-&nbsp; &nbsp; lidar = MyLidarModel()
-</tt></p><p><tt>
-&nbsp; &nbsp; mapbytes = bytearray(800*800)
-</tt></p><p><tt>
-&nbsp; &nbsp; slam = <b>RMHC_SLAM</b>(lidar, 800, 35) 
-</tt></p><p><tt>
-&nbsp; &nbsp; while True:
-</tt></p><p><tt>
-&nbsp; &nbsp; &nbsp; &nbsp; scan = readLidar()
-</tt></p><p><tt>
-&nbsp; &nbsp; &nbsp; &nbsp; slam.<b>update</b>(scan)
-</tt></p><p><tt>
-&nbsp; &nbsp; &nbsp; &nbsp; x, y, theta = slam.<b>getpos</b>(scan)
-</tt></p><p><tt>
-&nbsp; &nbsp; &nbsp; &nbsp; slam.<b>getmap</b>(mapbytes)
-</tt>
-</p><p>
+<pre>
+from breezyslam.algorithms import RMHC\_SLAM
+
+lidar = MyLidarModel()
+
+mapbytes = bytearray(800*800)
+
+slam = <b>RMHC_SLAM</b>(lidar, 800, 35) 
+
+while True:
+
+    scan = readLidar()
+
+    slam.update(scan)
+
+    x, y, theta = slam.<b>getpos</b>(scan)
+
+    slam.getmap(mapbytes)
+</pre>
+
 If odometry is available, it can also be passed into the update method.  
 
 
