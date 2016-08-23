@@ -46,7 +46,11 @@ from sys import argv, exit
 from time import time, sleep
 from threading import Thread
 
-def threadfunc(display, robot, slam, lidars, odometries, use_odometry, mapbytes, pose):
+def threadfunc(robot, slam, lidars, odometries, use_odometry, mapbytes, pose):
+    '''
+    Threaded function runs SLAM, setting the map bytes and robot pose for display
+    on the main thread.
+    '''
 
     # Loop over scans    
     for scanno in range(len(lidars)):
@@ -71,10 +75,7 @@ def threadfunc(display, robot, slam, lidars, odometries, use_odometry, mapbytes,
         slam.getmap(mapbytes)
 
         # Add delay to yield to main thread
-        sleep(0.01)
-
-        print(scanno)
-    
+        sleep(0.1)
    
 def main():
 	    
@@ -106,15 +107,15 @@ def main():
     # Set up a SLAM display
     display = SlamShow(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, 'SLAM')
 
-    start_time = time()
-
+    # Pose will be modified in our threaded code
     pose = [0,0,0]
 
     # Launch the data-collection / update thread
-    thread = Thread(target=threadfunc, args=(display, robot, slam, lidars, odometries, use_odometry, mapbytes, pose))
+    thread = Thread(target=threadfunc, args=(robot, slam, lidars, odometries, use_odometry, mapbytes, pose))
     thread.daemon = True
     thread.start()
     
+    # Loop forever,displaying current map and pose
     while True:
 
         # Display map and robot pose
@@ -124,17 +125,5 @@ def main():
         # Refresh the display, exiting gracefully if user closes it
         if not display.refresh():
             exit(0)
-
-        curr_time = time()
-        print(curr_time - start_time)
-        start_time = curr_time
-
-           
-# Helpers ---------------------------------------------------------        
-
-def mm2pix(mm):
-        
-    return int(mm / (MAP_SIZE_METERS * 1000. / MAP_SIZE_PIXELS))  
-    
                     
 main()
