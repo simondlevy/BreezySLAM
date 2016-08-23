@@ -53,12 +53,11 @@ import numpy as np
 
 class SlamShow(object):
 
-    def __init__(self, map_size_pixels, map_scale_mm_per_pixel, window_name):
+    def __init__(self, map_size_pixels, map_scale_mm_per_pixel, title):
     
         # Store constants for update
         self.map_size_pixels = map_size_pixels
         self.map_scale_mm_per_pixel = map_scale_mm_per_pixel
-        self.window_name = window_name
 
         # Create a byte array to display the map with a color overlay
         self.bgrbytes = bytearray(map_size_pixels * map_size_pixels * 3)
@@ -70,6 +69,7 @@ class SlamShow(object):
         self.figid = id(fig)
 
         fig.canvas.set_window_title('SLAM')
+        plt.title(title)
 
         self.ax = fig.gca()
         self.ax.set_aspect("auto")

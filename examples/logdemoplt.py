@@ -110,8 +110,8 @@ def main():
     # Create a byte array to receive the computed maps
     mapbytes = bytearray(MAP_SIZE_PIXELS * MAP_SIZE_PIXELS)
 
-    # Set up a SLAM display
-    display = SlamShow(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, 'SLAM')
+    # Set up a SLAM display, named by dataset
+    display = SlamShow(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, dataset)
 
     # Pose will be modified in our threaded code
     pose = [0,0,0]
