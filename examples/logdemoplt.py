@@ -46,11 +46,14 @@ from sys import argv, exit
 from time import time, sleep
 from threading import Thread
 
-def threadfunc(robot, slam, lidars, odometries, use_odometry, mapbytes, pose):
+def threadfunc(robot, slam, timestamps, lidars, odometries, use_odometry, mapbytes, pose):
     '''
     Threaded function runs SLAM, setting the map bytes and robot pose for display
     on the main thread.
     '''
+
+    # Initialize time for delay
+    prevtime = 0
 
     # Loop over scans    
     for scanno in range(len(lidars)):
@@ -75,8 +78,11 @@ def threadfunc(robot, slam, lidars, odometries, use_odometry, mapbytes, pose):
         slam.getmap(mapbytes)
 
         # Add delay to yield to main thread
-        sleep(0.1)
-   
+        currtime = timestamps[scanno] / 1.e6 # Convert usec to sec
+        if prevtime > 0:
+            sleep(currtime-prevtime)
+        prevtime = currtime
+    
 def main():
 	    
     # Bozo filter for input args
@@ -91,7 +97,7 @@ def main():
     seed =  int(argv[3]) if len(argv) > 3 else 0
     
 	# Load the data from the file    
-    timestamp, lidars, odometries = load_data('.', dataset)
+    timestamps, lidars, odometries = load_data('.', dataset)
     
     # Build a robot model if we want odometry
     robot = Rover() if use_odometry else None
@@ -111,7 +117,7 @@ def main():
     pose = [0,0,0]
 
     # Launch the data-collection / update thread
-    thread = Thread(target=threadfunc, args=(robot, slam, lidars, odometries, use_odometry, mapbytes, pose))
+    thread = Thread(target=threadfunc, args=(robot, slam, timestamps, lidars, odometries, use_odometry, mapbytes, pose))
     thread.daemon = True
     thread.start()
     
