@@ -76,11 +76,14 @@ class SlamShow(object):
 
         map_size_mm = map_scale_mm_per_pixel * map_size_pixels
 
-        self.ax.set_xlim([0, map_size_mm])
-        self.ax.set_ylim([0, map_size_mm])
+        #self.ax.set_xlim([0, map_size_mm])
+        #self.ax.set_ylim([0, map_size_mm])
 
-        self.ax.set_xlabel('X (mm)')
-        self.ax.set_ylabel('Y (mm)')
+        self.ax.set_xlim([0, map_size_pixels])
+        self.ax.set_ylim([0, map_size_pixels])
+
+        #self.ax.set_xlabel('X (mm)')
+        #self.ax.set_ylabel('Y (mm)')
 
         self.ax.grid(False)
 
@@ -91,29 +94,13 @@ class SlamShow(object):
 
         mapimg = np.reshape(np.frombuffer(mapbytes, dtype=np.uint8), (self.map_size_pixels, self.map_size_pixels))
  
-        #plt.imshow(mapimg)
+        plt.imshow(mapimg)
         plt.set_cmap('gray')
 
         # Interleave the grayscale map bytes into the color bytes
         self.bgrbytes[0::3] = mapbytes
         self.bgrbytes[1::3] = mapbytes
         self.bgrbytes[2::3] = mapbytes
-
-        # Put color bytes into image - this line causes error
-        #plt.set_cmap('BlueRedAlpha')
-
-    def displayVelocities(self, dxy_mm, dtheta_deg):
-        
-        # Add velocity bars
-        self.show_velocity(dxy_mm,      SENSOR_V_MAX_MM,      '   dXY', SENSOR_V_Y)
-        self.show_velocity(dtheta_deg,  SENSOR_THETA_MAX_DEG, 'dTheta', SENSOR_THETA_Y)
-                       
-    def displayTrajectory(self, trajectory):
-        
-        for k in range(1, len(trajectory)):
-            
-            x1_mm, y1_mm = trajectory[k-1]
-            x2_mm, y2_mm = trajectory[k]
 
     def setPose(self, x_mm, y_mm, theta_deg):
         '''
@@ -133,7 +120,10 @@ class SlamShow(object):
         #Use a very short arrow shaft to orient the head of the arrow
         dx, dy = plt_rotate(0, 0, 0.1, theta_deg)
 
-        self.vehicle=self.ax.arrow(x_mm, y_mm, dx, dy, head_width=ROBOT_WIDTH_MM, head_length=ROBOT_HEIGHT_MM, fc='r', ec='r')
+        s = self.map_scale_mm_per_pixel
+
+        self.vehicle=self.ax.arrow(x_mm/s, y_mm/s, 
+                dx, dy, head_width=ROBOT_WIDTH_MM/s, head_length=ROBOT_HEIGHT_MM/s, fc='r', ec='r')
 
     def refresh(self):                   
 
@@ -142,7 +132,7 @@ class SlamShow(object):
             return False
 
         # Redraw current objects without blocking
-        #plt.draw()
+        plt.draw()
 
         # Refresh display, setting flag on window close or keyboard interrupt
         try:

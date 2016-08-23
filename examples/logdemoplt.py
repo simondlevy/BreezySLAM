@@ -100,12 +100,12 @@ def main():
         x_mm, y_mm, theta_degrees = slam.getpos()    
 
         # Get new map
-        #slam.getmap(mapbytes)
+        slam.getmap(mapbytes)
 
         # Display map and robot pose
-        #display.displayMap(mapbytes)
+        display.displayMap(mapbytes)
 
-        #display.setPose(x_mm, y_mm, theta_degrees)   
+        display.setPose(x_mm, y_mm, theta_degrees)   
 
         # Exit gracefully if user closes display
         if not display.refresh():
