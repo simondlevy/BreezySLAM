@@ -77,14 +77,12 @@ map and robot trajctory for the Lidar scan and odometry data in the log file
 you can also try the <b><tt>log2png.py</tt></b> script to generate a
 a PNG file instead.
 
-If you have installed OpenCV for Python, you can see a &ldquo;live&rdquo; animation
+If you have installed Matplotlib, you can see a &ldquo;live&rdquo; animation
 by doing
 
 <pre>
-make cvmovie
+make movie
 </pre>
-
-There is also a Pyplot version (<tt>logdemoplt.py</tt>) in the works.
 
 You can turn off odometry by setting the <b><tt>USE_ODOMETRY</tt></b>
 parameter at the top of the Makefile to 0 (zero). You can turn off 

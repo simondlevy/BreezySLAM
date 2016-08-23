@@ -33,8 +33,8 @@ all: log2pgm Log2PGM.class
 pltmovie:
 	./logdemoplt.py exp1 1 9999
 
-cvmovie:
-	./logdemocv.py exp1 1 9999
+movie:
+	./logmovie.py exp1 1 9999
 
 pytest: 
 	./log2pgm.py $(DATASET) $(USE_ODOMETRY) $(RANDOM_SEED)
