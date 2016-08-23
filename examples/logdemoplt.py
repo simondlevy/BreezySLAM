@@ -43,8 +43,39 @@ from mines import MinesLaser, Rover, load_data
 from pltslamshow import SlamShow
 
 from sys import argv, exit
-from time import time
+from time import time, sleep
+from threading import Thread
 
+def threadfunc(robot, slam, lidars, odometries, use_odometry, mapbytes, pose):
+
+    # Loop over scans    
+    for scanno in range(len(lidars)):
+
+        if use_odometry:
+                  
+            # Convert odometry to velocities
+            velocities = robot.computeVelocities(odometries[scanno])
+                                 
+            # Update SLAM with lidar and velocities
+            slam.update(lidars[scanno], velocities)
+            
+        else:
+        
+            # Update SLAM with lidar alone
+            slam.update(lidars[scanno])
+
+        # Get new position
+        pose[0],pose[1],pose[2] = slam.getpos()    
+
+        # Get new map
+        slam.getmap(mapbytes)
+
+        # XXX Add delay for real-time plot
+        sleep(.1)
+
+        print(scanno)
+    
+   
 def main():
 	    
     # Bozo filter for input args
@@ -79,45 +110,31 @@ def main():
     display = SlamShow(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, 'SLAM')
 
     start_time = time()
-    
-    # Loop over scans    
-    for scanno in range(nscans):
-   
-        if use_odometry:
-                  
-            # Convert odometry to velocities
-            velocities = robot.computeVelocities(odometries[scanno])
-                                 
-            # Update SLAM with lidar and velocities
-            slam.update(lidars[scanno], velocities)
-            
-        else:
-        
-            # Update SLAM with lidar alone
-            slam.update(lidars[scanno])
-                    
-        # Get new position
-        x_mm, y_mm, theta_degrees = slam.getpos()    
 
-        # Get new map
-        slam.getmap(mapbytes)
+    pose = [0,0,0]
+
+    # Launch the data-collection / update thread
+    thread = Thread(target=threadfunc, args=(robot, slam, lidars, odometries, use_odometry, mapbytes, pose))
+    thread.daemon = True
+    thread.start()
+    
+    while True:
 
         # Display map and robot pose
         display.displayMap(mapbytes)
+        display.setPose(*pose)
 
-        display.setPose(x_mm, y_mm, theta_degrees)   
-
-        # Exit gracefully if user closes display
+        # Refresh the display, exiting gracefully if user closes it
         if not display.refresh():
             exit(0)
 
         curr_time = time()
         print(curr_time - start_time)
         start_time = curr_time
- 
-        # XXX Add delay for real-time plot
-    
-            
+
+        sleep(.01)
+
+           
 # Helpers ---------------------------------------------------------        
 
 def mm2pix(mm):
