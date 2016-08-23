@@ -1,7 +1,7 @@
 '''
 pltslamshow.py - Pyplot classes for displaying maps and robots in SLAM projects
 
-Copyright (C) 2016 Simon D. Levy and Matt Lubas
+Copyright (C) 2016 Simon D. Levy, Matt Lubas, and Alfredo Rwagaju
 
 This code is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as 
@@ -69,7 +69,7 @@ class SlamShow(object):
         # Store Python ID of figure to detect window close
         self.figid = id(fig)
 
-        fig.canvas.set_window_title('SLAM 2D')
+        fig.canvas.set_window_title('SLAM')
 
         self.ax = fig.gca()
         self.ax.set_aspect("auto")
@@ -77,20 +77,25 @@ class SlamShow(object):
 
         map_size_mm = map_scale_mm_per_pixel * map_size_pixels
  
+        # Use an "artist" to speed up map drawing
         self.img_artist = None
 
-        #self.ax.set_xlim([0, map_size_mm])
-        #self.ax.set_ylim([0, map_size_mm])
-
+        # We base the axis on pixels, to support displaying the map
         self.ax.set_xlim([0, map_size_pixels])
         self.ax.set_ylim([0, map_size_pixels])
 
-        #self.ax.set_xlabel('X (mm)')
-        #self.ax.set_ylabel('Y (mm)')
+        # Hence we must relabel the axis ticks to show millimeters
+        ticks = np.arange(0,self.map_size_pixels+100,100)
+        labels = [str(map_scale_mm_per_pixel * tick) for tick in ticks]
+        self.ax.xaxis.set_ticks(ticks)
+        self.ax.set_xticklabels(labels)
+
+        self.ax.set_xlabel('X (mm)')
+        self.ax.set_ylabel('Y (mm)')
 
         self.ax.grid(False)
 
-        # Start vehicle at Center
+        # Start vehicle at center
         map_center_mm = map_scale_mm_per_pixel * map_size_pixels
         self._add_vehicle(map_center_mm,map_center_mm,0)
 
