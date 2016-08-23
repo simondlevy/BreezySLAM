@@ -47,6 +47,7 @@ SENSOR_NEGATIVE_COLOR_BGR       = (0,0,255)
 TRAJECTORY_COLOR_BGR            = (255, 0, 0)
 
 import matplotlib.pyplot as plt
+import matplotlib.cm as colormap
 from math import sin, cos, radians
 import numpy as np
 
@@ -75,6 +76,8 @@ class SlamShow(object):
         self.ax.set_autoscale_on(True)
 
         map_size_mm = map_scale_mm_per_pixel * map_size_pixels
+ 
+        self.img_artist = None
 
         #self.ax.set_xlim([0, map_size_mm])
         #self.ax.set_ylim([0, map_size_mm])
@@ -87,20 +90,21 @@ class SlamShow(object):
 
         self.ax.grid(False)
 
-        #Starting vehicle at Center, 16000mm, 16000mm
-        self._add_vehicle(16000,16000,0)
+        # Start vehicle at Center
+        map_center_mm = map_scale_mm_per_pixel * map_size_pixels
+        self._add_vehicle(map_center_mm,map_center_mm,0)
 
     def displayMap(self, mapbytes):
 
         mapimg = np.reshape(np.frombuffer(mapbytes, dtype=np.uint8), (self.map_size_pixels, self.map_size_pixels))
- 
-        plt.imshow(mapimg)
-        plt.set_cmap('gray')
 
-        # Interleave the grayscale map bytes into the color bytes
-        self.bgrbytes[0::3] = mapbytes
-        self.bgrbytes[1::3] = mapbytes
-        self.bgrbytes[2::3] = mapbytes
+        if self.img_artist is None:
+
+            self.img_artist = self.ax.imshow(mapimg, cmap=colormap.gray)
+
+        else:
+
+            self.img_artist.set_data(mapimg)
 
     def setPose(self, x_mm, y_mm, theta_deg):
         '''

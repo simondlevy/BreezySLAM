@@ -46,7 +46,7 @@ from sys import argv, exit
 from time import time, sleep
 from threading import Thread
 
-def threadfunc(robot, slam, lidars, odometries, use_odometry, mapbytes, pose):
+def threadfunc(display, robot, slam, lidars, odometries, use_odometry, mapbytes, pose):
 
     # Loop over scans    
     for scanno in range(len(lidars)):
@@ -70,8 +70,8 @@ def threadfunc(robot, slam, lidars, odometries, use_odometry, mapbytes, pose):
         # Get new map
         slam.getmap(mapbytes)
 
-        # XXX Add delay for real-time plot
-        sleep(.1)
+        # Add delay to yield to main thread
+        sleep(0.01)
 
         print(scanno)
     
@@ -100,9 +100,6 @@ def main():
            if seed \
            else Deterministic_SLAM(MinesLaser(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
            
-    # Report what we're doing
-    nscans = len(lidars)
-    
     # Create a byte array to receive the computed maps
     mapbytes = bytearray(MAP_SIZE_PIXELS * MAP_SIZE_PIXELS)
 
@@ -114,7 +111,7 @@ def main():
     pose = [0,0,0]
 
     # Launch the data-collection / update thread
-    thread = Thread(target=threadfunc, args=(robot, slam, lidars, odometries, use_odometry, mapbytes, pose))
+    thread = Thread(target=threadfunc, args=(display, robot, slam, lidars, odometries, use_odometry, mapbytes, pose))
     thread.daemon = True
     thread.start()
     
@@ -131,8 +128,6 @@ def main():
         curr_time = time()
         print(curr_time - start_time)
         start_time = curr_time
-
-        sleep(.01)
 
            
 # Helpers ---------------------------------------------------------        
