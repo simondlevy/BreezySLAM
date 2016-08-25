@@ -18,33 +18,8 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
 # Robot display params
-ROBOT_COLOR_BGR                 = (0, 0, 255)
-ROBOT_HEIGHT                    = 16
-ROBOT_WIDTH                     = 10
-
-ROBOT_HEIGHT_MM                 = 500
-ROBOT_WIDTH_MM                  = 300
-
-# Scan point display params
-SCANPOINT_RADIUS                = 1
-SCANPOINT_COLOR_BGR             = (0, 255, 0)
-
-# Display params for odometry-based velocity
-SENSOR_V_MAX_MM                 = 1000
-SENSOR_THETA_MAX_DEG            = 20
-SENSOR_BAR_X                    = 150
-SENSOR_BAR_Y_OFFSET             = 3
-SENSOR_BAR_WIDTH                = 20
-SENSOR_BAR_MAX_HEIGHT           = 200
-SENSOR_TEXT_X                   = 20
-SENSOR_V_Y                      = 30
-SENSOR_THETA_Y                  = 80
-SENSOR_LABEL_COLOR_BGR          = (255,0,0)
-SENSOR_POSITIVE_COLOR_BGR       = (0,255,0)
-SENSOR_NEGATIVE_COLOR_BGR       = (0,0,255)
-
-# Trajectory display params
-TRAJECTORY_COLOR_BGR            = (255, 0, 0)
+ROBOT_HEIGHT_MM = 500
+ROBOT_WIDTH_MM  = 300
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as colormap
@@ -75,8 +50,6 @@ class SlamShow(object):
         self.ax.set_aspect("auto")
         self.ax.set_autoscale_on(True)
 
-        map_size_mm = map_scale_mm_per_pixel * map_size_pixels
- 
         # Use an "artist" to speed up map drawing
         self.img_artist = None
 
@@ -167,5 +140,3 @@ def plt_rotate(x, y, r, deg):
     dx = r * c
     dy = r * s
     return x+dx, y+dy 
-   
-
