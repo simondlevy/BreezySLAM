@@ -28,7 +28,7 @@ from breezyslam.components import URG04LX as LaserModel
 
 from breezylidar import URG04LX as Lidar
 
-from cvslamshow import SlamShow
+from pltslamshow import SlamShow
        
 if __name__ == '__main__':
 
@@ -40,9 +40,6 @@ if __name__ == '__main__':
 
     # Set up a SLAM display
     display = SlamShow(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, 'SLAM')
-
-    # Initialize an empty trajectory
-    trajectory = []
 
     # Initialize empty map
     mapbytes = bytearray(MAP_SIZE_PIXELS * MAP_SIZE_PIXELS)
@@ -60,12 +57,7 @@ if __name__ == '__main__':
 
         display.displayMap(mapbytes)
 
-        display.displayRobot((x, y, theta))
-
-        trajectory.append((x,y))
-
-        # Display trajectory
-        display.displayTrajectory(trajectory)
+        display.setPose(x, y, theta)
 
         # Exit on ESCape
         key = display.refresh()
