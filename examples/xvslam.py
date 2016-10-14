@@ -28,7 +28,7 @@ from breezyslam.components import XVLidar as LaserModel
 
 from xvlidar import XVLidar as Lidar
 
-from cvslamshow import SlamShow
+from pltslamshow import SlamShow
 
 if __name__ == '__main__':
 
@@ -60,12 +60,7 @@ if __name__ == '__main__':
 
         display.displayMap(mapbytes)
 
-        display.displayRobot((x, y, theta))
-
-        trajectory.append((x,y))
-
-        # Display trajectory
-        display.displayTrajectory(trajectory)
+        display.setPose(x, y, theta)
 
         # Exit on ESCape
         key = display.refresh()
