@@ -29,7 +29,7 @@ the current robot position; and a method for retrieving the current map as a byt
 array.
 
 <pre>
-from breezyslam.algorithms import RMHC\_SLAM
+from breezyslam.algorithms import RMHC_SLAM
 
 lidar = MyLidarModel()
 
