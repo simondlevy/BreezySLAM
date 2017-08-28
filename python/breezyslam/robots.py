@@ -17,22 +17,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License 
 along with this code.  If not, see <http:#www.gnu.org/licenses/>.
-You should also have received a copy of the Parrot Parrot AR.Drone 
-Development License and Parrot AR.Drone copyright notice and disclaimer 
-and If not, see 
-<https:#projects.ardrone.org/attafchments/277/ParrotLicense.txt> 
-and
-<https:#projects.ardrone.org/attachments/278/ParrotCopyrightAndDisclaimer.txt>.
-'''
-
-'''
-Change Log:
-
-01-MAR-2014: Simon D. Levy - Initial release
-19-MAR-2014: SDL           - Added Laser class
-31-MAR-2014: SDL           - Robot.computeVelocities returns dtheta in degrees
-01-MAY-2014: SDL           - Migrated Laser class to C extension
-04-MAY-2014: SDL           - Changed from meters to millimeters
 '''
 
 import math

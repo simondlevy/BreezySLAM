@@ -16,9 +16,4 @@ GNU General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with this code.  If not, see <http:#www.gnu.org/licenses/>.
 You should also have received a copy of the Parrot Parrot AR.Drone 
-Development License and Parrot AR.Drone copyright notice and disclaimer 
-and If not, see 
-<https:#projects.ardrone.org/attafchments/277/ParrotLicense.txt> 
-and
-<https:#projects.ardrone.org/attachments/278/ParrotCopyrightAndDisclaimer.txt>.
 '''
