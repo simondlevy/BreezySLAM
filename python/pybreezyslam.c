@@ -1,5 +1,5 @@
 /*
-pypybreezyslam.c : C extensions for BreezySLAM in Python
+pybreezyslam.c : C extensions for BreezySLAM in Python
 
 Copyright (C) 2014 Simon D. Levy
 
@@ -129,7 +129,7 @@ static PyTypeObject pybreezyslam_PositionType =
     #else
     PyVarObject_HEAD_INIT(NULL, 0)
     #endif
-    "pypybreezyslam.Position",                  // tp_name
+    "pybreezyslam.Position",                  // tp_name
     sizeof(Position),                           // tp_basicsize
     0,                                          // tp_itemsize
     (destructor)Position_dealloc,               // tp_dealloc
@@ -385,7 +385,7 @@ static PyTypeObject pybreezyslam_ScanType =
     #else
     PyVarObject_HEAD_INIT(NULL, 0)
     #endif
-    "pypybreezyslam.Scan",                      // tp_name
+    "pybreezyslam.Scan",                      // tp_name
     sizeof(Scan),                               // tp_basicsize
     0,                                          // tp_itemsize
     (destructor)Scan_dealloc,                   // tp_dealloc
@@ -593,7 +593,7 @@ static PyTypeObject pybreezyslam_MapType =
     #else
     PyVarObject_HEAD_INIT(NULL, 0)
     #endif
-    "pypybreezyslam.Map",                       // tp_name
+    "pybreezyslam.Map",                       // tp_name
     sizeof(Map),                                // tp_basicsize
     0,                                          // tp_itemsize
     (destructor)Map_dealloc,                    // tp_dealloc
@@ -687,7 +687,7 @@ static PyTypeObject pybreezyslam_RandomizerType =
     #else
     PyVarObject_HEAD_INIT(NULL, 0)
     #endif
-    "pypybreezyslam.Randomizer",                // tp_name
+    "pybreezyslam.Randomizer",                // tp_name
     sizeof(Randomizer),                         // tp_basicsize
     0,                                          // tp_itemsize
     (destructor)Randomizer_dealloc,             // tp_dealloc
@@ -727,7 +727,7 @@ static PyTypeObject pybreezyslam_RandomizerType =
 };
 
 
-// pypybreezyslam module ------------------------------------------------------------
+// pybreezyslam module ------------------------------------------------------------
 
 
 static PyObject *
