@@ -25,7 +25,8 @@ approach to Graphical User Interfaces developed by my colleague
 Application Programming Interface that is simple enough for beginners to use,
 but that is efficient enough to scale-up to real world problems; for
 example, the mapping of an entire floor of a house, shown in the image above-right,
-made by a BreezySLAM [user](https://www.linkedin.com/pulse/slam-your-robot-drone-python-150-lidar-chris-fotache).
+made by a BreezySLAM 
+<a href="https://www.linkedin.com/pulse/slam-your-robot-drone-python-150-lidar-chris-fotache">user</a>.
 
 As shown in the following code fragment, the basic API is extremely 
 simple: a constructor that accepts Lidar parameters and the size of 
