@@ -3,9 +3,7 @@ BreezySLAM
 
 <img src="breezyslam.png" align="left" width=700>
 
-<p>
-
-Simple, efficient, open-source package for Simultaneous Localization and Mapping in Python, Matlab, Java, and C++
+<b>Simple, efficient, open-source package for Simultaneous Localization and Mapping in Python, Matlab, Java, and C++</b>
 
 <a href="https://github.com/simondlevy/BreezySLAM">This repository</a> contains everything you need to
 start working with 
