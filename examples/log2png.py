@@ -57,7 +57,7 @@ def main():
 	    
     # Bozo filter for input args
     if len(argv) < 3:
-        print('Usage:   %s <dataset> <use_odometry> <random_seed>' % argv[0])
+        print('Usage:   %s <dataset> <use_odometry> [random_seed]' % argv[0])
         print('Example: %s exp2 1 9999' % argv[0])
         exit(1)
     

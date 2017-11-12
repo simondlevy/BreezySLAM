@@ -43,8 +43,9 @@ from mines import MinesLaser, Rover, load_data
 from pltslamshow import SlamShow
 
 from sys import argv, exit
-from time import time, sleep
+from time import sleep
 from threading import Thread
+import pickle
 
 def threadfunc(robot, slam, timestamps, lidars, odometries, use_odometry, mapbytes, pose):
     '''
@@ -86,8 +87,8 @@ def threadfunc(robot, slam, timestamps, lidars, odometries, use_odometry, mapbyt
 def main():
 	    
     # Bozo filter for input args
-    if len(argv) < 3:
-        print('Usage:   %s <dataset> <use_odometry> <random_seed>' % argv[0])
+    if len(argv) < 4:
+        print('Usage:   %s <dataset> <use_odometry> [random_seed]' % argv[0])
         print('Example: %s exp2 1 9999' % argv[0])
         exit(1)
     
@@ -95,6 +96,9 @@ def main():
     dataset = argv[1]
     use_odometry  =  True if int(argv[2]) else False
     seed =  int(argv[3]) if len(argv) > 3 else 0
+
+    # Allocate byte array to receive map updates
+    mapbytes = bytearray(MAP_SIZE_PIXELS * MAP_SIZE_PIXELS)
     
 	# Load the data from the file    
     timestamps, lidars, odometries = load_data('.', dataset)
@@ -106,9 +110,6 @@ def main():
     slam = RMHC_SLAM(MinesLaser(), MAP_SIZE_PIXELS, MAP_SIZE_METERS, random_seed=seed) \
            if seed \
            else Deterministic_SLAM(MinesLaser(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
-           
-    # Create a byte array to receive the computed maps
-    mapbytes = bytearray(MAP_SIZE_PIXELS * MAP_SIZE_PIXELS)
 
     # Set up a SLAM display, named by dataset
     display = SlamShow(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, dataset)

@@ -57,9 +57,9 @@ class CoreSLAM(object):
     
     Implementing classes should provide the method
     
-      _updateMapAndPointcloud(scan_mm, velocities, shouldUpdateMap)
+      _updateMapAndPointcloud(scan_mm, velocities, should_update_map)
     
-    to update the point-cloud (particle cloud) and map (if shouldUpdateMap true)
+    to update the point-cloud (particle cloud) and map (if should_update_map true)
     '''
     
     def __init__(self, laser, map_size_pixels, map_size_meters, 
@@ -90,7 +90,7 @@ class CoreSLAM(object):
         # Initialize the map 
         self.map = pybreezyslam.Map(map_size_pixels, map_size_meters)
                 
-    def update(self, scans_mm, velocities, shouldUpdateMap=True):
+    def update(self, scans_mm, velocities, should_update_map=True):
         '''
         Updates the scan and odometry, and calls the the implementing class's _updateMapAndPointcloud method with
         the specified velocities.
@@ -98,7 +98,7 @@ class CoreSLAM(object):
         scan_mm is a list of Lidar scan values, whose count is specified in the scan_size 
         attribute of the Laser object passed to the CoreSlam constructor
         velocities is a tuple of velocities (dxy_mm, dtheta_degrees, dt_seconds) for odometry
-        shouldUpdateMap flags for whether you want to update the map
+        should_update_map flags for whether you want to update the map
         '''
 
         # Build a scan for computing distance to map, and one for updating map 
@@ -112,16 +112,23 @@ class CoreSLAM(object):
         self.velocities = (new_dxy_mm, new_dtheta_degrees, 0)
                                                   
         # Implementing class updates map and pointcloud
-        self._updateMapAndPointcloud(velocities, shouldUpdateMap)
+        self._updateMapAndPointcloud(velocities, should_update_map)
         
     def getmap(self, mapbytes):
         '''
-        Fills bytearray mapbytes with map pixels, where bytearray length is square of map size passed
+        Fills bytearray mapbytes with current map pixels, where bytearray length is square of map size passed
         to CoreSLAM.__init__().
         '''
         self.map.get(mapbytes)
         
         
+    def setmap(self, mapbytes):
+        '''
+        Sets current map pixels to values in bytearray, where bytearray length is square of map size passed
+        to CoreSLAM.__init__().
+        '''
+        self.map.set(mapbytes)
+
     def __str__(self):
         
         return 'CoreSLAM: %s \n          map quality = %d / 255 \n          hole width = %7.0f mm' % \
@@ -159,7 +166,7 @@ class SinglePositionSLAM(CoreSLAM):
         init_coord_mm = 500 * map_size_meters # center of map
         self.position =  pybreezyslam.Position(init_coord_mm, init_coord_mm, 0)
         
-    def _updateMapAndPointcloud(self, velocities, shouldUpdateMap):
+    def _updateMapAndPointcloud(self, velocities, should_update_map):
         '''
         Updates the map and point-cloud (particle cloud). Called automatically by CoreSLAM.update()
         velocities is a tuple of the form (dxy_mm, dtheta_degrees, dt_seconds).
@@ -186,7 +193,7 @@ class SinglePositionSLAM(CoreSLAM):
         self.position.y_mm -= self.laser.offset_mm * self._sintheta()
   
         # Update the map with this new position if indicated
-        if shouldUpdateMap:
+        if should_update_map:
             self.map.update(self.scan_for_mapbuild, new_position, self.map_quality, self.hole_width_mm)
       
     def getpos(self):
@@ -247,13 +254,13 @@ class RMHC_SLAM(SinglePositionSLAM):
         self.sigma_theta_degrees = sigma_theta_degrees
         self.max_search_iter = max_search_iter
         
-    def update(self, scan_mm, velocities=None, shouldUpdateMap=True):
+    def update(self, scan_mm, velocities=None, should_update_map=True):
 
         if not velocities:
         
             velocities = (0, 0, 0)
     
-        CoreSLAM.update(self, scan_mm, velocities, shouldUpdateMap)   
+        CoreSLAM.update(self, scan_mm, velocities, should_update_map)   
     
     def _getNewPosition(self, start_position):
         '''
