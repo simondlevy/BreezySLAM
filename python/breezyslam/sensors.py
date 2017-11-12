@@ -1,8 +1,7 @@
 '''
 BreezySLAM: Simple, efficient SLAM in Python
 
-components.py: SLAM components (Laser, Map, Position, Scan, Map),
-implemented as C extensions for efficiency. 
+sensors.py: SLAM sensors (currently just Laser)
 
 Copyright (C) 2014 Simon D. Levy
 
@@ -19,9 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with this code.  If not, see <http:#www.gnu.org/licenses/>.
 '''
-
-# These classes are implemented as C extensions
-from pybreezyslam import Scan, Map, Position
 
 class Laser(object):
     '''

@@ -11,7 +11,7 @@ For details see
       author    = {Bruno Steux and Oussama El Hamzaoui},
       title     = {CoreSLAM: a SLAM Algorithm in less than 200 lines of C code},
       booktitle = {11th International Conference on Control, Automation, 
-                   Robotics and Vision, ICARCV 2010, Singapore, 7-10 
+                   Vehicleics and Vision, ICARCV 2010, Singapore, 7-10 
                    December 2010, Proceedings},
       pages     = {1975-1979},
       publisher = {IEEE},
@@ -44,8 +44,6 @@ MAP_SIZE_PIXELS          = 800
 MAP_SIZE_METERS          =  32
 
 from breezyslam.algorithms import Deterministic_SLAM, RMHC_SLAM
-from breezyslam.components import Laser
-from breezyslam.robots import WheeledRobot
 
 from mines import MinesLaser, Rover, load_data
 from progressbar import ProgressBar

@@ -7,7 +7,7 @@ For details see
       author    = {Bruno Steux and Oussama El Hamzaoui},
       title     = {CoreSLAM: a SLAM Algorithm in less than 200 lines of C code},
       booktitle = {11th International Conference on Control, Automation, 
-                   Robotics and Vision, ICARCV 2010, Singapore, 7-10 
+                   Vehicleics and Vision, ICARCV 2010, Singapore, 7-10 
                    December 2010, Proceedings},
       pages     = {1975-1979},
       publisher = {IEEE},
@@ -30,8 +30,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with this code.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from breezyslam.robots import WheeledRobot
-from breezyslam.components import URG04LX
+from breezyslam.vehicles import WheeledVehicle
+from breezyslam.sensors import URG04LX
 
 import math
 
@@ -87,21 +87,21 @@ class MinesLaser(URG04LX):
         
 # Class for MinesRover custom robot ------------------------------------------
 
-class Rover(WheeledRobot):
+class Rover(WheeledVehicle):
     
     def __init__(self):
         
-        WheeledRobot.__init__(self, 77, 165)
+        WheeledVehicle.__init__(self, 77, 165)
         
         self.ticks_per_cycle = 2000
                         
     def __str__(self):
         
-        return '<%s ticks_per_cycle=%d>' % (WheeledRobot.__str__(self), self.ticks_per_cycle)
+        return '<%s ticks_per_cycle=%d>' % (WheeledVehicle.__str__(self), self.ticks_per_cycle)
         
     def computeVelocities(self, odometry):
         
-        return WheeledRobot.computeVelocities(self, odometry[0], odometry[1], odometry[2])
+        return WheeledVehicle.computeVelocities(self, odometry[0], odometry[1], odometry[2])
 
     def extractOdometry(self, timestamp, leftWheel, rightWheel):
                 

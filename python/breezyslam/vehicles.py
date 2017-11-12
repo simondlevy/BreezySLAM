@@ -1,7 +1,8 @@
 '''
 BreezySLAM: Simple, efficient SLAM in Python
 
-robots.py: odometry models for different kinds of robots
+vehicles.py: odometry models for different kinds of vehicles
+(currently just wheeled vehicles)
 
 Copyright (C) 2014 Suraj Bajracharya and Simon D. Levy
 
@@ -21,7 +22,7 @@ along with this code.  If not, see <http:#www.gnu.org/licenses/>.
 
 import math
 
-class WheeledRobot(object):
+class WheeledVehicle(object):
     '''
     An abstract class supporting ododmetry for wheeled robots.  Your implementing
     class should provide the method:
