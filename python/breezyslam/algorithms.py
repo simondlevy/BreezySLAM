@@ -57,9 +57,9 @@ class CoreSLAM(object):
     
     Implementing classes should provide the method
     
-      _updateMapAndPointcloud(scan_mm, velocities)
+      _updateMapAndPointcloud(scan_mm, velocities, shouldUpdateMap)
     
-    to update the map and point-cloud (particle cloud).
+    to update the point-cloud (particle cloud) and map (if shouldUpdateMap true)
     '''
     
     def __init__(self, laser, map_size_pixels, map_size_meters, 
@@ -90,7 +90,7 @@ class CoreSLAM(object):
         # Initialize the map 
         self.map = pybreezyslam.Map(map_size_pixels, map_size_meters)
                 
-    def update(self, scans_mm, velocities):
+    def update(self, scans_mm, velocities, shouldUpdateMap=True):
         '''
         Updates the scan and odometry, and calls the the implementing class's _updateMapAndPointcloud method with
         the specified velocities.
@@ -98,6 +98,7 @@ class CoreSLAM(object):
         scan_mm is a list of Lidar scan values, whose count is specified in the scan_size 
         attribute of the Laser object passed to the CoreSlam constructor
         velocities is a tuple of velocities (dxy_mm, dtheta_degrees, dt_seconds) for odometry
+        shouldUpdateMap flags for whether you want to update the map
         '''
 
         # Build a scan for computing distance to map, and one for updating map 
@@ -111,7 +112,7 @@ class CoreSLAM(object):
         self.velocities = (new_dxy_mm, new_dtheta_degrees, 0)
                                                   
         # Implementing class updates map and pointcloud
-        self._updateMapAndPointcloud(velocities)
+        self._updateMapAndPointcloud(velocities, shouldUpdateMap)
         
     def getmap(self, mapbytes):
         '''
@@ -158,7 +159,7 @@ class SinglePositionSLAM(CoreSLAM):
         init_coord_mm = 500 * map_size_meters # center of map
         self.position =  pybreezyslam.Position(init_coord_mm, init_coord_mm, 0)
         
-    def _updateMapAndPointcloud(self, velocities):
+    def _updateMapAndPointcloud(self, velocities, shouldUpdateMap):
         '''
         Updates the map and point-cloud (particle cloud). Called automatically by CoreSLAM.update()
         velocities is a tuple of the form (dxy_mm, dtheta_degrees, dt_seconds).
@@ -179,14 +180,15 @@ class SinglePositionSLAM(CoreSLAM):
         # Get new position from implementing class
         new_position = self._getNewPosition(start_pos)
                 
-        # Update the map with this new position
-        self.map.update(self.scan_for_mapbuild, new_position, self.map_quality, self.hole_width_mm)
-      
         # Update the current position with this new position, adjusted by laser offset
         self.position = new_position.copy()        
         self.position.x_mm -= self.laser.offset_mm * self._costheta()
         self.position.y_mm -= self.laser.offset_mm * self._sintheta()
   
+        # Update the map with this new position if indicated
+        if shouldUpdateMap:
+            self.map.update(self.scan_for_mapbuild, new_position, self.map_quality, self.hole_width_mm)
+      
     def getpos(self):
         '''
         Returns current position as a tuple (x_mm, y_mm, theta_degrees)
@@ -245,13 +247,13 @@ class RMHC_SLAM(SinglePositionSLAM):
         self.sigma_theta_degrees = sigma_theta_degrees
         self.max_search_iter = max_search_iter
         
-    def update(self, scan_mm, velocities=None):
+    def update(self, scan_mm, velocities=None, shouldUpdateMap=True):
 
         if not velocities:
         
             velocities = (0, 0, 0)
     
-        CoreSLAM.update(self, scan_mm, velocities)    
+        CoreSLAM.update(self, scan_mm, velocities, shouldUpdateMap)   
     
     def _getNewPosition(self, start_position):
         '''
