@@ -23,7 +23,10 @@ BreezySLAM was inspired by the <a href="http://home.wlu.edu/%7Elambertk/#Softwar
 approach to Graphical User Interfaces developed by my colleague 
 <a href="http://home.wlu.edu/%7Elambertk/">Ken Lambert</a>: an object-oriented
 Application Programming Interface that is simple enough for beginners to use,
-but that is efficient enough to scale-up to real world problems. 
+but that is efficient enough to scale-up to real world problems; for
+example, the mapping of an entire floor of a house, shown in the image above-right,
+made by a BreezySLAM [user](https://www.linkedin.com/pulse/slam-your-robot-drone-python-150-lidar-chris-fotache).
+
 As shown in the following code fragment, the basic API is extremely 
 simple: a constructor that accepts Lidar parameters and the size of 
 the map (pixels) and mapping area (meters); a method for updating with the current scan; a method that returns
