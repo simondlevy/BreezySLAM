@@ -1,8 +1,7 @@
 BreezySLAM
 ==========
 
-<img src="scanrates.png" align="left" width=500>
-<img src="fotache.jpg" align="right" width=200>
+<img src="breezyslam.png" align="left" width=500>
 
 Simple, efficient, open-source package for Simultaneous Localization and Mapping in Python, Matlab, Java, and C++
 
