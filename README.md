@@ -1,7 +1,7 @@
 BreezySLAM
 ==========
 
-<img src="breezyslam.png" align="left" width=700>
+<img src="breezyslam.png" align="center" width=700>
 
 <p><p><p>
 
