@@ -24,7 +24,7 @@ MAP_SIZE_METERS         = 10
 LIDAR_DEVICE            = '/dev/ttyACM0'
 
 from breezyslam.algorithms import RMHC_SLAM
-from breezyslam.components import XVLidar as LaserModel
+from breezyslam.sensors import XVLidar as LaserModel
 
 from xvlidar import XVLidar as Lidar
 
