@@ -112,7 +112,7 @@ class CoreSLAM(object):
         self.velocities = (new_dxy_mm, new_dtheta_degrees, 0)
                                                   
         # Implementing class updates map and pointcloud
-        self._updateMapAndPointcloud(velocities, should_update_map)
+        self._updateMapAndPointcloud(self.velocities, should_update_map)
         
     def getmap(self, mapbytes):
         '''
