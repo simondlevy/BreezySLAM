@@ -67,7 +67,7 @@ def threadfunc(robot, slam, timestamps, lidars, odometries, mapbytes, pose):
         else:
         
             # Convert odometry to velocities
-            velocities = robot.computeVelocities(odometries[scanno])
+            velocities = robot.computePoseChange(odometries[scanno])
 
             # Update SLAM with lidar and velocities
             slam.update(lidars[scanno], velocities)

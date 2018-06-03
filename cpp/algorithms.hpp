@@ -47,7 +47,7 @@ class Laser;
 *     </pre>
 *    Implementing classes should provide the method
 *
-*      void updateMapAndPointcloud(int * scan_mm, Velocities & velocities)
+*      void updateMapAndPointcloud(int * scan_mm, PoseChange & poseChange)
 *
 *    to update the map and point-cloud (particle cloud).
 *
@@ -74,17 +74,17 @@ public:
     
    /**
     * Updates the scan and odometry, and calls the the implementing class's updateMapAndPointcloud method with
-    * the specified velocities.
+    * the specified poseChange.
     * 
     * @param scan_mm Lidar scan values, whose count is specified in the <tt>scan_size</tt> 
     * attribute of the Laser object passed to the CoreSlam constructor
-    * @param velocities velocities for odometry
+    * @param poseChange poseChange for odometry
     */
-    void update(int * scan_mm, Velocities & velocities);
+    void update(int * scan_mm, PoseChange & poseChange);
 
 
     /**
-    * Updates the scan, and calls the the implementing class's updateMapAndPointcloud method with zero velocities
+    * Updates the scan, and calls the the implementing class's updateMapAndPointcloud method with zero poseChange
     * (no odometry).
     * @param scan_mm Lidar scan values, whose count is specified in the <tt>scan_size</tt> 
     * attribute of the Laser object passed to the CoreSlam constructor
@@ -139,15 +139,15 @@ protected:
     Scan * scan_for_distance;    
     
     /**
-    * The current velocities from odometry
+    * The current poseChange from odometry
     */
-    class Velocities * velocities;
+    class PoseChange * poseChange;
         
     /**
     * Updates the map and point-cloud (particle cloud). Called automatically by CoreSLAM::update()
-    * @param velocities velocities for odometry
+    * @param poseChange poseChange for odometry
     */
-    virtual void updateMapAndPointcloud(Velocities & velocities) = 0;
+    virtual void updateMapAndPointcloud(PoseChange & poseChange) = 0;
 
 private:
             
@@ -191,9 +191,9 @@ protected:
     
     /**
     * Updates the map and point-cloud (particle cloud). Called automatically by CoreSLAM::update()
-    * @param velocities velocities for odometry
+    * @param poseChange poseChange for odometry
     */
-    void updateMapAndPointcloud(Velocities & velocities);
+    void updateMapAndPointcloud(PoseChange & poseChange);
     
     /**
     * Returns a new position based on searching from a starting position. Called automatically by

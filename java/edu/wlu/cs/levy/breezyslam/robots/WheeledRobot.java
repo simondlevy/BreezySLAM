@@ -23,12 +23,12 @@
 
 package edu.wlu.cs.levy.breezyslam.robots;
 
-import edu.wlu.cs.levy.breezyslam.components.Velocities;
+import edu.wlu.cs.levy.breezyslam.components.PoseChange;
 
 
 /**
  * An abstract class for wheeled robots.  Supports computation of forward and angular 
- * velocities based on odometry. Your subclass should should implement the
+ * poseChange based on odometry. Your subclass should should implement the
  * extractOdometry method.
  */
 public abstract class WheeledRobot 
@@ -59,14 +59,14 @@ public abstract class WheeledRobot
     }
 
     /**
-     * Computes forward and angular velocities based on odometry.
+     * Computes forward and angular poseChange based on odometry.
      * @param timestamp time stamp, in whatever units your robot uses       
      * @param left_wheel_odometry odometry for left wheel, in whatever units your robot uses       
      * @param right_wheel_odometry odometry for right wheel, in whatever units your robot uses
-     * @return velocities object representing velocities for these odometry values
+     * @return poseChange object representing poseChange for these odometry values
      */
 
-    public Velocities computeVelocities( double timestamp, double left_wheel_odometry, double right_wheel_odometry)
+    public PoseChange computePoseChange( double timestamp, double left_wheel_odometry, double right_wheel_odometry)
     {
         WheelOdometry odometry = this.extractOdometry(timestamp, left_wheel_odometry, right_wheel_odometry);
 
@@ -91,7 +91,7 @@ public abstract class WheeledRobot
         this.left_wheel_degrees_prev = odometry.left_wheel_degrees;
         this.right_wheel_degrees_prev = odometry.right_wheel_degrees;      
 
-        return new Velocities(dxy_mm, dtheta_degrees, dt_seconds);
+        return new PoseChange(dxy_mm, dtheta_degrees, dt_seconds);
     }
 
     /**

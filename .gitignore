@@ -3,10 +3,11 @@ examples/*.pyc
 examples/*.pgm
 examples/*.png
 examples/*.map
+examples/log2pgm
 python/breezyslam/*.pyc
 python/breezyslam/__pycache__
 python/build
-cpp/*.o
-cpp/*.so
+*.o
+*.so
 *.swp
 

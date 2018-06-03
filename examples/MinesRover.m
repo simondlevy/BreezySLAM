@@ -45,9 +45,9 @@ classdef MinesRover < WheeledRobot
             
         end
         
-        function [velocities, obj] = computeVelocities(obj, odometry)
+        function [poseChange, obj] = computePoseChange(obj, odometry)
             
-            [velocities, obj] = computeVelocities@WheeledRobot(obj, odometry(1), odometry(2), odometry(3));
+            [poseChange, obj] = computePoseChange@WheeledRobot(obj, odometry(1), odometry(2), odometry(3));
             
         end
         

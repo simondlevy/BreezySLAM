@@ -27,11 +27,11 @@
 #include <vector>
 using namespace std;
 
-class Velocities;
+class PoseChange;
 
 /**
 * An abstract class for wheeled robots.  Supports computation of forward and angular 
-* velocities based on odometry. Your subclass should should implement the
+* poseChange based on odometry. Your subclass should should implement the
 * extractOdometry method.
 */
 class WheeledRobot 
@@ -57,15 +57,15 @@ WheeledRobot(double wheel_radius_mm, double half_axle_length_mm)
 }
 
 /**
-* Computes forward and angular velocities based on odometry.
+* Computes forward and angular poseChange based on odometry.
 * @param timestamp time stamp, in whatever units your robot uses       
 * @param left_wheel_odometry odometry for left wheel, in whatever units your robot uses       
 * @param right_wheel_odometry odometry for right wheel, in whatever units your robot uses
-* @return velocities object representing velocities for these odometry values
+* @return poseChange object representing poseChange for these odometry values
 */
 
-Velocities
-computeVelocities(
+PoseChange
+computePoseChange(
     double timestamp, 
     double left_wheel_odometry, 
     double right_wheel_odometry);

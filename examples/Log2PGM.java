@@ -35,7 +35,7 @@ import edu.wlu.cs.levy.breezyslam.components.Map;
 import edu.wlu.cs.levy.breezyslam.components.Scan;
 import edu.wlu.cs.levy.breezyslam.components.Position;
 import edu.wlu.cs.levy.breezyslam.components.URG04LX;
-import edu.wlu.cs.levy.breezyslam.components.Velocities;
+import edu.wlu.cs.levy.breezyslam.components.PoseChange;
 
 import edu.wlu.cs.levy.breezyslam.robots.WheeledRobot;
 
@@ -226,8 +226,8 @@ public class Log2PGM
             if (this.use_odometry)
             {
                 long [] odometry = odometries.elementAt(scanno);
-                Velocities velocities = this.robot.computeVelocities(odometry[0], odometry[1], odometry[2]);
-                slam.update(scan, velocities);            
+                PoseChange poseChange = this.robot.computePoseChange(odometry[0], odometry[1], odometry[2]);
+                slam.update(scan, poseChange);            
             }
             else
             {

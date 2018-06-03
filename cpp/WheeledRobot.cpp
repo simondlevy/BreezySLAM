@@ -28,15 +28,15 @@
 using namespace std; 
 
 #include "WheeledRobot.hpp"
-#include "Velocities.hpp"
+#include "PoseChange.hpp"
 
-Velocities 
-WheeledRobot::computeVelocities(
+PoseChange 
+WheeledRobot::computePoseChange(
     double timestamp, 
     double left_wheel_odometry, 
     double right_wheel_odometry)
 {                
-    Velocities velocities;
+    PoseChange poseChange;
     
     double timestamp_seconds_curr, left_wheel_degrees_curr, right_wheel_degrees_curr;
     
@@ -48,12 +48,12 @@ WheeledRobot::computeVelocities(
         double left_diff_degrees = left_wheel_degrees_curr - this->left_wheel_degrees_prev;
         double right_diff_degrees = right_wheel_degrees_curr - this->right_wheel_degrees_prev;
         
-        velocities.dxy_mm =  this->wheel_radius_mm * (radians(left_diff_degrees) + radians(right_diff_degrees));
+        poseChange.dxy_mm =  this->wheel_radius_mm * (radians(left_diff_degrees) + radians(right_diff_degrees));
         
-        velocities.dtheta_degrees = this->wheel_radius_mm / this->half_axle_length_mm *
+        poseChange.dtheta_degrees = this->wheel_radius_mm / this->half_axle_length_mm *
         (right_diff_degrees - left_diff_degrees);
         
-        velocities.dt_seconds = timestamp_seconds_curr - timestamp_seconds_prev;
+        poseChange.dt_seconds = timestamp_seconds_curr - timestamp_seconds_prev;
     }
     
     // Store current odometry for next time
@@ -61,5 +61,5 @@ WheeledRobot::computeVelocities(
     this->left_wheel_degrees_prev = left_wheel_degrees_curr;
     this->right_wheel_degrees_prev = right_wheel_degrees_curr;      
     
-    return velocities;
+    return poseChange;
 }

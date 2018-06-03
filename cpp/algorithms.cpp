@@ -24,7 +24,7 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 #include "Map.hpp"
 #include "Laser.hpp"
 #include "Scan.hpp"
-#include "Velocities.hpp"
+#include "PoseChange.hpp"
 #include "WheeledRobot.hpp"
 
 #include "algorithms.hpp"
@@ -64,8 +64,8 @@ CoreSLAM::CoreSLAM(
     // Store laser for later
     this->laser = new Laser(laser);
     
-    // Initialize velocities (dxyMillimeters, dthetaDegrees, dtSeconds) for odometry
-    this->velocities = new Velocities();
+    // Initialize poseChange (dxyMillimeters, dthetaDegrees, dtSeconds) for odometry
+    this->poseChange = new PoseChange();
 
     // Initialize a scan for computing distance to map, and one for updating map
     this->scan_for_mapbuild = this->scan_create(3);
@@ -80,30 +80,30 @@ CoreSLAM::~CoreSLAM(void)
     delete this->map;
     delete this->scan_for_distance;
     delete this->scan_for_mapbuild;
-    delete this->velocities;
+    delete this->poseChange;
 }
 
 
-void CoreSLAM::update(int * scan_mm, Velocities & velocities)
+void CoreSLAM::update(int * scan_mm, PoseChange & poseChange)
 {             
     // Build a scan for computing distance to map, and one for updating map
     this->scan_update(this->scan_for_mapbuild, scan_mm);
     this->scan_update(this->scan_for_distance, scan_mm);
     
-    // Update velocities
-    this->velocities->update(velocities.dxy_mm, 
-                             velocities.dtheta_degrees,  
-                             velocities.dt_seconds);
+    // Update poseChange
+    this->poseChange->update(poseChange.dxy_mm, 
+                             poseChange.dtheta_degrees,  
+                             poseChange.dt_seconds);
                              
     // Implementing class updates map and pointcloud
-    this->updateMapAndPointcloud(velocities);
+    this->updateMapAndPointcloud(poseChange);
 }   
 
 void CoreSLAM::update(int * scan_mm) 
 {
-    Velocities zero_velocities;   
+    PoseChange zero_poseChange;   
     
-    this->update(scan_mm, zero_velocities);
+    this->update(scan_mm, zero_poseChange);
 }
 
 
@@ -121,7 +121,7 @@ Scan * CoreSLAM::scan_create(int span)
 void 
 CoreSLAM::scan_update(Scan * scan, int * scan_mm)
 {
-    scan->update(scan_mm, this->hole_width_mm, *this->velocities);
+    scan->update(scan_mm, this->hole_width_mm, *this->poseChange);
 }
 
 SinglePositionSLAM::SinglePositionSLAM(Laser & laser, int map_size_pixels, double map_size_meters) :
@@ -133,15 +133,15 @@ CoreSLAM(laser, map_size_pixels, map_size_meters)
     
 // SinglePositionSLAM class -------------------------------------------------------------------------------------------
 
-void SinglePositionSLAM::updateMapAndPointcloud(Velocities & velocities)
+void SinglePositionSLAM::updateMapAndPointcloud(PoseChange & poseChange)
 {    
     // Start at current position 
     Position start_pos = this->position;
 
-    // Add effect of velocities
-    start_pos.x_mm      += velocities.dxy_mm * this->costheta(),
-    start_pos.y_mm      += velocities.dxy_mm *  this->sintheta(),
-    start_pos.theta_degrees += velocities.dtheta_degrees;
+    // Add effect of poseChange
+    start_pos.x_mm      += poseChange.dxy_mm * this->costheta(),
+    start_pos.y_mm      += poseChange.dxy_mm *  this->sintheta(),
+    start_pos.theta_degrees += poseChange.dtheta_degrees;
     
     // Add offset from laser
     start_pos.x_mm += this->laser->offset_mm * this->costheta();

@@ -58,7 +58,7 @@ using namespace std;
 #include "Position.hpp"
 #include "Laser.hpp"
 #include "WheeledRobot.hpp"
-#include "Velocities.hpp"
+#include "PoseChange.hpp"
 #include "algorithms.hpp"
 
 
@@ -161,9 +161,9 @@ public:
     {
     }
     
-    Velocities computeVelocities(long * odometry, Velocities & velocities)
+    PoseChange computePoseChange(long * odometry, PoseChange & poseChange)
     {  
-        return WheeledRobot::computeVelocities(
+        return WheeledRobot::computePoseChange(
             odometry[0], 
             odometry[1], 
             odometry[2]);
@@ -350,8 +350,8 @@ int main( int argc, const char** argv )
         // Update with/out odometry
         if (use_odometry)
         {
-            Velocities velocities = robot.computeVelocities(odometries[scanno], velocities);
-            slam->update(lidar, velocities);            
+            PoseChange poseChange = robot.computePoseChange(odometries[scanno], poseChange);
+            slam->update(lidar, poseChange);            
         }
         else
         {

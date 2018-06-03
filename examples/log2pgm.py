@@ -94,8 +94,8 @@ def main():
     
         if use_odometry:
                   
-            # Convert odometry to velocities
-            velocities = robot.computeVelocities(odometries[scanno])
+            # Convert odometry to pose change (dxy_mm, dtheta_degrees, dt_seconds)
+            velocities = robot.computePoseChange(odometries[scanno])
                                  
             # Update SLAM with lidar and velocities
             slam.update(lidars[scanno], velocities)

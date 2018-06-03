@@ -27,7 +27,7 @@
 #include <iostream>
 using namespace std; 
 
-class Velocities;
+class PoseChange;
 class Laser;
 
 
@@ -81,14 +81,14 @@ update(
 * Updates this Scan object with new values from a Lidar scan.
 * @param scanvals_mm scanned Lidar distance values in millimeters
 * @param hole_width_millimeters hole width in millimeters
-* @param velocities forward velocity and angular velocity of robot at scan time
+* @param poseChange forward velocity and angular velocity of robot at scan time
 * 
 */
 void 
 update(
     int * scanvals_mm, 
     double hole_width_millimeters,
-    Velocities & velocities);
+    PoseChange & poseChange);
 
 friend ostream& operator<< (ostream & out, Scan & scan);
 

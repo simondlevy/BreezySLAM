@@ -57,7 +57,7 @@ class CoreSLAM(object):
     
     Implementing classes should provide the method
     
-      _updateMapAndPointcloud(scan_mm, velocities, should_update_map)
+      _updateMapAndPointcloud(scan_mm, dxy_mm, dtheta_degrees, should_update_map)
     
     to update the point-cloud (particle cloud) and map (if should_update_map true)
     '''
@@ -80,7 +80,7 @@ class CoreSLAM(object):
         # Store laser for later
         self.laser = laser
         
-        # Initialize velocities (dxyMillimeters, dthetaDegrees, dtSeconds) for odometry
+        # Initialize velocities (dxyMillimeters/dt, dthetaDegrees/dt) for scan update
         self.velocities = (0, 0)
         
         # Initialize a scan for computing distance to map, and one for updating map
@@ -97,22 +97,22 @@ class CoreSLAM(object):
          
         scan_mm is a list of Lidar scan values, whose count is specified in the scan_size 
         attribute of the Laser object passed to the CoreSlam constructor
-        velocities is a tuple of velocities (dxy_mm, dtheta_degrees, dt_seconds) for odometry
+        velocities is a tuple of velocities (dxy_mm, dtheta_degrees, dt_seconds) computed from odometry
         should_update_map flags for whether you want to update the map
         '''
+
+        # Convert (dxy,dtheta,dt) to (dxy/dt, dtheta/dt) for scan update
+        velocity_factor = (1 / velocities[2])  if (velocities[2] > 0) else 0 # units => units/sec
+        dxy_mm_dt = velocities[0] * velocity_factor  
+        dtheta_degrees_dt = velocities[1] * velocity_factor
+        self.velocities = (dxy_mm_dt, dtheta_degrees_dt)
 
         # Build a scan for computing distance to map, and one for updating map 
         self._scan_update(self.scan_for_mapbuild, scans_mm)
         self._scan_update(self.scan_for_distance, scans_mm)
 
-        # Convert (dxy,dtheta,dt) to (dxy/dt, dtheta/dt) for scan update
-        velocity_factor = (1 / velocities[2])  if (velocities[2] > 0) else 0 # units => units/sec
-        new_dxy_mm = velocities[0] * velocity_factor  
-        new_dtheta_degrees = velocities[1] * velocity_factor
-        self.velocities = (new_dxy_mm, new_dtheta_degrees)
-
         # Implementing class updates map and pointcloud
-        self._updateMapAndPointcloud(self.velocities, should_update_map)
+        self._updateMapAndPointcloud(velocities[0], velocities[1], should_update_map)
         
     def getmap(self, mapbytes):
         '''
@@ -166,7 +166,7 @@ class SinglePositionSLAM(CoreSLAM):
         init_coord_mm = 500 * map_size_meters # center of map
         self.position =  pybreezyslam.Position(init_coord_mm, init_coord_mm, 0)
         
-    def _updateMapAndPointcloud(self, velocities, should_update_map):
+    def _updateMapAndPointcloud(self, dxy_mm, dtheta_degrees, should_update_map):
         '''
         Updates the map and point-cloud (particle cloud). Called automatically by CoreSLAM.update()
         velocities is a tuple of the form (dxy_mm, dtheta_degrees, dt_seconds).
@@ -176,9 +176,9 @@ class SinglePositionSLAM(CoreSLAM):
         start_pos = self.position.copy()
         
         # Add effect of velocities
-        start_pos.x_mm      += velocities[0] * self._costheta()
-        start_pos.y_mm      += velocities[0] * self._sintheta()
-        start_pos.theta_degrees += velocities[1]
+        start_pos.x_mm      += dxy_mm * self._costheta()
+        start_pos.y_mm      += dxy_mm * self._sintheta()
+        start_pos.theta_degrees += dtheta_degrees
 
         # Add offset from laser
         start_pos.x_mm  += self.laser.offset_mm * self._costheta()

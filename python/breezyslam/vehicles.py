@@ -52,9 +52,9 @@ class WheeledVehicle(object):
         
         return self.__str__()
         
-    def computeVelocities(self, timestamp, leftWheelOdometry, rightWheelOdometry):
+    def computePoseChange(self, timestamp, leftWheelOdometry, rightWheelOdometry):
         '''
-        Computes forward and angular velocities based on odometry.
+        Computes pose change based on odometry.
         
         Parameters:
         

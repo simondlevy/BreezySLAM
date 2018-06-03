@@ -31,7 +31,7 @@ using namespace std;
 
 #include "coreslam.h"
 
-#include "Velocities.hpp"
+#include "PoseChange.hpp"
 #include "Laser.hpp"
 #include "Scan.hpp"
 
@@ -76,22 +76,22 @@ void
 Scan::update(
     int * scanvals_mm, 
     double hole_width_millimeters,
-    Velocities & velocities)
+    PoseChange & poseChange)
 {
     scan_update(
         this->scan,
         scanvals_mm,
         hole_width_millimeters,
-        velocities.dxy_mm,
-        velocities.dtheta_degrees);
+        poseChange.dxy_mm,
+        poseChange.dtheta_degrees);
 }
 void 
 Scan::update(
     int * scanvals_mm, 
     double hole_width_millimeters)
 {
-    Velocities zeroVelocities;
-    this->update(scanvals_mm, hole_width_millimeters, zeroVelocities);
+    PoseChange zeroPoseChange;
+    this->update(scanvals_mm, hole_width_millimeters, zeroPoseChange);
 }
 
 ostream& operator<< (ostream & out, Scan & scan)

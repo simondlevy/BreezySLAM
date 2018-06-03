@@ -50,11 +50,11 @@ libbreezyslam.$(LIBEXT): algorithms.o  Scan.o Map.o WheeledRobot.o \
                         coreslam.o coreslam_$(ARCH).o random.o ziggurat.o \
           -o libbreezyslam.$(LIBEXT) -lm
 
-algorithms.o: algorithms.cpp algorithms.hpp Laser.hpp Position.hpp Map.hpp Scan.hpp Velocities.hpp \
+algorithms.o: algorithms.cpp algorithms.hpp Laser.hpp Position.hpp Map.hpp Scan.hpp PoseChange.hpp \
                WheeledRobot.hpp ../c/coreslam.h 
 	g++ -O3 -I../c -c -Wall $(CFLAGS) algorithms.cpp
 
-Scan.o: Scan.cpp Scan.hpp Velocities.hpp Laser.hpp ../c/coreslam.h
+Scan.o: Scan.cpp Scan.hpp PoseChange.hpp Laser.hpp ../c/coreslam.h
 	g++ -O3 -I../c -c -Wall $(CFLAGS) Scan.cpp
 
 Map.o: Map.cpp Map.hpp Position.hpp Scan.hpp ../c/coreslam.h

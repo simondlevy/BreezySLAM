@@ -1,6 +1,6 @@
 /**
 * 
-* Velocities.hpp - C++ header for Velocities class
+* PoseChange.hpp - C++ header for PoseChange class
 *
 * Copyright (C) 2014 Simon D. Levy
 
@@ -27,18 +27,18 @@ using namespace std;
 
 
 /**
-* A class representing the forward and angular velocities of a robot.
+* A class representing the forward and angular poseChange of a robot.
 */
-class Velocities 
+class PoseChange 
 {    
     friend class Scan;
     
 public:
     
 /**
-* Creates a new Velocities object with specified velocities.
+* Creates a new PoseChange object with specified poseChange.
 */
-Velocities(double dxy_mm, double dtheta_degrees, double dtSeconds)
+PoseChange(double dxy_mm, double dtheta_degrees, double dtSeconds)
 {
     this->dxy_mm = dxy_mm;
     this->dtheta_degrees = dtheta_degrees;
@@ -46,9 +46,9 @@ Velocities(double dxy_mm, double dtheta_degrees, double dtSeconds)
 }
 
 /**
-* Creates a new Velocities object with zero velocities.
+* Creates a new PoseChange object with zero poseChange.
 */
-Velocities(void)
+PoseChange(void)
 {
     this->dxy_mm = 0;
     this->dtheta_degrees = 0;
@@ -58,10 +58,10 @@ Velocities(void)
 
 
 /**
-* Updates this Velocities object.
+* Updates this PoseChange object.
 * @param dxy_mm new forward distance traveled in millimeters
 * @param dtheta_degrees new angular rotation in degrees
-* @param dtSeconds time in seconds since last velocities
+* @param dtSeconds time in seconds since last poseChange
 */
 void update(double dxy_mm, double dtheta_degrees, double dtSeconds)
 {
@@ -72,14 +72,14 @@ void update(double dxy_mm, double dtheta_degrees, double dtSeconds)
     this->dtheta_degrees = dtheta_degrees * velocity_factor;
 }
 
-friend ostream& operator<< (ostream & out, Velocities & velocities)
+friend ostream& operator<< (ostream & out, PoseChange & poseChange)
 {
     char str[100];
     
     sprintf(str, "<dxy=%7.0f mm dtheta = %+3.3f degrees dt = %f s",
-        velocities.dxy_mm, 
-        velocities.dtheta_degrees,
-        velocities.dt_seconds);
+        poseChange.dxy_mm, 
+        poseChange.dtheta_degrees,
+        poseChange.dt_seconds);
     
     out << str;
     

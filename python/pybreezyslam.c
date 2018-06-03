@@ -15,29 +15,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License 
 along with this code.  If not, see <http://www.gnu.org/licenses/>.
-
-Change log:
-
-07-FEB-2014 : Simon D. Levy  - Initial release
-
-17-FEB-2014 : SDL - Prohibit non-positive random seed
-28-FEB-2014 : SDL - Check for null return in Robot.computeVelocities()
-01-MAR-2014 : SDL - Moved module code to in __init__.py
-14-MAR_2014 : SDL - Changed mm_per_pixel to pixels_per_meter
-                  - No more robot object passed to __init__(); velocities 
-                    sent directly into update()
-16-MAR_2014 : SDL - Changed #include to ../pybreezyslam
-23-MAR-2014 : SDL - Changed millimeters to meters
-31-MAR-2014 : SDL - Improved documetnation for Laser class
-                  - Made all units explicit
-30-APR-2014 : SDL - Migrated CoreSLAM algorithm to pure Python
-                  - Added Position, Map, Scan classes
-                  - Added distanceScanToMap method
-04-MAY-2014 : SDL - Changed back from meters to mm
-03-JUN-2014 : SDL - Made distanceScanToMap() return -1 for infinity
-23-JUL-2014 : SDL - Simplified API for Laser
-08-AUG-2014:  SDL - Moved Laser to pure Python
-13-AUG-2014:  SDL - Fixed Scan.update() bug in Python3
 */
 
 #include <Python.h>

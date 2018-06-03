@@ -62,8 +62,8 @@ classdef WheeledRobot
     
     methods (Access = 'public')
         
-        function [velocities, obj] = computeVelocities(obj, timestamp, leftWheelOdometry, rightWheelOdometry)
-            % Computes forward and angular velocities based on odometry.
+        function [poseChange, obj] = computePoseChange(obj, timestamp, leftWheelOdometry, rightWheelOdometry)
+            % Computes forward and angular poseChange based on odometry.
             %
             % Parameters:
             
@@ -104,7 +104,7 @@ classdef WheeledRobot
             obj.rightWheelDegreesPrev = rightWheelDegreesCurr;
             
             % Return linear velocity, angular velocity, time difference
-            velocities = [dxyMillimeters, dthetaDegrees, dtSeconds];
+            poseChange = [dxyMillimeters, dthetaDegrees, dtSeconds];
             
         end
     end    

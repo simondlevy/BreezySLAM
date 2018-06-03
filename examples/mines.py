@@ -99,9 +99,9 @@ class Rover(WheeledVehicle):
         
         return '<%s ticks_per_cycle=%d>' % (WheeledVehicle.__str__(self), self.ticks_per_cycle)
         
-    def computeVelocities(self, odometry):
+    def computePoseChange(self, odometry):
         
-        return WheeledVehicle.computeVelocities(self, odometry[0], odometry[1], odometry[2])
+        return WheeledVehicle.computePoseChange(self, odometry[0], odometry[1], odometry[2])
 
     def extractOdometry(self, timestamp, leftWheel, rightWheel):
                 

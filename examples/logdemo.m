@@ -82,7 +82,7 @@ for scanno = 1:size(scans, 1)
     if use_odometry
         
         % Convert odometry to velocities
-        [velocities,robot] = robot.computeVelocities(odometries(scanno, :));
+        [velocities,robot] = robot.computePoseChange(odometries(scanno, :));
         
         % Update SLAM with lidar and velocities
         slam = slam.update(scans(scanno,:), velocities);
