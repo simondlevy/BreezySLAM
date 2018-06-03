@@ -47,7 +47,7 @@ from time import sleep
 from threading import Thread
 import pickle
 
-def threadfunc(robot, slam, timestamps, lidars, odometries, use_odometry, mapbytes, pose):
+def threadfunc(robot, slam, timestamps, lidars, odometries, mapbytes, pose):
     '''
     Threaded function runs SLAM, setting the map bytes and robot pose for display
     on the main thread.
@@ -59,18 +59,18 @@ def threadfunc(robot, slam, timestamps, lidars, odometries, use_odometry, mapbyt
     # Loop over scans    
     for scanno in range(len(lidars)):
 
-        if use_odometry:
+        if odometries is None:
                   
+             # Update SLAM with lidar alone
+            slam.update(lidars[scanno])
+
+        else:
+        
             # Convert odometry to velocities
             velocities = robot.computeVelocities(odometries[scanno])
                                  
             # Update SLAM with lidar and velocities
             slam.update(lidars[scanno], velocities)
-            
-        else:
-        
-            # Update SLAM with lidar alone
-            slam.update(lidars[scanno])
 
         # Get new position
         pose[0],pose[1],pose[2] = slam.getpos()    
@@ -118,7 +118,7 @@ def main():
     pose = [0,0,0]
 
     # Launch the data-collection / update thread
-    thread = Thread(target=threadfunc, args=(robot, slam, timestamps, lidars, odometries, use_odometry, mapbytes, pose))
+    thread = Thread(target=threadfunc, args=(robot, slam, timestamps, lidars, odometries if use_odometry else None, mapbytes, pose))
     thread.daemon = True
     thread.start()
     
