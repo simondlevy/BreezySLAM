@@ -81,7 +81,7 @@ class CoreSLAM(object):
         self.laser = laser
         
         # Initialize velocities (dxyMillimeters, dthetaDegrees, dtSeconds) for odometry
-        self.velocities = (0, 0, 0)
+        self.velocities = (0, 0)
         
         # Initialize a scan for computing distance to map, and one for updating map
         self.scan_for_distance = pybreezyslam.Scan(laser, 1)
@@ -105,12 +105,12 @@ class CoreSLAM(object):
         self._scan_update(self.scan_for_mapbuild, scans_mm)
         self._scan_update(self.scan_for_distance, scans_mm)
 
-        # Update velocities
-        velocity_factor = (1 / velocities[2])  if (velocities[2] > 0) else 0
+        # Convert (dxy,dtheta,dt) to (dxy/dt, dtheta/dt) for scan update
+        velocity_factor = (1 / velocities[2])  if (velocities[2] > 0) else 0 # units => units/sec
         new_dxy_mm = velocities[0] * velocity_factor  
         new_dtheta_degrees = velocities[1] * velocity_factor
-        self.velocities = (new_dxy_mm, new_dtheta_degrees, 0)
-                                                  
+        self.velocities = (new_dxy_mm, new_dtheta_degrees)
+
         # Implementing class updates map and pointcloud
         self._updateMapAndPointcloud(self.velocities, should_update_map)
         
@@ -178,7 +178,7 @@ class SinglePositionSLAM(CoreSLAM):
         # Add effect of velocities
         start_pos.x_mm      += velocities[0] * self._costheta()
         start_pos.y_mm      += velocities[0] * self._sintheta()
-        start_pos.theta_degrees = start_pos.theta_degrees +  velocities[1]
+        start_pos.theta_degrees += velocities[1]
 
         # Add offset from laser
         start_pos.x_mm  += self.laser.offset_mm * self._costheta()
