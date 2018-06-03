@@ -1,6 +1,6 @@
 '''
 BreezySLAM: Simple, efficient SLAM in Python
-
+#
 algorithms.py: SLAM algorithms
 
 Copyright (C) 2014 Simon D. Levy
@@ -90,21 +90,21 @@ class CoreSLAM(object):
         # Initialize the map 
         self.map = pybreezyslam.Map(map_size_pixels, map_size_meters)
                 
-    def update(self, scans_mm, velocities, should_update_map=True):
+    def update(self, scans_mm, poseChange, should_update_map=True):
         '''
         Updates the scan and odometry, and calls the the implementing class's _updateMapAndPointcloud method with
-        the specified velocities.
+        the specified pose change.
          
         scan_mm is a list of Lidar scan values, whose count is specified in the scan_size 
         attribute of the Laser object passed to the CoreSlam constructor
-        velocities is a tuple of velocities (dxy_mm, dtheta_degrees, dt_seconds) computed from odometry
+        poseChange is a tuple (dxy_mm, dtheta_degrees, dt_seconds) computed from odometry
         should_update_map flags for whether you want to update the map
         '''
 
         # Convert (dxy,dtheta,dt) to (dxy/dt, dtheta/dt) for scan update
-        velocity_factor = (1 / velocities[2])  if (velocities[2] > 0) else 0 # units => units/sec
-        dxy_mm_dt = velocities[0] * velocity_factor  
-        dtheta_degrees_dt = velocities[1] * velocity_factor
+        velocity_factor = (1 / poseChange[2])  if (poseChange[2] > 0) else 0 # units => units/sec
+        dxy_mm_dt = poseChange[0] * velocity_factor  
+        dtheta_degrees_dt = poseChange[1] * velocity_factor
         self.velocities = (dxy_mm_dt, dtheta_degrees_dt)
 
         # Build a scan for computing distance to map, and one for updating map 
@@ -112,7 +112,7 @@ class CoreSLAM(object):
         self._scan_update(self.scan_for_distance, scans_mm)
 
         # Implementing class updates map and pointcloud
-        self._updateMapAndPointcloud(velocities[0], velocities[1], should_update_map)
+        self._updateMapAndPointcloud(poseChange[0], poseChange[1], should_update_map)
         
     def getmap(self, mapbytes):
         '''

@@ -341,7 +341,7 @@ static PyMethodDef Scan_methods[] =
     "Scan.update(scans_mm, hole_width_mm, velocities=None) updates scan.\n"\
     "scans_mm is a list of integers representing scanned distances in mm.\n"\
     "hole_width_mm is the width of holes (obstacles, walls) in millimeters.\n"\
-    "velocities is an optional tuple containing at least dxy_mm, dtheta_degrees;\n"\
+    "velocities is an optional tuple containing (dxy_mm/dt, dtheta_degrees/dt);\n"\
     "i.e., robot's (forward, rotational velocity) for improving the quality of the scan."
     },
     {NULL}  // Sentinel 
