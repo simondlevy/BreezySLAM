@@ -100,7 +100,7 @@ the particle-filter (Monte Carlo position estimation) by commenting-out
 To see what other features are available, do 
 
 <pre>
-pydoc breezyslam
+pydoc3 breezyslam
 </pre>
 
 By using the component classes <b>Map</b>, <b>Scan</b>, and
