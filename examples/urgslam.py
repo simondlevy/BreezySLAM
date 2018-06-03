@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 '''
 urgslam.py : BreezySLAM Python with Hokuyo URG04LX Lidar

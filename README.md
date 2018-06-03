@@ -63,13 +63,13 @@ If odometry is available, it can also be passed into the update method.
 The BreezySLAM installation uses the popular
 <a href="http://docs.python.org/2/distutils/introduction.html">distutils</a> 
 approach to installing Python packages, so all you should have to do is
-download and unzip the file, cd to <tt><b>BreezySLAM-master/python</b></tt>, and do 
+download and unzip the file, cd to <tt><b>BreezySLAM/python</b></tt>, and do 
 
 <pre>
-sudo python setup.py install
+sudo python3 setup.py install
 </pre>
 
-For a quick demo, you can then cd to <tt><b>BreezySLAM-master/examples</b></tt> and do
+For a quick demo, you can then cd to <tt><b>BreezySLAM/examples</b></tt> and do
 
 <pre>
 make pytest
@@ -143,7 +143,7 @@ For making the binary on Windows I found
 
 <h3>Installing for C++</h3>
 
-Just cd to <tt><b>BreezySLAM-master/cpp</b></tt>, and do
+Just cd to <tt><b>BreezySLAM/cpp</b></tt>, and do
 
 &nbsp; &nbsp; <h3><b><tt>sudo make install</tt></b></h3>
 
@@ -153,7 +153,7 @@ variable at the top of the Makefile.
 
 <p>
 
-For a quick demo, you can then cd to <tt><b>BreezySLAM-master/examples</b></tt> and do
+For a quick demo, you can then cd to <tt><b>BreezySLAM/examples</b></tt> and do
 
 <pre>
 make cpptest
@@ -168,15 +168,15 @@ the Makefile in this directory as well, if you don't use <tt><b>/usr/local/lib</
 
 <h3>Installing for Java</h3>
 
-In <tt><b>BreezySLAM-master/java/edu/wlu/cs/levy/breezyslam/algorithms</b></tt> and
-<tt><b>BreezySLAM-master/java/edu/wlu/cs/levy/breezyslam/components</b></tt>,
+In <tt><b>BreezySLAM/java/edu/wlu/cs/levy/breezyslam/algorithms</b></tt> and
+<tt><b>BreezySLAM/java/edu/wlu/cs/levy/breezyslam/components</b></tt>,
 edit the <tt>JDKINC</tt> variable to reflect where you installed the JDK.
 Then run make in these directories, and also in
-<tt><b>BreezySLAM-master/java/edu/wlu/cs/levy/breezyslam/robots</b></tt>.
+<tt><b>BreezySLAM/java/edu/wlu/cs/levy/breezyslam/robots</b></tt>.
 
 <p>
 
-For a quick demo, you can then cd to <tt><b>BreezySLAM-master/examples</b></tt> and do
+For a quick demo, you can then cd to <tt><b>BreezySLAM/examples</b></tt> and do
 
 <pre>
 make javatest

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 '''
 logdemo.py : BreezySLAM Python demo.  Reads logfile with odometry and scan data
