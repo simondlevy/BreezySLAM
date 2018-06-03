@@ -51,7 +51,7 @@ from progressbar import ProgressBar
 from sys import argv, exit, stdout
 from time import time
 
-import Image
+from PIL import Image
 
 def main():
 	    
