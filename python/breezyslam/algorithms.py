@@ -80,9 +80,6 @@ class CoreSLAM(object):
         # Store laser for later
         self.laser = laser
         
-        # Initialize velocities (dxyMillimeters/dt, dthetaDegrees/dt) for scan update
-        self.velocities = (0, 0)
-        
         # Initialize a scan for computing distance to map, and one for updating map
         self.scan_for_distance = pybreezyslam.Scan(laser, 1)
         self.scan_for_mapbuild = pybreezyslam.Scan(laser, 3)
@@ -105,11 +102,11 @@ class CoreSLAM(object):
         velocity_factor = (1 / poseChange[2])  if (poseChange[2] > 0) else 0 # units => units/sec
         dxy_mm_dt = poseChange[0] * velocity_factor  
         dtheta_degrees_dt = poseChange[1] * velocity_factor
-        self.velocities = (dxy_mm_dt, dtheta_degrees_dt)
+        velocities = (dxy_mm_dt, dtheta_degrees_dt)
 
         # Build a scan for computing distance to map, and one for updating map 
-        self._scan_update(self.scan_for_mapbuild, scans_mm)
-        self._scan_update(self.scan_for_distance, scans_mm)
+        self._scan_update(self.scan_for_mapbuild, scans_mm, velocities)
+        self._scan_update(self.scan_for_distance, scans_mm, velocities)
 
         # Implementing class updates map and pointcloud
         self._updateMapAndPointcloud(poseChange[0], poseChange[1], should_update_map)
@@ -139,9 +136,9 @@ class CoreSLAM(object):
          return self.__str__()
 
         
-    def _scan_update(self, scan, lidar):
+    def _scan_update(self, scan, lidar, velocities):
         
-        scan.update(scans_mm=lidar, hole_width_mm=self.hole_width_mm, velocities=self.velocities)
+        scan.update(scans_mm=lidar, hole_width_mm=self.hole_width_mm, velocities=velocities)
         
         
 # SinglePositionSLAM class ---------------------------------------------------------------------------------------------
