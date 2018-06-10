@@ -2,7 +2,8 @@
 * 
 * BreezySLAM: Simple, efficient SLAM in Java
 *
-* Velocities.java - Java code for Velocities class
+* PoseChange.java - Java code for PoseChange class, encoding triple 
+* (dxy_mm, dtheta_degrees, dt_seconds)
 *
 * Copyright (C) 2014 Simon D. Levy
 *
@@ -25,13 +26,13 @@ package edu.wlu.cs.levy.breezyslam.components;
 /**
 * A class representing the forward and angular velocities of a robot as determined by odometry.
 */
-public class Velocities 
+public class PoseChange 
 {    
     
     /**
-    * Creates a new Velocities object with specified velocities.
+    * Creates a new PoseChange object with specified velocities.
     */
-    public Velocities(double dxy_mm, double dtheta_degrees, double dtSeconds)
+    public PoseChange(double dxy_mm, double dtheta_degrees, double dtSeconds)
     {
         this.dxy_mm = dxy_mm;
         this.dtheta_degrees = dtheta_degrees;
@@ -39,9 +40,9 @@ public class Velocities
     }
 
     /**
-    * Creates a new Velocities object with zero velocities.
+    * Creates a new PoseChange object with zero velocities.
     */
-    public Velocities()
+    public PoseChange()
     {
         this.dxy_mm = 0;
         this.dtheta_degrees = 0;
@@ -49,7 +50,7 @@ public class Velocities
     }
 
     /**
-    * Updates this Velocities object.
+    * Updates this PoseChange object.
     * @param dxy_mm new forward distance traveled in millimeters
     * @param dtheta_degrees new angular rotation in degrees
     * @param dtSeconds time in seconds since last velocities
@@ -64,7 +65,7 @@ public class Velocities
     }
 
     /**
-      * Returns a string representation of this Velocities object.
+      * Returns a string representation of this PoseChange object.
       */
     public String toString()
     {
@@ -73,7 +74,7 @@ public class Velocities
     }
 
     /**
-      * Returns the forward component of this Velocities object.
+      * Returns the forward component of this PoseChange object.
       */
     public double getDxyMm()
     {
@@ -81,7 +82,7 @@ public class Velocities
     }
 
     /**
-      * Returns the angular component of this Velocities object.
+      * Returns the angular component of this PoseChange object.
       */
      public double getDthetaDegrees()
     {
@@ -89,7 +90,7 @@ public class Velocities
     }
 
     /**
-      * Returns the time component of this Velocities object.
+      * Returns the time component of this PoseChange object.
       */
     public double getDtSeconds()
     {

@@ -21,7 +21,7 @@ package edu.wlu.cs.levy.breezyslam.algorithms;
 
 import edu.wlu.cs.levy.breezyslam.components.Position;
 import edu.wlu.cs.levy.breezyslam.components.Laser;
-import edu.wlu.cs.levy.breezyslam.components.Velocities;
+import edu.wlu.cs.levy.breezyslam.components.PoseChange;
 import edu.wlu.cs.levy.breezyslam.components.Map;
 import edu.wlu.cs.levy.breezyslam.components.Scan;
 

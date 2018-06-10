@@ -25,7 +25,7 @@
 package edu.wlu.cs.levy.breezyslam.algorithms;
 
 import edu.wlu.cs.levy.breezyslam.components.Position;
-import edu.wlu.cs.levy.breezyslam.components.Velocities;
+import edu.wlu.cs.levy.breezyslam.components.PoseChange;
 import edu.wlu.cs.levy.breezyslam.components.Laser;
 
 
@@ -57,17 +57,17 @@ public abstract class SinglePositionSLAM extends CoreSLAM
     
     /**
     * Updates the map and point-cloud (particle cloud). Called automatically by CoreSLAM::update()
-    * @param velocities velocities for odometry
+    * @param poseChange poseChange for odometry
     */
-    protected void updateMapAndPointcloud(Velocities velocities)
+    protected void updateMapAndPointcloud(PoseChange poseChange)
     {
         // Start at current position 
         Position start_pos = new Position(this.position);
 
-        // Add effect of velocities
-        start_pos.x_mm      += velocities.getDxyMm() * this.costheta();
-        start_pos.y_mm      += velocities.getDxyMm() *  this.sintheta();
-        start_pos.theta_degrees += velocities.getDthetaDegrees();
+        // Add effect of poseChange
+        start_pos.x_mm      += poseChange.getDxyMm() * this.costheta();
+        start_pos.y_mm      += poseChange.getDxyMm() *  this.sintheta();
+        start_pos.theta_degrees += poseChange.getDthetaDegrees();
         
         // Add offset from laser
         start_pos.x_mm += this.laser.getOffsetMm() * this.costheta();

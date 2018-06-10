@@ -43,7 +43,7 @@ else
   ARCH = sisd
 endif
 
-ALL = libjnibreezyslam_components.$(LIBEXT) Laser.class Position.class Velocities.class URG04LX.class
+ALL = libjnibreezyslam_components.$(LIBEXT) Laser.class Position.class PoseChange.class URG04LX.class
 
 all: $(ALL)
 
@@ -78,8 +78,8 @@ Laser.class: Laser.java
 URG04LX.class: URG04LX.java Laser.class
 	javac $(JFLAGS) -classpath $(JAVADIR) URG04LX.java
 
-Velocities.class: Velocities.java
-	javac $(JFLAGS) Velocities.java
+PoseChange.class: PoseChange.java
+	javac $(JFLAGS) PoseChange.java
 
 
 Position.class: Position.java

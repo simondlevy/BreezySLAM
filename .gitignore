@@ -1,3 +1,6 @@
+java/edu/wlu/cs/levy/breezyslam/algorithms/RMHCSLAM.h
+java/edu/wlu/cs/levy/breezyslam/components/Map.h
+java/edu/wlu/cs/levy/breezyslam/components/Scan.h
 examples/__pycache__
 examples/*.pyc
 examples/*.pgm
@@ -7,6 +10,7 @@ examples/log2pgm
 python/breezyslam/*.pyc
 python/breezyslam/__pycache__
 python/build
+*.class
 *.o
 *.so
 *.swp

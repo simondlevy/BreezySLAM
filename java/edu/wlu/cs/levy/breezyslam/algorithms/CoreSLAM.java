@@ -22,7 +22,7 @@
 package edu.wlu.cs.levy.breezyslam.algorithms;
 
 import edu.wlu.cs.levy.breezyslam.components.Laser;
-import edu.wlu.cs.levy.breezyslam.components.Velocities;
+import edu.wlu.cs.levy.breezyslam.components.PoseChange;
 import edu.wlu.cs.levy.breezyslam.components.Map;
 import edu.wlu.cs.levy.breezyslam.components.Scan;
 
@@ -43,7 +43,7 @@ import edu.wlu.cs.levy.breezyslam.components.Scan;
 *     </pre>
 *    Implementing classes should provide the method
 *
-*      void updateMapAndPointcloud(int * scan_mm, Velocities & velocities)
+*      void updateMapAndPointcloud(int * scan_mm, PoseChange & poseChange)
 *
 *    to update the map and point-cloud (particle cloud).
 *
@@ -62,7 +62,7 @@ public abstract class CoreSLAM {
 
     protected Laser laser;
 
-    protected Velocities velocities;
+    protected PoseChange poseChange;
 
     protected Map map;
 
@@ -74,8 +74,8 @@ public abstract class CoreSLAM {
         // Set default params
         this.laser = new Laser(laser);
         
-        // Initialize velocities (dxyMillimeters, dthetaDegrees, dtSeconds) for odometry
-        this.velocities = new Velocities();
+        // Initialize poseChange (dxyMillimeters, dthetaDegrees, dtSeconds) for odometry
+        this.poseChange = new PoseChange();
 
         // Initialize a scan for computing distance to map, and one for updating map
         this.scan_for_mapbuild = this.scan_create(3);
@@ -92,38 +92,38 @@ public abstract class CoreSLAM {
 
     private void scan_update(Scan scan, int [] scan_mm)
     {
-        scan.update(scan_mm, this.hole_width_mm, this.velocities);
+        scan.update(scan_mm, this.hole_width_mm, this.poseChange);
     }
 
 
-    public void update(int [] scan_mm, Velocities velocities)
+    public void update(int [] scan_mm, PoseChange poseChange)
     {             
         // Build a scan for computing distance to map, and one for updating map
         this.scan_update(this.scan_for_mapbuild, scan_mm);
         this.scan_update(this.scan_for_distance, scan_mm);
         
-        // Update velocities
-        this.velocities.update(velocities.getDxyMm(), velocities.getDthetaDegrees(),  velocities.getDtSeconds());
+        // Update poseChange
+        this.poseChange.update(poseChange.getDxyMm(), poseChange.getDthetaDegrees(),  poseChange.getDtSeconds());
                                  
         // Implementing class updates map and pointcloud
-        this.updateMapAndPointcloud(velocities);
+        this.updateMapAndPointcloud(poseChange);
     }   
 
     /**
-    * Updates the scan, and calls the the implementing class's updateMapAndPointcloud method with zero velocities
+    * Updates the scan, and calls the the implementing class's updateMapAndPointcloud method with zero poseChange
     * (no odometry).
     * @param scan_mm Lidar scan values, whose count is specified in the <tt>scan_size</tt> 
     * attribute of the Laser object passed to the CoreSlam constructor
     */
     public void update(int [] scan_mm)
     {
-        Velocities zero_velocities = new Velocities();
+        PoseChange zero_poseChange = new PoseChange();
 
-        this.update(scan_mm, zero_velocities);
+        this.update(scan_mm, zero_poseChange);
     }
 
 
-    protected abstract void updateMapAndPointcloud(Velocities velocities);
+    protected abstract void updateMapAndPointcloud(PoseChange poseChange);
 
     public void getmap(byte [] mapbytes)
     {

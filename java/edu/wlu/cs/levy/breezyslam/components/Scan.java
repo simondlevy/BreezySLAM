@@ -51,8 +51,8 @@ public class Scan
     public native void update(
             int [] lidar_mm,
             double hole_width_mm,
-            double velocities_dxy_mm,
-            double velocities_dtheta_degrees);
+            double poseChange_dxy_mm,
+            double poseChange_dtheta_degrees);
 
 
     /**
@@ -86,12 +86,12 @@ public class Scan
     * Updates this Scan object with new values from a Lidar scan.
     * @param scanvals_mm scanned Lidar distance values in millimeters
     * @param hole_width_millimeters hole width in millimeters
-    * @param velocities forward velocity and angular velocity of robot at scan time
+    * @param poseChange forward velocity and angular velocity of robot at scan time
     * 
     */
-    public void update(int [] scanvals_mm, double hole_width_millimeters, Velocities velocities) 
+    public void update(int [] scanvals_mm, double hole_width_millimeters, PoseChange poseChange) 
     {
-        this.update(scanvals_mm, hole_width_millimeters, velocities.dxy_mm, velocities.dtheta_degrees);
+        this.update(scanvals_mm, hole_width_millimeters, poseChange.dxy_mm, poseChange.dtheta_degrees);
     }
 }
 
