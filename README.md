@@ -171,8 +171,7 @@ the Makefile in this directory as well, if you don't use <tt><b>/usr/local/lib</
 In <tt><b>BreezySLAM/java/edu/wlu/cs/levy/breezyslam/algorithms</b></tt> and
 <tt><b>BreezySLAM/java/edu/wlu/cs/levy/breezyslam/components</b></tt>,
 edit the <tt>JDKINC</tt> variable in the Makefile to reflect where you installed the JDK.
-Then run make in these directories, and also in
-<tt><b>BreezySLAM/java/edu/wlu/cs/levy/breezyslam/robots</b></tt>.
+Then run <b>make</b> in these directories.
 
 <p>
 
