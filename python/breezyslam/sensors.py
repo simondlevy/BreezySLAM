@@ -23,11 +23,9 @@ class Laser(object):
     '''
     A class representing the specifications of a scanning laser rangefinder (Lidar).
     '''
-    def __init__(self, scan_size, scan_rate_hz, detection_angle_degrees, distance_no_detection_mm, detection_margin=0, offset_mm=0):
+    def __init__(self, scan_rate_hz, distance_no_detection_mm, detection_margin=0, offset_mm=0):
         
-        self.scan_size = scan_size
         self.scan_rate_hz = scan_rate_hz
-        self.detection_angle_degrees = detection_angle_degrees
         self.distance_no_detection_mm = distance_no_detection_mm
         self.detection_margin = detection_margin
         self.offset_mm = offset_mm
@@ -41,22 +39,40 @@ class Laser(object):
         
         return str(self)
 
+class FixedSizeLaser(Laser):
+    '''
+    A class for lasers that have a fixed number of angles per scan
+    '''
+    def __init__(self, scan_size, scan_rate_hz, detection_angle_degrees, distance_no_detection_mm, detection_margin=0, offset_mm=0):
 
-class URG04LX(Laser):
+        Laser.__init__(self, scan_rate_hz, distance_no_detection_mm, detection_margin, offset_mm)
+
+        self.scan_size = scan_size
+        self.detection_angle_degrees = detection_angle_degrees
+ 
+    def __str__(self):
+        
+        return  Laser.__str__(self) + ' | ' + ('scan_size=%d | detection_angle=%3.3f deg' % (self.scan_size,  self.detection_angle_degrees))
+        
+    def __repr__(self):
+        
+        return str(self)
+
+class URG04LX(FixedSizeLaser):
     '''
     A class for the Hokuyo URG-04LX
     '''
     def __init__(self, detectionMargin = 0, offsetMillimeters = 0):
         
-        Laser.__init__(self, 682, 10, 240, 4000, detectionMargin, offsetMillimeters)
+        FixedSizeLaser.__init__(self, 682, 10, 240, 4000, detectionMargin, offsetMillimeters)
 
-class XVLidar(Laser):
+class XVLidar(FixedSizeLaser):
     '''
     A class for the GetSurreal XVLidar
     '''
     def __init__(self, detectionMargin = 0, offsetMillimeters = 0):
         
-        Laser.__init__(self, 360, 5.5, 360, 6000, detectionMargin, offsetMillimeters)
+        FixedSizeLaser.__init__(self, 360, 5.5, 360, 6000, detectionMargin, offsetMillimeters)
 
 class RPLidarA1(Laser):
     '''
@@ -64,6 +80,6 @@ class RPLidarA1(Laser):
     '''
     def __init__(self, detectionMargin = 0, offsetMillimeters = 0):
         
-        Laser.__init__(self, 360, 5.5, 360, 12000, detectionMargin, offsetMillimeters)
+        Laser.__init__(self, 5.5, 12000, detectionMargin, offsetMillimeters)
 
 
