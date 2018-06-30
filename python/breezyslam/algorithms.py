@@ -308,5 +308,3 @@ class Deterministic_SLAM(SinglePositionSLAM):
         '''
         
         return start_position.copy()
-        
-  
