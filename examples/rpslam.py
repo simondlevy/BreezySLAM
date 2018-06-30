@@ -47,20 +47,26 @@ if __name__ == '__main__':
     # Initialize empty map
     mapbytes = bytearray(MAP_SIZE_PIXELS * MAP_SIZE_PIXELS)
 
-    # Create an iterator to collect data from the RPLidar
+    # Create an iterator to collect scan data from the RPLidar
     iterator = lidar.iter_scans()
 
     while True:
 
         try:
-            print(next(iterator))
+
+            # Extrat (quality, angle, distance) triples from current scan
+            items = [item for item in next(iterator)]
+
+            # Extract distances and angles from triples
+            distances = [item[2] for item in items]
+            angles    = [item[1] for item in items]
+            print(angles)
 
         except KeyboardInterrupt:
             break
 
-
-        # Update SLAM with current Lidar scan, using first element of (scan, quality) pairs
-        #slam.update([pair[0] for pair in lidar.getScan()])
+        # Update SLAM with current Lidar scan, using third element of (quality, angle, distance) triples
+        #slam.update([item[2] for item in next(iterator)])
 
         # Get current robot position
         #x, y, theta = slam.getpos()
