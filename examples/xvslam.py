@@ -30,6 +30,8 @@ from xvlidar import XVLidar as Lidar
 
 from pltslamshow import SlamShow
 
+from sys import stdout
+
 if __name__ == '__main__':
 
     # Connect to Lidar unit
@@ -62,8 +64,7 @@ if __name__ == '__main__':
 
         display.setPose(x, y, theta)
 
-        # Exit on ESCape
-        key = display.refresh()
-        if key != None and (key&0x1A):
+        # Exit on window close
+        if not display.refresh():
             exit(0)
      
