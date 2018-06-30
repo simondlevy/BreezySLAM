@@ -1,6 +1,6 @@
 '''
 BreezySLAM: Simple, efficient SLAM in Python
-#
+
 algorithms.py: SLAM algorithms
 
 Copyright (C) 2014 Simon D. Levy
