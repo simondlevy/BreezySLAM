@@ -12,7 +12,7 @@ start working with
 <a href="http://en.wikipedia.org/wiki/Lidar">Lidar</a>
 -based
 <a href="http://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping">SLAM</a> 
-in Python or C++.  (For those interested in Matlab or Java, there is a
+in Python or C++.  (For those working in Matlab or Java, there is a
 [legacy](https://github.com/simondlevy/BreezySLAM/tree/legacy) branch, which I
 am no longer maintaining.) BreezySLAM works with Python 2 and 3 on Linux and
 Mac OS X, and with C++ on Linux and Windows.  By using Python C extensions, we
@@ -125,7 +125,9 @@ both packages, you can run the <b>xvslam.py</b> example in the <b>BreezySLAM/exa
 
 Just cd to <tt><b>BreezySLAM/cpp</b></tt>, and do
 
-&nbsp; &nbsp; <h3><b><tt>sudo make install</tt></b></h3>
+<pre>
+sudo make install
+</pre>
 
 This will put the <tt><b>libbreezyslam</b></tt> shareable library in your <tt><b>/usr/local/lib</b></tt>
 directory.  If you keep your shared libraries elsewhere, just change the <tt><b>LIBDIR</b></tt>
