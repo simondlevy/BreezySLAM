@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
         # Interpolate to get 360 angles from 0 through 359, and corresponding distances
         f = interp1d(angles, distances, fill_value='extrapolate')
-        distances = list(f(np.arange(360)))
+        distances = list(f(np.arange(360))) # slam.update wants a list
 
         # Update SLAM with current Lidar scan, using third element of (quality, angle, distance) triples
         slam.update(distances)
@@ -79,9 +79,10 @@ if __name__ == '__main__':
 
         display.setPose(x, y, theta)
 
-        # Exit on window close
+        # Break on window close
         if not display.refresh():
-            exit(0)
+            break
 
+    # Shut down the lidar connection
     lidar.stop()
     lidar.disconnect()

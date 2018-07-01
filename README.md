@@ -114,11 +114,19 @@ try the  <b>urgslam.py</b> example in the examples folder.
 
 <p><h3>Testing with the GetSurreal XV Lidar</h3>
 
-BreezySLAM now includes Python support for the inexpensive 
+BreezySLAM includes Python support for the inexpensive 
 <a href="https://www.getsurreal.com/product/xv-lidar-sensor-mount-package">XV Lidar</a> from GetSurreal.
 To try it out, you'll also need the <a href="https://github.com/simondlevy/xvlidar">xvlidar</a> 
 Python package.  Once you've installed
 both packages, you can run the <b>xvslam.py</b> example in the <b>BreezySLAM/examples</b> folder.
+
+<p><h3>Testing with the SLAMTEC RPLidar A1</h3>
+
+BreezySLAM also includes Python support for the inexpensive 
+<a href="http://www.slamtec.com/en/lidar/a1">RPLidar A1</a> from SLAMTECH.
+To try it out, you'll also need the <a href="https://github.com/SkoltechRobotics/rplidar">rplidar</a> 
+Python package, as well as the popular <b>numpy</b> and <b>scipy</b> packages.  Once you've installed
+all packages, you can run the <b>rpslam.py</b> example in the <b>BreezySLAM/examples</b> folder.
 
 </p><h3>Installing for Matlab</h3>
 
