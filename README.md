@@ -12,9 +12,8 @@ start working with
 <a href="http://en.wikipedia.org/wiki/Lidar">Lidar</a>
 -based
 <a href="http://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping">SLAM</a> 
-in Python or C++.  (For those working in Matlab or Java, there is a
-[legacy](https://github.com/simondlevy/BreezySLAM/tree/legacy) branch, which I
-am no longer maintaining.) BreezySLAM works with Python 2 and 3 on Linux and
+in Python or C++.  There is also support for Matlab and Java, though I am no longer maintaining that
+code.) BreezySLAM works with Python 2 and 3 on Linux and
 Mac OS X, and with C++ on Linux and Windows.  By using Python C extensions, we
 were able to get the Python version to run as fast as C++. For maximum effiency
 on 32-bit platforms, we use Streaming SIMD extensions (Intel) and NEON (ARMv7)
