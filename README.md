@@ -4,6 +4,8 @@ BreezySLAM
 <img src="breezyslam.png" align="center" width=700>
 
 <p><p><p>
+    
+<b>NOTE: This branch (legacy) contains legacy support for Matlab, and Java</b>, languages that I am no longer supporting in the [master](https://github.com/simondlevy/BreezySLAM) branch.  If you're working in Python or C++, you should be using the master branch.
 
 <b>Simple, efficient, open-source package for Simultaneous Localization and Mapping in Python and C++</b>
 
