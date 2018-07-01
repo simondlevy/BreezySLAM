@@ -5,19 +5,19 @@ BreezySLAM
 
 <p><p><p>
     
-<b>Simple, efficient, open-source package for Simultaneous Localization and Mapping in Python and C++</b>
-
 <a href="https://github.com/simondlevy/BreezySLAM">This repository</a> contains everything you need to
 start working with 
 <a href="http://en.wikipedia.org/wiki/Lidar">Lidar</a>
 -based
 <a href="http://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping">SLAM</a> 
-in Python or C++.  There is also support for Matlab and Java, though I am no longer maintaining that
-code.) BreezySLAM works with Python 2 and 3 on Linux and
-Mac OS X, and with C++ on Linux and Windows.  By using Python C extensions, we
-were able to get the Python version to run as fast as C++. For maximum effiency
-on 32-bit platforms, we use Streaming SIMD extensions (Intel) and NEON (ARMv7)
-in the compute-intensive part of the code.
+in Python. (There is also support for Matlab, C++, and Java; however, because of the popularity of
+Python for this kind of work, I am no longer updating that code.)
+BreezySLAM works with Python 2 and 3 on Linux and Mac OS X, and
+with C++ on Linux and Windows.
+By using Python C extensions, we were able to get the Python and Matlab versions to run
+as fast as C++. For maximum effiency on 32-bit platforms, we use Streaming
+SIMD extensions (Intel) and NEON (ARMv7) in the compute-intensive part
+of the code.
 </p><p>
 BreezySLAM was inspired by the <a href="http://home.wlu.edu/%7Elambertk/#Software">Breezy</a>
 approach to Graphical User Interfaces developed by my colleague 
@@ -120,6 +120,27 @@ To try it out, you'll also need the <a href="https://github.com/simondlevy/xvlid
 Python package.  Once you've installed
 both packages, you can run the <b>xvslam.py</b> example in the <b>BreezySLAM/examples</b> folder.
 
+</p><h3>Installing for Matlab</h3>
+
+<p>
+I have run BreezySLAM in Matlab on 64-bit Windows, Linux, and Mac OS X. The <b>matlab</b> directory contains all the code you
+need, including pre-compiled binaries for all three operating systems.  To try it out in Matlab, add this directory to your
+path, then change to the <b>examples</b> directory and do
+
+<pre>
+  >> logdemo('exp2', 1)
+</pre> 
+
+If you modify the source code or want to build the binary for a different OS, you can change to the <b>matlab</b> 
+directory and do
+
+<pre>
+  >> make
+</pre>
+
+For making the binary on Windows I found 
+<a href="http://www.mathworks.com/matlabcentral/answers/95039-why-does-the-sdk-7-1-installation-fail-with-an-installation-failed-message-on-my-windows-system">these instructions</a> very helpful when I ran into trouble.
+
 <h3>Installing for C++</h3>
 
 Just cd to <tt><b>BreezySLAM/cpp</b></tt>, and do
@@ -146,6 +167,21 @@ Again, you'll need to change the <tt><b>LIBDIR</b></tt> variable at the top of
 the Makefile in this directory as well, if you don't use <tt><b>/usr/local/lib</b></tt>.
 
 </p><p>
+
+<h3>Installing for Java</h3>
+
+In <tt><b>BreezySLAM/java/edu/wlu/cs/levy/breezyslam/algorithms</b></tt> and
+<tt><b>BreezySLAM/java/edu/wlu/cs/levy/breezyslam/components</b></tt>,
+edit the <tt>JDKINC</tt> variable in the Makefile to reflect where you installed the JDK.
+Then run <b>make</b> in these directories.
+
+<p>
+
+For a quick demo, you can then cd to <tt><b>BreezySLAM/examples</b></tt> and do
+
+<pre>
+make javatest
+</pre>
 
 <h3>Notes on Windows installation</h3>
 
