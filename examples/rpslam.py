@@ -3,7 +3,7 @@
 '''
 rpslam.py : BreezySLAM Python with SLAMTECH RP A1 Lidar
                  
-Copyright (C) 2016 Simon D. Levy
+Copyright (C) 2018 Simon D. Levy
 
 This code is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as 
