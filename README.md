@@ -11,7 +11,7 @@ start working with
 -based
 <a href="http://en.wikipedia.org/wiki/Simultaneous_localization_and_mapping">SLAM</a> 
 in Python. (There is also support for Matlab, C++, and Java; however, because of the popularity of
-Python for this kind of work, I am no longer updating that code.)
+Python for this kind of work, I am no longer updating the code for those languages.)
 BreezySLAM works with Python 2 and 3 on Linux and Mac OS X, and
 with C++ on Linux and Windows.
 By using Python C extensions, we were able to get the Python and Matlab versions to run
