@@ -89,12 +89,13 @@ float interpolate(float xData[], float yData[], int size, float x)
 
 static void interpolate_scan(scan_t * scan, float * lidar_angles_deg, int * lidar_distances_mm, int scan_size)
 {
-    // Sort angles, preserving indices
+    // Sort angles, preserving distance for each angle
 
     interpolation_t * interp = (interpolation_t *)scan->interpolation;
     angle_distance_pair_t * pairs = interp->angle_distance_pairs;
 
-    int k;
+    int k = 0;
+
     for (k=0; k<scan_size; ++k) 
     {
         angle_distance_pair_t * pair = &pairs[k];
@@ -104,15 +105,21 @@ static void interpolate_scan(scan_t * scan, float * lidar_angles_deg, int * lida
 
     qsort(pairs, scan_size, sizeof(angle_distance_pair_t), angle_compar);
 
-    /* Interpolate */
+    /* Copy sorted angle/distance pairs to arrays for interpolation */
 
     for (k=0; k<scan_size; ++k) 
     {
         angle_distance_pair_t pair = pairs[k];
         interp->angles[k] = pair.angle;
         interp->distances[k] = pair.distance;
+    }
 
-        printf("%3.1f: %4.0f\n", interp->angles[k], interp->distances[k]);
+    /* Interpolate */
+
+    for (k=0; k<scan->size; ++k) 
+    {
+        lidar_distances_mm[k] = (int)interpolate(interp->angles, interp->distances, scan_size, (float)k);
+        printf("%3d: %d\n", k, lidar_distances_mm[k]);
     }
 
     printf("\n");
