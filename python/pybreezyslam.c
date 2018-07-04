@@ -307,6 +307,12 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
             return null_on_raise_argument_exception_with_details("Scan", "update", 
                     "number of scan angles must equal number of scan distances");
         }
+
+        // Extract scan angle values from argument
+        for (int k=0; k<PyList_Size(py_scan_angles_degrees); ++k)
+        {
+            self->lidar_angles_deg[k] = (float)PyFloat_AsDouble(PyList_GetItem(py_scan_angles_degrees, k));
+        }
     }
 
     // No scan angles provided; lidar-list size must match scan size
