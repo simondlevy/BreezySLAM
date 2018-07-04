@@ -336,7 +336,7 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
     }
 
     // Extract LIDAR values from argument
-    for (int k=0; k<self->scan.size; ++k)
+    for (int k=0; k<PyList_Size(py_lidar); ++k)
     {
         self->lidar_mm[k] = (int)PyFloat_AsDouble(PyList_GetItem(py_lidar, k));
     }
