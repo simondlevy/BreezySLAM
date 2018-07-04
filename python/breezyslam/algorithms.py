@@ -137,9 +137,9 @@ class CoreSLAM(object):
          return self.__str__()
 
         
-    def _scan_update(self, scan, lidar, velocities, scan_angles_degrees):
+    def _scan_update(self, scan, scans_distances_mm, velocities, scan_angles_degrees):
 
-        scan.update(scans_mm=lidar, hole_width_mm=self.hole_width_mm, 
+        scan.update(scans_mm=scans_distances_mm, hole_width_mm=self.hole_width_mm, 
                 velocities=velocities, scan_angles_degrees=scan_angles_degrees)
         
         

@@ -41,6 +41,87 @@
 
 #include "random.h"
 
+/* For angle/distance interpolation ------------------------------- */
+
+typedef struct angle_distance_pair {
+
+    float angle;
+    int  distance;
+
+}  angle_distance_pair_t;
+
+typedef struct interpolation {
+
+    /* for sorting */
+    angle_distance_pair_t * angle_distance_pairs;
+
+    /* for interpolating after sorting */
+    float * angles;
+    float * distances;
+
+
+} interpolation_t;
+
+static int angle_compar(const void * v1, const void * v2)
+{
+    angle_distance_pair_t * pair1 = (angle_distance_pair_t *)v1;
+    angle_distance_pair_t * pair2 = (angle_distance_pair_t *)v2;
+
+    return pair1->angle < pair2->angle ? -1 : 1;
+}
+
+// http://www.cplusplus.com/forum/general/216928/
+float interpolate(float xData[], float yData[], int size, float x)
+{
+    int i = 0;                                                                  // find left end of interval for interpolation
+    if ( x >= xData[size - 2] ) {                                               // special case: beyond right end 
+        i = size - 2;
+    }
+    else {
+        while ( x > xData[i+1] ) i++;
+    }
+    float xL = xData[i], yL = yData[i], xR = xData[i+1], yR = yData[i+1];      // points on either side (unless beyond ends)
+
+    float dydx = ( yR - yL ) / ( xR - xL );                                    // gradient
+
+    return yL + dydx * ( x - xL );                                              // linear interpolation
+}
+
+static void interpolate_scan(scan_t * scan, float * lidar_angles_deg, int * lidar_distances_mm, int scan_size)
+{
+    // Sort angles, preserving distance for each angle
+
+    interpolation_t * interp = (interpolation_t *)scan->interpolation;
+    angle_distance_pair_t * pairs = interp->angle_distance_pairs;
+
+    int k = 0;
+
+    for (k=0; k<scan_size; ++k) 
+    {
+        angle_distance_pair_t * pair = &pairs[k];
+        pair->angle    = lidar_angles_deg[k];
+        pair->distance = lidar_distances_mm[k];
+    }
+
+    qsort(pairs, scan_size, sizeof(angle_distance_pair_t), angle_compar);
+
+    /* Copy sorted angle/distance pairs to arrays for interpolation */
+
+    for (k=0; k<scan_size; ++k) 
+    {
+        angle_distance_pair_t pair = pairs[k];
+        interp->angles[k] = pair.angle;
+        interp->distances[k] = pair.distance;
+    }
+
+    /* Interpolate */
+
+    for (k=0; k<scan->size; ++k) 
+    {
+        lidar_distances_mm[k] = (int)interpolate(interp->angles, interp->distances, scan_size, (float)k);
+    }
+}
+
 /* Local helpers--------------------------------------------------- */
 
 static void * safe_malloc(size_t size)
@@ -56,17 +137,10 @@ static void * safe_malloc(size_t size)
     return v;
 }
 
-
 static double * double_alloc(int size)
 {
     return (double *)safe_malloc(size * sizeof(double));
 }
-
-static float * float_alloc(int size)
-{
-    return (float *)safe_malloc(size * sizeof(float));
-}
-
 
 static void
         swap(int * a, int * b)
@@ -264,6 +338,13 @@ int *
     return (int *)safe_malloc(size * sizeof(int));
 }
 
+float *
+        float_alloc(
+        int size)
+{
+    return (float *)safe_malloc(size * sizeof(float));
+}
+
 void
         map_init(
         map_t * map,
@@ -402,6 +483,13 @@ void scan_init(
     
     scan->npoints = 0;
     scan->obst_npoints = 0;
+
+    /* for angle/distance interpolation */
+    interpolation_t * interp = (interpolation_t *)safe_malloc(sizeof(interpolation_t));
+    interp->angles = float_alloc(scan->size);
+    interp->distances = float_alloc(scan->size);
+    interp->angle_distance_pairs = (angle_distance_pair_t *)safe_malloc(size*sizeof(angle_distance_pair_t));
+    scan->interpolation = interp;
     
     /* assure size multiple of 4 for SSE */
     scan->obst_x_mm = float_alloc(size*span+4);
@@ -419,6 +507,12 @@ void
     
     free(scan->obst_x_mm);
     free(scan->obst_y_mm);
+
+    interpolation_t * interp = (interpolation_t *)scan->interpolation;
+    free(interp->angles);
+    free(interp->distances);
+    free(interp->angle_distance_pairs);
+    free(interp);
 }
 
 void scan_string(
@@ -431,11 +525,19 @@ void scan_string(
 void
 scan_update(
         scan_t * scan,
-        int * lidar_mm,
-        double hole_width_mm,
-        double velocities_dxy_mm,
-        double velocities_dtheta_degrees)
+        float * lidar_angles_deg,
+        int *   lidar_distances_mm,
+        int     scan_size,
+        double  hole_width_mm,
+        double  velocities_dxy_mm,
+        double  velocities_dtheta_degrees)
 {    
+    /* interpolate scan distances by angles if indicated */
+    if (lidar_angles_deg) 
+    {
+        interpolate_scan(scan, lidar_angles_deg, lidar_distances_mm, scan_size);
+    }
+
     /* Take velocity into account */
     int degrees_per_second = (int)(scan->rate_hz * 360);
     double horz_mm = velocities_dxy_mm / degrees_per_second;
@@ -449,7 +551,7 @@ scan_update(
     
     for (i=scan->detection_margin+1; i<scan->size-scan->detection_margin; ++i)
     {
-        int lidar_value_mm = lidar_mm[i];
+        int lidar_value_mm = lidar_distances_mm[i];
         
         /* No obstacle */
         if (lidar_value_mm == 0)

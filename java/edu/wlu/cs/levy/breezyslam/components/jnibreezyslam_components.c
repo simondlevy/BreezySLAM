@@ -126,7 +126,8 @@ JNIEXPORT void JNICALL Java_edu_wlu_cs_levy_breezyslam_components_Scan_update (J
 
     jint * lidar_mm_c = (*env)->GetIntArrayElements(env, lidar_mm, 0);
 
-    scan_update(scan, lidar_mm_c, hole_width_mm, velocities_dxy_mm, velocities_dtheta_degrees);
+    // no support for angles/interpolation yet
+    scan_update(scan, NULL, lidar_mm_c, scan->size, hole_width_mm, velocities_dxy_mm, velocities_dtheta_degrees);
 
     (*env)->ReleaseIntArrayElements(env, lidar_mm, lidar_mm_c, 0);
 }

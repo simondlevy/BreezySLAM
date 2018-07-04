@@ -176,7 +176,8 @@ typedef struct
     PyObject_HEAD
     
     scan_t scan;
-    int * lidar_mm;
+    int   * lidar_distances_mm;
+    float * lidar_angles_deg;
     
 } Scan;
 
@@ -186,7 +187,8 @@ Scan_dealloc(Scan* self)
 {        
     scan_free(&self->scan);
     
-    free(self->lidar_mm);
+    free(self->lidar_distances_mm);
+    free(self->lidar_angles_deg);
     
     Py_TYPE(self)->tp_free((PyObject*)self);
 }
@@ -243,7 +245,8 @@ Scan_init(Scan *self, PyObject *args, PyObject *kwds)
             detection_margin,               
             offset_mm);
  
-    self->lidar_mm = int_alloc(self->scan.size);
+    self->lidar_distances_mm = int_alloc(self->scan.size);
+    self->lidar_angles_deg   = float_alloc(self->scan.size);
     
     return 0;
 }
@@ -288,20 +291,27 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
             "lidar must be a list");
     }
 
-    // Scan angles provided; run bozo-filter to match against lidar-list size
+    // Scan angles provided
     if (py_scan_angles_degrees != Py_None) 
     {
-        // Bozo filter on SCAN_ANGLES_DEGREES argument
+        // Bozo filter #1: SCAN_ANGLES_DEGREES  must be a list
         if (!PyList_Check(py_scan_angles_degrees))
         {
             return null_on_raise_argument_exception_with_details("Scan", "update", 
                     "scan angles must be a list");
         }
 
+        // Bozo filter #2: must have same number of scan angles as scan distances
         if (PyList_Size(py_lidar) != PyList_Size(py_scan_angles_degrees))
         {
             return null_on_raise_argument_exception_with_details("Scan", "update", 
                     "number of scan angles must equal number of scan distances");
+        }
+
+        // Extract scan angle values from argument
+        for (int k=0; k<PyList_Size(py_scan_angles_degrees); ++k)
+        {
+            self->lidar_angles_deg[k] = (float)PyFloat_AsDouble(PyList_GetItem(py_scan_angles_degrees, k));
         }
     }
 
@@ -312,13 +322,12 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
                 "lidar size mismatch");
     }
 
-
     // Default to no velocities
     double dxy_mm = 0;
     double dtheta_degrees = 0;
 
     // Bozo filter on velocities tuple
-    if (py_velocities)
+    if (py_velocities != Py_None)
     {
         if (!PyTuple_Check(py_velocities))
         {
@@ -336,22 +345,24 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
     }
 
     // Extract LIDAR values from argument
-    int k = 0;
-    for (k=0; k<self->scan.size; ++k)
+    for (int k=0; k<PyList_Size(py_lidar); ++k)
     {
-        self->lidar_mm[k] = PyFloat_AsDouble(PyList_GetItem(py_lidar, k));
+        self->lidar_distances_mm[k] = (int)PyFloat_AsDouble(PyList_GetItem(py_lidar, k));
     }
 
     // Update the scan
     scan_update(
             &self->scan, 
-            self->lidar_mm, 
+            (py_scan_angles_degrees != Py_None) ? self->lidar_angles_deg :NULL,
+            self->lidar_distances_mm, 
+            PyList_Size(py_lidar),
             hole_width_mm,
             dxy_mm,
             dtheta_degrees);
 
     Py_RETURN_NONE;
-}
+
+} // Scan_update
 
 
 static PyMethodDef Scan_methods[] = 

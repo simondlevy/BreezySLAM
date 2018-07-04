@@ -67,6 +67,9 @@ typedef struct scan_t
     double distance_no_detection_mm;    /* default value when the laser returns 0 */
     int detection_margin;               /* first scan element to consider */
     double offset_mm;                   /* position of the laser wrt center of rotation */
+
+    /* for angle/distance interpolation */
+    void * interpolation;
      
     /* for SSE */
     float * obst_x_mm;
@@ -84,6 +87,10 @@ extern "C"
     
 int * 
 int_alloc(
+    int size);
+
+float * 
+float_alloc(
     int size);
 
 void 
@@ -129,7 +136,9 @@ void scan_string(
 void 
 scan_update(
     scan_t * scan, 
-    int * lidar_mm, 
+    float * lidar_angles_deg,
+    int   * lidar_distances_mm, 
+    int     scan_size, 
     double hole_width_mm,
     double velocities_dxy_mm,
     double velocities_dtheta_degrees);
