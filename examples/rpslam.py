@@ -44,7 +44,7 @@ class STFU_Logger(Logger):
 
 if __name__ == '__main__':
 
-    # Connect to Lidar unit, with logger that suppresses buffer-overflow warnings
+    # Connect to Lidar unit, with logger that suppresses warnings
     lidar = Lidar(LIDAR_DEVICE, logger=STFU_Logger())
     #lidar = Lidar(LIDAR_DEVICE)
 
