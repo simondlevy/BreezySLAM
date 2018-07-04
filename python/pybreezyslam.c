@@ -353,7 +353,7 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
     // Update the scan
     scan_update(
             &self->scan, 
-            NULL,
+            (py_scan_angles_degrees != Py_None) ? self->lidar_angles_deg :NULL,
             self->lidar_distances_mm, 
             PyList_Size(py_lidar),
             hole_width_mm,

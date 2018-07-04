@@ -439,6 +439,8 @@ scan_update(
         double  velocities_dxy_mm,
         double  velocities_dtheta_degrees)
 {    
+    printf("%p %d\n", lidar_angles_deg, scan_size);
+
     /* Take velocity into account */
     int degrees_per_second = (int)(scan->rate_hz * 360);
     double horz_mm = velocities_dxy_mm / degrees_per_second;
