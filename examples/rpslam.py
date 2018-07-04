@@ -30,9 +30,6 @@ from rplidar import RPLidar as Lidar
 
 from pltslamshow import SlamShow
 
-from scipy.interpolate import interp1d
-import numpy as np
-
 if __name__ == '__main__':
 
     # Connect to Lidar unit
@@ -55,34 +52,41 @@ if __name__ == '__main__':
 
     while True:
 
-        # Extrat (quality, angle, distance) triples from current scan
-        items = [item for item in next(iterator)]
+        try:
 
-        # Extract distances and angles from triples
-        distances = [item[2] for item in items]
-        angles    = [item[1] for item in items]
+            # Extract (quality, angle, distance) triples from current scan
+            items = [item for item in next(iterator)]
 
-        # Interpolate to get 360 angles from 0 through 359, and corresponding distances
-        f = interp1d(angles, distances, fill_value='extrapolate')
-        distances = list(f(np.arange(360))) # slam.update wants a list
+            # Extract distances and angles from triples
+            distances = [item[2] for item in items]
+            angles    = [item[1] for item in items]
 
-        # Update SLAM with current Lidar scan, using third element of (quality, angle, distance) triples
-        slam.update(distances)
+            print(len(distances), len(angles))
 
-        # Get current robot position
-        x, y, theta = slam.getpos()
+            # Update SLAM with current Lidar scan and scan angles
+            slam.update(distances, scan_angles_degrees=angles)
 
-        # Get current map bytes as grayscale
-        slam.getmap(mapbytes)
+        except KeyboardInterrupt:
 
-        display.displayMap(mapbytes)
-
-        display.setPose(x, y, theta)
-
-        # Break on window close
-        if not display.refresh():
             break
 
+        # Get current robot position
+        #x, y, theta = slam.getpos()
+
+        # Get current map bytes as grayscale
+        #slam.getmap(mapbytes)
+
+        # Display the map
+        #display.displayMap(mapbytes)
+
+        # Display the robot's pose in the map
+        #display.setPose(x, y, theta)
+
+        # Break on window close
+        #if not display.refresh():
+        #    break
+
     # Shut down the lidar connection
+    from time import sleep
     lidar.stop()
     lidar.disconnect()

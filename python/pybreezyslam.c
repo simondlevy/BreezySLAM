@@ -288,21 +288,25 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
             "lidar must be a list");
     }
 
-    // Scan angles provided; run bozo-filter to match against lidar-list size
+    // Scan angles provided
     if (py_scan_angles_degrees != Py_None) 
     {
-        // Bozo filter on SCAN_ANGLES_DEGREES argument
+        // Bozo filter #1: SCAN_ANGLES_DEGREES  must be a list
         if (!PyList_Check(py_scan_angles_degrees))
         {
             return null_on_raise_argument_exception_with_details("Scan", "update", 
                     "scan angles must be a list");
         }
 
+        // Bozo filter #2: must have same number of scan angles as scan distances
         if (PyList_Size(py_lidar) != PyList_Size(py_scan_angles_degrees))
         {
             return null_on_raise_argument_exception_with_details("Scan", "update", 
                     "number of scan angles must equal number of scan distances");
         }
+
+        printf("Interpolate!\n"); 
+        Py_RETURN_NONE;
     }
 
     // No scan angles provided; lidar-list size must match scan size
@@ -312,13 +316,12 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
                 "lidar size mismatch");
     }
 
-
     // Default to no velocities
     double dxy_mm = 0;
     double dtheta_degrees = 0;
 
     // Bozo filter on velocities tuple
-    if (py_velocities)
+    if (py_velocities != Py_None)
     {
         if (!PyTuple_Check(py_velocities))
         {
