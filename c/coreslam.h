@@ -133,7 +133,8 @@ void scan_string(
 void 
 scan_update(
     scan_t * scan, 
-    int * lidar_mm, 
+    float * lidar_angles_deg,
+    int * lidar_distances_mm, 
     double hole_width_mm,
     double velocities_dxy_mm,
     double velocities_dtheta_degrees);

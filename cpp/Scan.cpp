@@ -80,6 +80,7 @@ Scan::update(
 {
     scan_update(
         this->scan,
+        NULL, // no support for angles/interpolation yet
         scanvals_mm,
         hole_width_millimeters,
         poseChange.dxy_mm,

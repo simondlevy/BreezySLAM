@@ -432,7 +432,8 @@ void scan_string(
 void
 scan_update(
         scan_t * scan,
-        int * lidar_mm,
+        float * lidar_angles_deg,
+        int * lidar_distances_mm,
         double hole_width_mm,
         double velocities_dxy_mm,
         double velocities_dtheta_degrees)
@@ -450,7 +451,7 @@ scan_update(
     
     for (i=scan->detection_margin+1; i<scan->size-scan->detection_margin; ++i)
     {
-        int lidar_value_mm = lidar_mm[i];
+        int lidar_value_mm = lidar_distances_mm[i];
         
         /* No obstacle */
         if (lidar_value_mm == 0)

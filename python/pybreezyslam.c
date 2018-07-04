@@ -347,6 +347,7 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
     // Update the scan
     scan_update(
             &self->scan, 
+            NULL,
             self->lidar_distances_mm, 
             hole_width_mm,
             dxy_mm,
