@@ -43,19 +43,52 @@
 
 /* For angle/distance interpolation ------------------------------- */
 
-
-typedef struct angle_index_pair {
+typedef struct angle_distance_pair {
 
     float angle;
-    int index;
+    int  distance;
 
-}  angle_index_pair_t;
+}  angle_distance_pair_t;
 
 typedef struct interpolation {
 
-    angle_index_pair_t * angle_index_pairs;
+    angle_distance_pair_t * angle_distance_pairs;
 
 } interpolation_t;
+
+static int angle_compar(const void * v1, const void * v2)
+{
+    angle_distance_pair_t * pair1 = (angle_distance_pair_t *)v1;
+    angle_distance_pair_t * pair2 = (angle_distance_pair_t *)v2;
+
+    return pair1->angle < pair2->angle ? -1 : 1;
+}
+
+static void interpolate(scan_t * scan, float * lidar_angles_deg, int * lidar_distances_mm, int scan_size)
+{
+    // Sort angles, preserving indices
+
+    interpolation_t * interpolate = (interpolation_t *)scan->interpolation;
+    angle_distance_pair_t * pairs = interpolate->angle_distance_pairs;
+
+    int k;
+    for (k=0; k<scan_size; ++k) 
+    {
+        angle_distance_pair_t * pair = &pairs[k];
+        pair->angle    = lidar_angles_deg[k];
+        pair->distance = lidar_distances_mm[k];
+    }
+
+    qsort(pairs, scan_size, sizeof(angle_distance_pair_t), angle_compar);
+
+    for (k=0; k<scan_size; ++k) 
+    {
+        angle_distance_pair_t pair = pairs[k];
+        printf("%3.1f %05d\n", pair.angle, pair.distance);
+    }
+
+    printf("\n");
+}
 
 /* Local helpers--------------------------------------------------- */
 
@@ -421,7 +454,7 @@ void scan_init(
 
     /* for angle/distance interpolation */
     interpolation_t * interpolation = (interpolation_t *)safe_malloc(sizeof(interpolation_t));
-    interpolation->angle_index_pairs = (angle_index_pair_t *)safe_malloc(size*sizeof(angle_index_pair_t));
+    interpolation->angle_distance_pairs = (angle_distance_pair_t *)safe_malloc(size*sizeof(angle_distance_pair_t));
     scan->interpolation = interpolation;
     
     /* assure size multiple of 4 for SSE */
@@ -442,7 +475,7 @@ void
     free(scan->obst_y_mm);
 
     interpolation_t * interpolation = (interpolation_t *)scan->interpolation;
-    free(interpolation->angle_index_pairs);
+    free(interpolation->angle_distance_pairs);
     free(interpolation);
 }
 
@@ -466,7 +499,7 @@ scan_update(
     /* interpolate scan distances by angles if indicated */
     if (lidar_angles_deg) 
     {
-        printf("interpolate\n");
+        interpolate(scan, lidar_angles_deg, lidar_distances_mm, scan_size);
     }
     
 
