@@ -62,12 +62,6 @@ static double * double_alloc(int size)
     return (double *)safe_malloc(size * sizeof(double));
 }
 
-static float * float_alloc(int size)
-{
-    return (float *)safe_malloc(size * sizeof(float));
-}
-
-
 static void
         swap(int * a, int * b)
 {
@@ -262,6 +256,13 @@ int *
         int size)
 {
     return (int *)safe_malloc(size * sizeof(int));
+}
+
+float *
+        float_alloc(
+        int size)
+{
+    return (float *)safe_malloc(size * sizeof(float));
 }
 
 void

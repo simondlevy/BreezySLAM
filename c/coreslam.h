@@ -86,6 +86,10 @@ int *
 int_alloc(
     int size);
 
+float * 
+float_alloc(
+    int size);
+
 void 
 map_init(
     map_t * map, 

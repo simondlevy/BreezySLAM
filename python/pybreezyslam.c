@@ -176,7 +176,8 @@ typedef struct
     PyObject_HEAD
     
     scan_t scan;
-    int * lidar_mm;
+    int   * lidar_distances_mm;
+    float * lidar_angles_deg;
     
 } Scan;
 
@@ -186,7 +187,8 @@ Scan_dealloc(Scan* self)
 {        
     scan_free(&self->scan);
     
-    free(self->lidar_mm);
+    free(self->lidar_distances_mm);
+    free(self->lidar_angles_deg);
     
     Py_TYPE(self)->tp_free((PyObject*)self);
 }
@@ -243,7 +245,8 @@ Scan_init(Scan *self, PyObject *args, PyObject *kwds)
             detection_margin,               
             offset_mm);
  
-    self->lidar_mm = int_alloc(self->scan.size);
+    self->lidar_distances_mm = int_alloc(self->scan.size);
+    self->lidar_angles_deg   = float_alloc(self->scan.size);
     
     return 0;
 }
@@ -338,13 +341,13 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
     // Extract LIDAR values from argument
     for (int k=0; k<PyList_Size(py_lidar); ++k)
     {
-        self->lidar_mm[k] = (int)PyFloat_AsDouble(PyList_GetItem(py_lidar, k));
+        self->lidar_distances_mm[k] = (int)PyFloat_AsDouble(PyList_GetItem(py_lidar, k));
     }
 
     // Update the scan
     scan_update(
             &self->scan, 
-            self->lidar_mm, 
+            self->lidar_distances_mm, 
             hole_width_mm,
             dxy_mm,
             dtheta_degrees);
