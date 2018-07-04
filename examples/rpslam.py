@@ -30,10 +30,23 @@ from rplidar import RPLidar as Lidar
 
 from pltslamshow import SlamShow
 
+from logging import Logger
+
+class STFU_Logger(Logger):
+
+    def __init__(self):
+
+        Logger.__init__(self, 'STFU')
+
+    def warning(self, *args):
+
+        return
+
 if __name__ == '__main__':
 
-    # Connect to Lidar unit
-    lidar = Lidar(LIDAR_DEVICE)
+    # Connect to Lidar unit, with logger that suppresses buffer-overflow warnings
+    lidar = Lidar(LIDAR_DEVICE, logger=STFU_Logger())
+    #lidar = Lidar(LIDAR_DEVICE)
 
     # Create an RMHC SLAM object with a laser model and optional robot model
     slam = RMHC_SLAM(LaserModel(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
