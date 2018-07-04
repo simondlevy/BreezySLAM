@@ -52,41 +52,33 @@ if __name__ == '__main__':
 
     while True:
 
-        try:
+        # Extract (quality, angle, distance) triples from current scan
+        items = [item for item in next(iterator)]
 
-            # Extract (quality, angle, distance) triples from current scan
-            items = [item for item in next(iterator)]
+        # Extract distances and angles from triples
+        distances = [item[2] for item in items]
+        angles    = [item[1] for item in items]
 
-            # Extract distances and angles from triples
-            distances = [item[2] for item in items]
-            angles    = [item[1] for item in items]
-
-            print(len(distances), len(angles))
-
-            # Update SLAM with current Lidar scan and scan angles
-            slam.update(distances, scan_angles_degrees=angles)
-
-        except KeyboardInterrupt:
-
-            break
+        # Update SLAM with current Lidar scan and scan angles
+        slam.update(distances, scan_angles_degrees=angles)
 
         # Get current robot position
-        #x, y, theta = slam.getpos()
+        x, y, theta = slam.getpos()
 
         # Get current map bytes as grayscale
-        #slam.getmap(mapbytes)
+        slam.getmap(mapbytes)
 
         # Display the map
-        #display.displayMap(mapbytes)
+        display.displayMap(mapbytes)
 
         # Display the robot's pose in the map
-        #display.setPose(x, y, theta)
+        display.setPose(x, y, theta)
 
         # Break on window close
-        #if not display.refresh():
-        #    break
+        if not display.refresh():
+            break
 
-    # Shut down the lidar connection
+# Shut down the lidar connection
     from time import sleep
     lidar.stop()
     lidar.disconnect()

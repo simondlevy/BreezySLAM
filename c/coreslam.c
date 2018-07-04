@@ -119,10 +119,7 @@ static void interpolate_scan(scan_t * scan, float * lidar_angles_deg, int * lida
     for (k=0; k<scan->size; ++k) 
     {
         lidar_distances_mm[k] = (int)interpolate(interp->angles, interp->distances, scan_size, (float)k);
-        printf("%3d: %d\n", k, lidar_distances_mm[k]);
     }
-
-    printf("\n");
 }
 
 /* Local helpers--------------------------------------------------- */
@@ -540,7 +537,6 @@ scan_update(
     {
         interpolate_scan(scan, lidar_angles_deg, lidar_distances_mm, scan_size);
     }
-    
 
     /* Take velocity into account */
     int degrees_per_second = (int)(scan->rate_hz * 360);
