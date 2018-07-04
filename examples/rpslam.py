@@ -78,7 +78,6 @@ if __name__ == '__main__':
         if not display.refresh():
             break
 
-# Shut down the lidar connection
-    from time import sleep
+    # Shut down the lidar connection
     lidar.stop()
     lidar.disconnect()
