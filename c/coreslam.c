@@ -41,6 +41,22 @@
 
 #include "random.h"
 
+/* For angle/distance interpolation ------------------------------- */
+
+
+typedef struct angle_index_pair {
+
+    float angle;
+    int index;
+
+}  angle_index_pair_t;
+
+typedef struct interpolation {
+
+    angle_index_pair_t * angle_index_pairs;
+
+} interpolation_t;
+
 /* Local helpers--------------------------------------------------- */
 
 static void * safe_malloc(size_t size)
@@ -55,7 +71,6 @@ static void * safe_malloc(size_t size)
     
     return v;
 }
-
 
 static double * double_alloc(int size)
 {
@@ -403,6 +418,11 @@ void scan_init(
     
     scan->npoints = 0;
     scan->obst_npoints = 0;
+
+    /* for angle/distance interpolation */
+    interpolation_t * interpolation = (interpolation_t *)safe_malloc(sizeof(interpolation_t));
+    interpolation->angle_index_pairs = (angle_index_pair_t *)safe_malloc(size*sizeof(angle_index_pair_t));
+    scan->interpolation = interpolation;
     
     /* assure size multiple of 4 for SSE */
     scan->obst_x_mm = float_alloc(size*span+4);
@@ -420,6 +440,10 @@ void
     
     free(scan->obst_x_mm);
     free(scan->obst_y_mm);
+
+    interpolation_t * interpolation = (interpolation_t *)scan->interpolation;
+    free(interpolation->angle_index_pairs);
+    free(interpolation);
 }
 
 void scan_string(
@@ -439,7 +463,12 @@ scan_update(
         double  velocities_dxy_mm,
         double  velocities_dtheta_degrees)
 {    
-    printf("%p %d\n", lidar_angles_deg, scan_size);
+    /* interpolate scan distances by angles if indicated */
+    if (lidar_angles_deg) 
+    {
+        printf("interpolate\n");
+    }
+    
 
     /* Take velocity into account */
     int degrees_per_second = (int)(scan->rate_hz * 360);
