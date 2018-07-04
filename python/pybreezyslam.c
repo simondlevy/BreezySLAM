@@ -304,9 +304,6 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
             return null_on_raise_argument_exception_with_details("Scan", "update", 
                     "number of scan angles must equal number of scan distances");
         }
-
-        printf("Interpolate!\n"); 
-        Py_RETURN_NONE;
     }
 
     // No scan angles provided; lidar-list size must match scan size
@@ -339,10 +336,9 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
     }
 
     // Extract LIDAR values from argument
-    int k = 0;
-    for (k=0; k<self->scan.size; ++k)
+    for (int k=0; k<self->scan.size; ++k)
     {
-        self->lidar_mm[k] = PyFloat_AsDouble(PyList_GetItem(py_lidar, k));
+        self->lidar_mm[k] = (int)PyFloat_AsDouble(PyList_GetItem(py_lidar, k));
     }
 
     // Update the scan
@@ -354,7 +350,8 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
             dtheta_degrees);
 
     Py_RETURN_NONE;
-}
+
+} // Scan_update
 
 
 static PyMethodDef Scan_methods[] = 
