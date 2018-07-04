@@ -98,7 +98,7 @@ class CoreSLAM(object):
         should_update_map flags for whether you want to update the map
         '''
 
-        # Convert (dxy,dtheta,dt) to (dxy/dt, dtheta/dt) for scan update
+        # Convert pose change (dxy,dtheta,dt) to velocities (dxy/dt, dtheta/dt) for scan update
         velocity_factor = (1 / poseChange[2])  if (poseChange[2] > 0) else 0 # units => units/sec
         dxy_mm_dt = poseChange[0] * velocity_factor  
         dtheta_degrees_dt = poseChange[1] * velocity_factor
@@ -251,13 +251,13 @@ class RMHC_SLAM(SinglePositionSLAM):
         self.sigma_theta_degrees = sigma_theta_degrees
         self.max_search_iter = max_search_iter
         
-    def update(self, scan_mm, velocities=None, should_update_map=True):
+    def update(self, scan_mm, angles_degrees=None, poseChange=None, should_update_map=True):
 
-        if not velocities:
+        if not poseChange:
         
-            velocities = (0, 0, 0)
+            poseChange = (0, 0, 0)
     
-        CoreSLAM.update(self, scan_mm, velocities, should_update_map)   
+        CoreSLAM.update(self, scan_mm, poseChange, should_update_map)   
     
     def _getNewPosition(self, start_position):
         '''
