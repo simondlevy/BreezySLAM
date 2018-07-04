@@ -47,7 +47,7 @@ cpptest: log2pgm
 
 javatest: Log2PGM.class
 	java -classpath ../java:. -Djava.library.path=$(JAVADIR)/algorithms:$(JAVADIR)/components Log2PGM \
-	 $(DATASET) $(USE_ODOMETRY) $(RANDOM_SEED)
+	$(DATASET) $(USE_ODOMETRY) $(RANDOM_SEED)
 	$(VIEWER) $(DATASET).pgm
 
 log2pgm: log2pgm.o 

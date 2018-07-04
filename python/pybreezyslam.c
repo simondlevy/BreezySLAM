@@ -268,13 +268,15 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
     PyObject * py_lidar = NULL;
     double hole_width_mm = 0;
     PyObject * py_velocities = NULL;
+    PyObject * py_scan_angles_degrees = NULL;
 
-    static char* argnames[] = {"scans_mm", "hole_width_mm", "velocities", NULL};
+    static char* argnames[] = {"scans_mm", "hole_width_mm", "velocities", "scan_angles_degrees", NULL};
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwds,"Od|O", argnames,
+    if (!PyArg_ParseTupleAndKeywords(args, kwds,"Od|OO", argnames,
         &py_lidar, 
         &hole_width_mm,
-        &py_velocities))
+        &py_velocities,
+        &py_scan_angles_degrees))
     {
         return null_on_raise_argument_exception("Scan", "update");
     }
@@ -285,36 +287,53 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
         return null_on_raise_argument_exception_with_details("Scan", "update", 
             "lidar must be a list");
     }
-    
-    // Bozo filter on LIDAR argument list size
-    if (PyList_Size(py_lidar) != self->scan.size)
+
+    // Scan angles provided; run bozo-filter to match against lidar-list size
+    if (py_scan_angles_degrees != Py_None) 
+    {
+        // Bozo filter on SCAN_ANGLES_DEGREES argument
+        if (!PyList_Check(py_scan_angles_degrees))
+        {
+            return null_on_raise_argument_exception_with_details("Scan", "update", 
+                    "scan angles must be a list");
+        }
+
+        if (PyList_Size(py_lidar) != PyList_Size(py_scan_angles_degrees))
+        {
+            return null_on_raise_argument_exception_with_details("Scan", "update", 
+                    "number of scan angles must equal number of scan distances");
+        }
+    }
+
+    // No scan angles provided; lidar-list size must match scan size
+    else if (PyList_Size(py_lidar) != self->scan.size)
     {        
         return null_on_raise_argument_exception_with_details("Scan", "update", 
-            "lidar size mismatch");
+                "lidar size mismatch");
     }
-    
+
+
     // Default to no velocities
     double dxy_mm = 0;
     double dtheta_degrees = 0;
-          
+
     // Bozo filter on velocities tuple
     if (py_velocities)
     {
         if (!PyTuple_Check(py_velocities))
         {
-           return null_on_raise_argument_exception_with_details("Scan", "update", 
-                "velocities must be a tuple");    
+            return null_on_raise_argument_exception_with_details("Scan", "update", 
+                    "velocities must be a tuple");    
         }
-        
+
         if (!double_from_tuple(py_velocities, 0, &dxy_mm) ||
-            !double_from_tuple(py_velocities, 1, &dtheta_degrees))
-            {
-                return null_on_raise_argument_exception_with_details("Scan", "update", 
+                !double_from_tuple(py_velocities, 1, &dtheta_degrees))
+        {
+            return null_on_raise_argument_exception_with_details("Scan", "update", 
                     "velocities tuple must contain at least two numbers");    
-               
-            }
+
+        }
     }
-    
 
     // Extract LIDAR values from argument
     int k = 0;
@@ -322,15 +341,15 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
     {
         self->lidar_mm[k] = PyFloat_AsDouble(PyList_GetItem(py_lidar, k));
     }
-    
+
     // Update the scan
     scan_update(
-        &self->scan, 
-        self->lidar_mm, 
-        hole_width_mm,
-        dxy_mm,
-        dtheta_degrees);
-               
+            &self->scan, 
+            self->lidar_mm, 
+            hole_width_mm,
+            dxy_mm,
+            dtheta_degrees);
+
     Py_RETURN_NONE;
 }
 
@@ -338,31 +357,31 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
 static PyMethodDef Scan_methods[] = 
 {
     {"update", (PyCFunction)Scan_update, METH_VARARGS | METH_KEYWORDS, 
-    "Scan.update(scans_mm, hole_width_mm, velocities=None) updates scan.\n"\
-    "scans_mm is a list of integers representing scanned distances in mm.\n"\
-    "hole_width_mm is the width of holes (obstacles, walls) in millimeters.\n"\
-    "velocities is an optional tuple containing (dxy_mm/dt, dtheta_degrees/dt);\n"\
-    "i.e., robot's (forward, rotational velocity) for improving the quality of the scan."
+        "Scan.update(scans_mm, hole_width_mm, velocities=None) updates scan.\n"\
+            "scans_mm is a list of integers representing scanned distances in mm.\n"\
+            "hole_width_mm is the width of holes (obstacles, walls) in millimeters.\n"\
+            "velocities is an optional tuple containing (dxy_mm/dt, dtheta_degrees/dt);\n"\
+            "i.e., robot's (forward, rotational velocity) for improving the quality of the scan."
     },
     {NULL}  // Sentinel 
 };
 
 #define TP_DOC_SCAN \
-"A class for Lidar scans.\n" \
+    "A class for Lidar scans.\n" \
 "Scan.__init__(laser, span=1)\n"\
-    "laser is a Laser object containing parameters of your laser rangefinder (Lidar)\n"\
+"laser is a Laser object containing parameters of your laser rangefinder (Lidar)\n"\
 "    span supports spanning laser scan to cover the space better"
 
 
 static PyTypeObject pybreezyslam_ScanType = 
 {
-    #if PY_MAJOR_VERSION < 3
+#if PY_MAJOR_VERSION < 3
     PyObject_HEAD_INIT(NULL)
-    0,                                          // ob_size
-    #else
+        0,                                          // ob_size
+#else
     PyVarObject_HEAD_INIT(NULL, 0)
-    #endif
-    "pybreezyslam.Scan",                      // tp_name
+#endif
+        "pybreezyslam.Scan",                      // tp_name
     sizeof(Scan),                               // tp_basicsize
     0,                                          // tp_itemsize
     (destructor)Scan_dealloc,                   // tp_dealloc
