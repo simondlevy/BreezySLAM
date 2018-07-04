@@ -192,7 +192,7 @@ static void _scan_update(const mxArray * prhs[])
     double * velocities = mxGetPr(prhs[4]);
     
     /* no support for angles/interpolation yet */
-    scan_update(scan, NULL, lidar_mm, hole_width_mm, velocities[0], velocities[1]);
+    scan_update(scan, NULL, lidar_mm, scan->size, hole_width_mm, velocities[0], velocities[1]);
 }
 
 static void _randomizer_init(mxArray *plhs[], const mxArray * prhs[])

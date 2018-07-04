@@ -349,6 +349,7 @@ Scan_update(Scan *self, PyObject *args, PyObject *kwds)
             &self->scan, 
             NULL,
             self->lidar_distances_mm, 
+            PyList_Size(py_lidar),
             hole_width_mm,
             dxy_mm,
             dtheta_degrees);
