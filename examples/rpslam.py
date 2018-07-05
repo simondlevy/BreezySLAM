@@ -22,7 +22,7 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 MAP_SIZE_PIXELS         = 500
 MAP_SIZE_METERS         = 10
 LIDAR_DEVICE            = '/dev/ttyUSB0'
-MAX_BUF_MEAS            = 1000
+MIN_SAMPLES             = 250
 
 from breezyslam.algorithms import RMHC_SLAM
 from breezyslam.sensors import RPLidarA1 as LaserModel
@@ -30,20 +30,9 @@ from rplidar import RPLidar as Lidar
 from pltslamshow import SlamShow
 from logging import Logger
 
-class STFU_Logger(Logger):
-
-    def __init__(self):
-
-        Logger.__init__(self, 'STFU')
-
-    def warning(self, *args):
-
-        return
-
 if __name__ == '__main__':
 
-    # Connect to Lidar unit, with logger that suppresses warnings
-    #lidar = Lidar(LIDAR_DEVICE, logger=STFU_Logger())
+    # Connect to Lidar unit
     lidar = Lidar(LIDAR_DEVICE)
 
     # Create an RMHC SLAM object with a laser model and optional robot model
@@ -59,7 +48,13 @@ if __name__ == '__main__':
     mapbytes = bytearray(MAP_SIZE_PIXELS * MAP_SIZE_PIXELS)
 
     # Create an iterator to collect scan data from the RPLidar
-    iterator = lidar.iter_scans(max_buf_meas=MAX_BUF_MEAS)
+    iterator = lidar.iter_scans()
+
+    previous_distances = None
+    previous_angles    = None
+
+    # First scan is crap, so ignore it
+    next(iterator)
 
     while True:
 
@@ -70,8 +65,15 @@ if __name__ == '__main__':
         distances = [item[2] for item in items]
         angles    = [item[1] for item in items]
 
-        # Update SLAM with current Lidar scan and scan angles
-        slam.update(distances, scan_angles_degrees=angles)
+        # Update SLAM with current Lidar scan and scan angles if sufficient
+        if len(distances) > MIN_SAMPLES:
+            slam.update(distances, scan_angles_degrees=angles)
+            previous_distances = distances.copy()
+            previous_angles    = angles.copy()
+
+        # If not sufficient, use previous
+        elif previous_distances is not None:
+            slam.update(previous_distances, scan_angles_degrees=previous_angles)
 
         # Get current robot position
         x, y, theta = slam.getpos()
