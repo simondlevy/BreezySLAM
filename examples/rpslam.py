@@ -28,7 +28,6 @@ from breezyslam.algorithms import RMHC_SLAM
 from breezyslam.sensors import RPLidarA1 as LaserModel
 from rplidar import RPLidar as Lidar
 from pltslamshow import SlamShow
-from logging import Logger
 
 if __name__ == '__main__':
 
@@ -50,6 +49,7 @@ if __name__ == '__main__':
     # Create an iterator to collect scan data from the RPLidar
     iterator = lidar.iter_scans()
 
+    # We will use these to store previous scan in case current scan is inadequate
     previous_distances = None
     previous_angles    = None
 
@@ -65,13 +65,13 @@ if __name__ == '__main__':
         distances = [item[2] for item in items]
         angles    = [item[1] for item in items]
 
-        # Update SLAM with current Lidar scan and scan angles if sufficient
+        # Update SLAM with current Lidar scan and scan angles if adequate
         if len(distances) > MIN_SAMPLES:
             slam.update(distances, scan_angles_degrees=angles)
             previous_distances = distances.copy()
             previous_angles    = angles.copy()
 
-        # If not sufficient, use previous
+        # If not adequate, use previous
         elif previous_distances is not None:
             slam.update(previous_distances, scan_angles_degrees=previous_angles)
 
