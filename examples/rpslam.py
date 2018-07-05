@@ -22,14 +22,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 MAP_SIZE_PIXELS         = 500
 MAP_SIZE_METERS         = 10
 LIDAR_DEVICE            = '/dev/ttyUSB0'
+MAX_BUF_MEAS            = 1000
 
 from breezyslam.algorithms import RMHC_SLAM
 from breezyslam.sensors import RPLidarA1 as LaserModel
-
 from rplidar import RPLidar as Lidar
-
 from pltslamshow import SlamShow
-
 from logging import Logger
 
 class STFU_Logger(Logger):
@@ -45,8 +43,8 @@ class STFU_Logger(Logger):
 if __name__ == '__main__':
 
     # Connect to Lidar unit, with logger that suppresses warnings
-    lidar = Lidar(LIDAR_DEVICE, logger=STFU_Logger())
-    #lidar = Lidar(LIDAR_DEVICE)
+    #lidar = Lidar(LIDAR_DEVICE, logger=STFU_Logger())
+    lidar = Lidar(LIDAR_DEVICE)
 
     # Create an RMHC SLAM object with a laser model and optional robot model
     slam = RMHC_SLAM(LaserModel(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
@@ -61,7 +59,7 @@ if __name__ == '__main__':
     mapbytes = bytearray(MAP_SIZE_PIXELS * MAP_SIZE_PIXELS)
 
     # Create an iterator to collect scan data from the RPLidar
-    iterator = lidar.iter_scans()
+    iterator = lidar.iter_scans(max_buf_meas=MAX_BUF_MEAS)
 
     while True:
 
