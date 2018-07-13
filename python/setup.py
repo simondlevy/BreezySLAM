@@ -50,7 +50,7 @@ from distutils.core import setup, Extension
 
 module = Extension('pybreezyslam', 
     sources = SOURCES, 
-    extra_compile_args = SIMD_FLAGS + OPT_FLAGS
+    extra_compile_args = ['-std=gnu99'] + SIMD_FLAGS + OPT_FLAGS
     )
 
 
