@@ -25,6 +25,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as colormap
 from math import sin, cos, radians
 import numpy as np
+from time import sleep
 
 class SlamShow(object):
 
@@ -77,6 +78,9 @@ class SlamShow(object):
     def displayMap(self, mapbytes):
 
         mapimg = np.reshape(np.frombuffer(mapbytes, dtype=np.uint8), (self.map_size_pixels, self.map_size_pixels))
+
+        # Pause to allow display to refresh
+        sleep(.001)
 
         if self.img_artist is None:
 
