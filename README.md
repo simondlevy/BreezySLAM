@@ -15,7 +15,7 @@ Python for this kind of work, I am no longer updating the code for those languag
 BreezySLAM works with Python 2 and 3 on Linux and Mac OS X, and
 with C++ on Linux and Windows.
 By using Python C extensions, we were able to get the Python and Matlab versions to run
-as fast as C++. For maximum effiency on 32-bit platforms, we use Streaming
+as fast as C++. For maximum efficiency on 32-bit platforms, we use Streaming
 SIMD extensions (Intel) and NEON (ARMv7) in the compute-intensive part
 of the code.
 </p><p>
