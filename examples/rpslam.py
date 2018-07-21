@@ -22,7 +22,12 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 MAP_SIZE_PIXELS         = 500
 MAP_SIZE_METERS         = 10
 LIDAR_DEVICE            = '/dev/ttyUSB0'
-MIN_SAMPLES             = 200
+
+
+# Ideally we could use all 250 or so samples that the RPLidar delivers in one 
+# scan, but on slower computers you'll get an empty map and unchanging position
+# at that rate.
+MIN_SAMPLES   = 200
 
 from breezyslam.algorithms import RMHC_SLAM
 from breezyslam.sensors import RPLidarA1 as LaserModel
