@@ -538,6 +538,26 @@ Map_get(Map * self, PyObject * args, PyObject * kwds)
 }
 
 static PyObject *
+Map_set(Map * self, PyObject * args, PyObject * kwds)
+{        
+    PyObject * py_mapbytes = NULL;
+
+    if (!PyArg_ParseTuple(args, "O", &py_mapbytes))
+    {
+        return null_on_raise_argument_exception("Map", "get");
+    }
+    
+    if (bad_mapbytes(py_mapbytes, self->map.size_pixels, "get"))
+    {
+        Py_RETURN_NONE;
+    }
+    
+    map_set(&self->map, PyByteArray_AsString(py_mapbytes));
+    
+    Py_RETURN_NONE;
+}
+
+static PyObject *
 Map_update(Map *self, PyObject *args, PyObject *kwds)
 {   
     Scan * py_scan = NULL;
@@ -583,6 +603,9 @@ static PyMethodDef Map_methods[] =
     },
     {"get", (PyCFunction)Map_get, METH_VARARGS,
     "Map.get(bytearray) fills byte array with map pixels, where bytearray length is square of size of map."
+    },
+    {"set", (PyCFunction)Map_set, METH_VARARGS,
+    "Map.set(bytearray) fills current map with pixels in bytearray, where bytearray length is square of size of map."
     },
     {NULL}  // Sentinel 
 };
