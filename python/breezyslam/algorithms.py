@@ -19,9 +19,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with this code.  If not, see <http:#www.gnu.org/licenses/>.
 '''
 
-# distanceScanToMap is implemented as a C extension for efficiency
-from pybreezyslam import distanceScanToMap
-
 import pybreezyslam
 
 import math
@@ -125,7 +122,7 @@ class CoreSLAM(object):
         Sets current map pixels to values in bytearray, where bytearray length is square of map size passed
         to CoreSLAM.__init__().
         '''
-        self.map.set(mapbytes)
+        self.map.__init__(mapbytes)
 
     def __str__(self):
         
