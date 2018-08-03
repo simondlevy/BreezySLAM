@@ -28,8 +28,11 @@ SIMD_FLAGS = []
 
 arch = machine()
 
-if  arch == 'i686':
+print(arch)
+
+if  arch in ['i686', 'x86_64']:
     SIMD_FLAGS = ['-msse3']
+    arch = 'i686'
 
 elif arch == 'armv7l':
     OPT_FLAGS = ['-O3']
