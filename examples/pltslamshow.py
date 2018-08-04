@@ -21,6 +21,10 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 ROBOT_HEIGHT_MM = 500
 ROBOT_WIDTH_MM  = 300
 
+# This helps with Raspberry Pi
+import matplotlib
+matplotlib.use('TkAgg')
+
 import matplotlib.pyplot as plt
 import matplotlib.cm as colormap
 from math import sin, cos, radians
