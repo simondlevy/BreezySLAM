@@ -159,7 +159,13 @@ sudo make install
 
 This will put the <tt><b>libbreezyslam</b></tt> shareable library in your <tt><b>/usr/local/lib</b></tt>
 directory.  If you keep your shared libraries elsewhere, just change the <tt><b>LIBDIR</b></tt>
-variable at the top of the Makefile.
+variable at the top of the Makefile.  You may also need to add the following line to your <b>~/.bashrc</b>
+file:
+
+<pre>
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+</pre>
+
 
 <p>
 
