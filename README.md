@@ -83,7 +83,7 @@ map and robot trajctory for the Lidar scan and odometry data in the log file
 you can also try the <b><tt>log2png.py</tt></b> script to generate a
 a PNG file instead.
 
-If you have installed [PyRoboViz]()https://github.com/simondlevy/PyRoboViz),
+If you have installed [PyRoboViz](https://github.com/simondlevy/PyRoboViz),
 you can see a &ldquo;live&rdquo; animation by doing
 
 <pre>
