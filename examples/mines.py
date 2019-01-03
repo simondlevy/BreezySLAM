@@ -33,7 +33,6 @@ along with this code.  If not, see <http://www.gnu.org/licenses/>.
 from breezyslam.vehicles import WheeledVehicle
 from breezyslam.sensors import URG04LX
 
-import math
 
 
 # Method to load all from file ------------------------------------------------

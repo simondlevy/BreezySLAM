@@ -45,7 +45,6 @@ from roboviz import Visualizer
 from sys import argv, exit
 from time import sleep
 from threading import Thread
-import pickle
 
 def threadfunc(robot, slam, timestamps, lidars, odometries, mapbytes, pose):
     '''
@@ -112,7 +111,7 @@ def main():
            else Deterministic_SLAM(MinesLaser(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Set up a SLAM display, named by dataset
-    display = Visualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, dataset)
+    display = Visualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, dataset)
 
     # Pose will be modified in our threaded code
     pose = [0,0,0]
@@ -127,7 +126,7 @@ def main():
 
         # Display map and robot pose
         display.displayMap(mapbytes)
-        display.setPose(*pose)
+        display.setPose(pose[0]/1000., pose[1]/1000., pose[2])
 
         # Refresh the display, exiting gracefully if user closes it
         if not display.refresh():

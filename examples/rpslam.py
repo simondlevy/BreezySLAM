@@ -43,7 +43,7 @@ if __name__ == '__main__':
     slam = RMHC_SLAM(LaserModel(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Set up a SLAM display
-    display = Visualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, 'SLAM')
+    display = Visualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, 'SLAM')
 
     # Initialize an empty trajectory
     trajectory = []
@@ -90,7 +90,7 @@ if __name__ == '__main__':
         display.displayMap(mapbytes)
 
         # Display the robot's pose in the map
-        display.setPose(x, y, theta)
+        display.setPose(x/1000., y/1000., theta)
 
         # Break on window close
         if not display.refresh():
