@@ -28,7 +28,7 @@ from breezyslam.sensors import XVLidar as LaserModel
 
 from xvlidar import XVLidar as Lidar
 
-from pltslamshow import SlamShow
+from roboviz import Visualizer
 
 from sys import stdout
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     slam = RMHC_SLAM(LaserModel(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Set up a SLAM display
-    display = SlamShow(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, 'SLAM')
+    display = Visualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, 'SLAM')
 
     # Initialize an empty trajectory
     trajectory = []

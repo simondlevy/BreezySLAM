@@ -33,7 +33,7 @@ from breezyslam.sensors import RPLidarA1 as LaserModel
 
 from rplidar import RPLidar as Lidar
 
-from pltslamshow import SlamShow
+from roboviz import Visualizer
 
 from scipy.interpolate import interp1d
 import numpy as np
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     slam = RMHC_SLAM(LaserModel(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Set up a SLAM display
-    display = SlamShow(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, 'SLAM')
+    display = Visualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, 'SLAM')
 
     # Initialize an empty trajectory
     trajectory = []
