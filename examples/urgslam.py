@@ -28,7 +28,7 @@ from breezyslam.sensors import URG04LX as LaserModel
 
 from breezylidar import URG04LX as Lidar
 
-from roboviz import Visualizer
+from roboviz import MapVisualizer
        
 if __name__ == '__main__':
 
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     slam = RMHC_SLAM(LaserModel(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Set up a SLAM display
-    display = Visualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, 'SLAM')
+    display = MapVisualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, 'SLAM')
 
     # Initialize empty map
     mapbytes = bytearray(MAP_SIZE_PIXELS * MAP_SIZE_PIXELS)
