@@ -39,7 +39,7 @@ if __name__ == '__main__':
     slam = RMHC_SLAM(LaserModel(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Set up a SLAM display
-    display = MapVisualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, 'SLAM')
+    viz = MapVisualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, 'SLAM')
 
     # Initialize empty map
     mapbytes = bytearray(MAP_SIZE_PIXELS * MAP_SIZE_PIXELS)
@@ -55,13 +55,6 @@ if __name__ == '__main__':
         # Get current map bytes as grayscale
         slam.getmap(mapbytes)
 
-        # Display map
-        display.displayMap(mapbytes)
-
-        # Display pose after converting from mm to meters
-        display.setPose(x/1000., y/1000., theta)
-
-        # Exit on window close
-        if not display.refresh():
+        # Display map and robot pose, exiting gracefully if user closes it
+        if not viz.display(x/1000., y/1000., theta, mapbytes):
             exit(0)
-     

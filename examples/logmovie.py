@@ -111,7 +111,7 @@ def main():
            else Deterministic_SLAM(MinesLaser(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Set up a SLAM display, named by dataset
-    display = MapVisualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, dataset)
+    viz = MapVisualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, dataset)
 
     # Pose will be modified in our threaded code
     pose = [0,0,0]
@@ -124,12 +124,8 @@ def main():
     # Loop forever,displaying current map and pose
     while True:
 
-        # Display map and robot pose
-        display.displayMap(mapbytes)
-        display.setPose(pose[0]/1000., pose[1]/1000., pose[2])
-
-        # Refresh the display, exiting gracefully if user closes it
-        if not display.refresh():
+        # Display map and robot pose, exiting gracefully if user closes it
+        if not viz.display(pose[0]/1000., pose[1]/1000., pose[2], mapbytes):
             exit(0)
                     
 main()
