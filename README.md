@@ -77,7 +77,7 @@ make pytest
 
 
 This will generate and display a PGM file showing the
-map and robot trajctory for the Lidar scan and odometry data in the log file
+map and robot trajectory for the Lidar scan and odometry data in the log file
 <tt><b>exp2.dat</b></tt>.  If you have the 
 <a href="http://www.pythonware.com/products/pil/">Python Imaging Library</a> installed,
 you can also try the <b><tt>log2png.py</tt></b> script to generate a
