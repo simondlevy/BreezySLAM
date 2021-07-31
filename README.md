@@ -122,11 +122,15 @@ both packages, you can run the <b>xvslam.py</b> example in the <b>BreezySLAM/exa
 
 <p><h3>Testing with the SLAMTEC RPLidar A1</h3>
 
-BreezySLAM also includes Python support for the inexpensive 
+BreezySLAM also includes partial Python support for the inexpensive 
 <a href="http://www.slamtec.com/en/lidar/a1">RPLidar A1</a> from SLAMTECH.
 To try it out, you'll also need the <a href="https://github.com/SkoltechRobotics/rplidar">rplidar</a> 
 Python package.  Once you've installed that package, you can run the
 <b>rpslam.py</b> example in the <b>BreezySLAM/examples</b> folder.
+
+Unfortunately, I and several users have had trouble using BreezySLAM with the
+RPLidar A1.  The issues are inconsistent enough that I cannot provide support
+for this lidar unit if you run into trouble using it with BreezySLAM.
 
 </p><h3>Installing for Matlab</h3>
 
