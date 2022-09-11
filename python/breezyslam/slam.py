@@ -7,13 +7,13 @@ from algorithms import RMHC_SLAM
 
 lidar = MyLidar()
 mapbytes = bytearray(800*800)
-slam = RMHC_SLAM(lidar, 800, 35) 
+slam = RMHC_SLAM(lidar, 800, 35)
 
 IP = 'Lidar'
 port = 23
 last_angle = 0
-mesurments = []
-angles = []
+mesurments_g = []
+angles_g = []
 frame = ''
 
 
@@ -36,19 +36,6 @@ s.connect((host_ip, port))
 print("the socket has successfully connected")
 
 
-
-def slam(angles, mesurments):
-    print(len(angles))
-    print(len(mesurments))
-    slam.update(scans_mm=mesurments,scan_angles_degrees=angles)
-    x, y, theta = slam.getpos()
-    print(x)
-    print(y)
-    print(theta)
-    print()
-    
-
-
 def checksum(frame):
     cs = int.from_bytes(frame[-2:], byteorder='big', signed=False)
     result = 0
@@ -61,21 +48,23 @@ def checksum(frame):
 
 def parseData(payload, payloadLen):
     global last_angle
+    global angles
+    global mesurments
 
     speed = payload[0]
     speed = speed * 0.05  # r/s
-    print('RPM: %.2fr/s or %drpm' % (speed, speed*60))
+    #print('RPM: %.2fr/s or %drpm' % (speed, speed*60))
 
     angOffset = int.from_bytes(payload[1:3], byteorder='big', signed=True)
     angOffset = angOffset * 0.01
-    # print('Angle Offset: %.2f' % angOffset)
+    #print('Angle Offset: %.2f' % angOffset)
 
     angStart = int.from_bytes(payload[3:5], byteorder='big', signed=False)
     angStart = angStart * 0.01
-    # print('Starting Angle: %.2f' % angStart)
+    #print('Starting Angle: %.2f' % angStart)
 
     nSamples = int((payloadLen - 5) / 3)
-    # print("N Samples: %d" % nSamples)
+    #print("N Samples: %d" % nSamples)
 
     # list of mesurments
     for i in range(nSamples):
@@ -84,13 +73,24 @@ def parseData(payload, payloadLen):
         ang = angStart + 22.5 * i / nSamples
         dist = int.from_bytes(
             payload[index + 1:index + 3], byteorder='big', signed=False)
-    
+
         if (ang < last_angle):
-                slam(angles,mesurments)
-                mesurments.clear()
-                angles.clear()
-        mesurments.append(dist)
-        angles.append(ang)
+            print('---------------------------------------------------------------')
+            #print(len(angles_g))
+            #print(len(mesurments_g))
+            #print(mesurments_g)
+            slam.update(scans_mm=mesurments_g, scan_angles_degrees=angles_g)
+            x, y, theta = slam.getpos()
+            #print("a")
+            print('x=',x)
+            print('y=',y)
+            print('theta=',theta)
+            print()
+            mesurments_g.clear()
+            angles_g.clear()
+            last_angle = ang
+        mesurments_g.append(dist)
+        angles_g.append(ang)
         last_angle = ang
 
 
@@ -123,9 +123,6 @@ def processFrame(frame):
     except:
         pass
     return True
-
-
-
 
 
 def onData(x):
