@@ -42,6 +42,15 @@ class Laser(object):
         return str(self)
 
 
+class MyLidar(Laser):
+    '''
+    A class for the Hokuyo URG-04LX
+    '''
+    def __init__(self, detectionMargin = 0, offsetMillimeters = 0):
+        
+        Laser.__init__(self, 352, 5.6, 360, 4000, detectionMargin, offsetMillimeters)
+
+
 class URG04LX(Laser):
     '''
     A class for the Hokuyo URG-04LX
