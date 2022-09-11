@@ -4,9 +4,18 @@ import socket  # for socket
 import sys
 from sensors import MyLidar
 from algorithms import RMHC_SLAM
+from roboviz import MapVisualizer
+
+
+MAP_SIZE_PIXELS = 500
+MAP_SIZE_METERS = 10
+
+viz = MapVisualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, 'SLAM')
+trajectory = []
+
 
 lidar = MyLidar()
-mapbytes = bytearray(800*800)
+mapbytes = bytearray(MAP_SIZE_PIXELS*MAP_SIZE_PIXELS)
 slam = RMHC_SLAM(lidar, 800, 35)
 
 IP = 'Lidar'
@@ -50,6 +59,7 @@ def parseData(payload, payloadLen):
     global last_angle
     global angles
     global mesurments
+    global mapbytes
 
     speed = payload[0]
     speed = speed * 0.05  # r/s
@@ -76,19 +86,23 @@ def parseData(payload, payloadLen):
 
         if (ang < last_angle):
             print('---------------------------------------------------------------')
-            #print(len(angles_g))
-            #print(len(mesurments_g))
-            #print(mesurments_g)
+            # print(len(angles_g))
+            # print(len(mesurments_g))
+            # print(mesurments_g)
             slam.update(scans_mm=mesurments_g, scan_angles_degrees=angles_g)
             x, y, theta = slam.getpos()
-            #print("a")
-            print('x=',x)
-            print('y=',y)
-            print('theta=',theta)
+            # slam.getmap(mapbytes)
+            # print("a")
+            print('x=', x)
+            print('y=', y)
+            print('theta=', theta)
             print()
             mesurments_g.clear()
             angles_g.clear()
             last_angle = ang
+
+            if not viz.display(x/1000., y/1000., theta, mapbytes):
+                exit(0)
         mesurments_g.append(dist)
         angles_g.append(ang)
         last_angle = ang
