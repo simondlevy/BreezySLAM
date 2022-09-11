@@ -40,10 +40,14 @@ print("the socket has successfully connected")
 def slam(angles, mesurments):
     print(len(angles))
     print(len(mesurments))
+    slam.update(scans_mm=mesurments,scan_angles_degrees=angles)
+    x, y, theta = slam.getpos()
+    print(x)
+    print(y)
+    print(theta)
     print()
-    print()
-    print()
-    print()
+    
+
 
 def checksum(frame):
     cs = int.from_bytes(frame[-2:], byteorder='big', signed=False)

@@ -9,8 +9,8 @@ while True:
 
     scan = readLidar()
 
-    slam.update(scan)
+    slam.update(scans_mm=a)
 
-    x, y, theta = slam.getpos(scan)
+    x, y, theta = slam.getpos()
 
     slam.getmap(mapbytes)
