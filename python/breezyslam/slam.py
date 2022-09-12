@@ -7,16 +7,16 @@ from algorithms import RMHC_SLAM
 from roboviz import MapVisualizer
 
 
-MAP_SIZE_PIXELS = 500
-MAP_SIZE_METERS = 10
+MAP_SIZE_PIXELS = 800
+MAP_SIZE_METERS = 30
 
-viz = MapVisualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, 'SLAM')
+viz = MapVisualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, 'SLAM', True)
 trajectory = []
 
 
 lidar = MyLidar()
 mapbytes = bytearray(MAP_SIZE_PIXELS*MAP_SIZE_PIXELS)
-slam = RMHC_SLAM(lidar, 800, 35)
+slam = RMHC_SLAM(lidar, MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
 IP = 'Lidar'
 port = 23
@@ -86,12 +86,13 @@ def parseData(payload, payloadLen):
 
         if (ang < last_angle):
             print('---------------------------------------------------------------')
-            # print(len(angles_g))
-            # print(len(mesurments_g))
+            print(len(angles_g))
+            print(len(mesurments_g))
             # print(mesurments_g)
             slam.update(scans_mm=mesurments_g, scan_angles_degrees=angles_g)
             x, y, theta = slam.getpos()
-            # slam.getmap(mapbytes)
+            theta = theta+90
+            slam.getmap(mapbytes)
             # print("a")
             print('x=', x)
             print('y=', y)
