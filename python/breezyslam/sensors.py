@@ -48,7 +48,7 @@ class MyLidar(Laser):
     '''
     def __init__(self, detectionMargin = 0, offsetMillimeters = 0):
         
-        Laser.__init__(self, 352, 5.6, 360, 4000, detectionMargin, offsetMillimeters)
+        Laser.__init__(self, 400, 5.6, 360, 4000, detectionMargin, offsetMillimeters)
 
 
 class URG04LX(Laser):

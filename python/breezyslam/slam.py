@@ -6,7 +6,7 @@ from roboviz import MapVisualizer
 from algorithms import RMHC_SLAM
 from sensors import MyLidar
 
-MAP_SIZE_PIXELS = 300
+MAP_SIZE_PIXELS = 200
 MAP_SIZE_METERS = 30
 
 viz = MapVisualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, 'SLAM', True)
