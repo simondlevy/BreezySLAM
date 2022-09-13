@@ -1,21 +1,19 @@
-from itertools import count
-import math
 import socket  # for socket
 import sys
-from sensors import MyLidar
-from algorithms import RMHC_SLAM
+
 from roboviz import MapVisualizer
 
+from algorithms import RMHC_SLAM
+from sensors import MyLidar
 
-MAP_SIZE_PIXELS = 800
+MAP_SIZE_PIXELS = 300
 MAP_SIZE_METERS = 30
 
 viz = MapVisualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, 'SLAM', True)
 trajectory = []
 
-
 lidar = MyLidar()
-mapbytes = bytearray(MAP_SIZE_PIXELS*MAP_SIZE_PIXELS)
+mapbytes = bytearray(MAP_SIZE_PIXELS * MAP_SIZE_PIXELS)
 slam = RMHC_SLAM(lidar, MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
 IP = 'Lidar'
@@ -25,13 +23,11 @@ mesurments_g = []
 angles_g = []
 frame = ''
 
-
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print("Socket successfully created")
 except socket.error as err:
     print("socket creation failed with error %s" % (err))
-
 
 try:
     host_ip = socket.gethostbyname(IP)
@@ -63,47 +59,45 @@ def parseData(payload, payloadLen):
 
     speed = payload[0]
     speed = speed * 0.05  # r/s
-    #print('RPM: %.2fr/s or %drpm' % (speed, speed*60))
+    # print('RPM: %.2fr/s or %drpm' % (speed, speed*60))
 
     angOffset = int.from_bytes(payload[1:3], byteorder='big', signed=True)
     angOffset = angOffset * 0.01
-    #print('Angle Offset: %.2f' % angOffset)
+    # print('Angle Offset: %.2f' % angOffset)
 
     angStart = int.from_bytes(payload[3:5], byteorder='big', signed=False)
     angStart = angStart * 0.01
-    #print('Starting Angle: %.2f' % angStart)
+    # print('Starting Angle: %.2f' % angStart)
 
     nSamples = int((payloadLen - 5) / 3)
-    #print("N Samples: %d" % nSamples)
+    # print("N Samples: %d" % nSamples)
 
     # list of mesurments
     for i in range(nSamples):
         index = 5 + i * 3
-        sampleID = payload[index]
         ang = angStart + 22.5 * i / nSamples
         dist = int.from_bytes(
             payload[index + 1:index + 3], byteorder='big', signed=False)
 
-        if (ang < last_angle):
+        if ang < last_angle:
             print('---------------------------------------------------------------')
             print(len(angles_g))
             print(len(mesurments_g))
-            # print(mesurments_g)
+
             slam.update(scans_mm=mesurments_g, scan_angles_degrees=angles_g)
-            x, y, theta = slam.getpos()
-            theta = theta+90
             slam.getmap(mapbytes)
-            # print("a")
+            x, y, theta = slam.getpos()
+            theta = theta + 90
+            if not viz.display(x / 1000., y / 1000., theta, mapbytes):
+                exit(0)
+
             print('x=', x)
             print('y=', y)
             print('theta=', theta)
-            print()
             mesurments_g.clear()
             angles_g.clear()
             last_angle = ang
 
-            if not viz.display(x/1000., y/1000., theta, mapbytes):
-                exit(0)
         mesurments_g.append(dist)
         angles_g.append(ang)
         last_angle = ang
