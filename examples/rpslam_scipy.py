@@ -44,10 +44,10 @@ if __name__ == '__main__':
     lidar = Lidar(LIDAR_DEVICE)
 
     # Create an RMHC SLAM object with a laser model and optional robot model
-    slam = RMHC_SLAM(LaserModel(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
+    slam = RMHC_SLAM(LaserModel(), map_size_pixels=MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Set up a SLAM display
-    viz = Visualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, title='SLAM')
+    viz = Visualizer(MAP_SIZE_METERS, MAP_SIZE_PIXELS, title='SLAM')
 
     # Initialize an empty trajectory
     trajectory = []

@@ -111,7 +111,7 @@ def main():
            else Deterministic_SLAM(MinesLaser(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Set up a SLAM display, named by dataset
-    viz = Visualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS)
+    viz = Visualizer(MAP_SIZE_METERS, map_size_pixels=MAP_SIZE_PIXELS)
 
     # Pose will be modified in our threaded code
     pose = [0,0,0]
