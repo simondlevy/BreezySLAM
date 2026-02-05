@@ -32,7 +32,7 @@ MIN_SAMPLES   = 200
 from breezyslam.algorithms import RMHC_SLAM
 from breezyslam.sensors import RPLidarA1 as LaserModel
 from rplidar import RPLidar as Lidar
-from roboviz import MapVisualizer
+from roboviz import Visualizer
 
 if __name__ == '__main__':
 
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     slam = RMHC_SLAM(LaserModel(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Set up a SLAM display
-    viz = MapVisualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, 'SLAM')
+    viz = Visualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, title='SLAM')
 
     # Initialize an empty trajectory
     trajectory = []

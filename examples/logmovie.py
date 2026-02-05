@@ -40,7 +40,7 @@ MAP_SIZE_METERS          = 32
 
 from breezyslam.algorithms import Deterministic_SLAM, RMHC_SLAM
 from mines import MinesLaser, Rover, load_data
-from roboviz import MapVisualizer
+from roboviz import Visualizer
 
 from sys import argv, exit
 from time import sleep
@@ -111,13 +111,16 @@ def main():
            else Deterministic_SLAM(MinesLaser(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Set up a SLAM display, named by dataset
-    viz = MapVisualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS, dataset)
+    viz = Visualizer(MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Pose will be modified in our threaded code
     pose = [0,0,0]
 
+    odo = odometries if use_odometry else None
+
     # Launch the data-collection / update thread
-    thread = Thread(target=threadfunc, args=(robot, slam, timestamps, lidars, odometries if use_odometry else None, mapbytes, pose))
+    thread = Thread(target=threadfunc,
+            args=(robot, slam, timestamps, lidars, odo, mapbytes, pose))
     thread.daemon = True
     thread.start()
     
