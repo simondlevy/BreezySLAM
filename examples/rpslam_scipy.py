@@ -47,7 +47,7 @@ if __name__ == '__main__':
     slam = RMHC_SLAM(LaserModel(), map_size_pixels=MAP_SIZE_PIXELS, MAP_SIZE_METERS)
 
     # Set up a SLAM display
-    viz = Visualizer(MAP_SIZE_METERS, MAP_SIZE_PIXELS, title='SLAM')
+    viz = Visualizer(MAP_SIZE_METERS, MAP_SIZE_PIXELS)
 
     # Initialize an empty trajectory
     trajectory = []
@@ -99,7 +99,7 @@ if __name__ == '__main__':
         slam.getmap(mapbytes)
 
         # Display map and robot pose, exiting gracefully if user closes it
-        if not viz.display(x/1000., y/1000., theta, mapbytes):
+        if not viz.display(x/1000., y/1000., theta, map_bytes=mapbytes, title='SLAM'):
             exit(0)
  
     # Shut down the lidar connection

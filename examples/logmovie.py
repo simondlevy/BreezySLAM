@@ -128,7 +128,7 @@ def main():
     while True:
 
         # Display map and robot pose, exiting gracefully if user closes it
-        if not viz.display(pose[0]/1000., pose[1]/1000., pose[2], mapbytes):
+        if not viz.display(pose[0]/1000., pose[1]/1000., pose[2], map_bytes=mapbytes):
             exit(0)
                     
 main()
